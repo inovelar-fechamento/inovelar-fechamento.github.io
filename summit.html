@@ -378,7 +378,7 @@ body.emleitor{overflow:hidden}
     var bCod = $('#bCod'), cod = $('#cod');
     bCod.onclick = function () {
       bCod.disabled = true; bCod.textContent = 'Entrando…';
-      chamar('entrar', [em.value.trim(), cod.value]).then(function (r) { ls('mp27_token', r.token); S.token = r.token; iniciar(); })
+      chamar('entrar', [em.value.trim(), cod.value]).then(function (r) { if (r.admin) ls('mp27_gestor', r.token); else ls('mp27_token', r.token); S.token = r.token; iniciar(); })
         .catch(function (x) { toast(x.message, 5000); bCod.disabled = false; bCod.textContent = 'Entrar'; });
     };
     cod.oninput = function () { if (cod.value.replace(/\D/g, '').length === 6) bCod.click(); };
@@ -393,7 +393,7 @@ body.emleitor{overflow:hidden}
       return chamar('entrarGestor', [k]).then(function (r) { ls('mp27_gestor', r.token); S.token = r.token; iniciar(); }).catch(function (x) { telaLogin(x.message); });
     }
     if (MODO !== 'corretor' && ls('mp27_gestor')) S.token = S.token || ls('mp27_gestor');
-    S.token = S.token || ls('mp27_token');
+    S.token = S.token || (MODO === 'como' ? null : ls('mp27_token'));
     if (!S.token) return telaLogin();
     app.innerHTML = '<div class="center"><p class="sub">Carregando…</p></div>';
     if (MODO === 'telao') return telao();
@@ -408,7 +408,7 @@ body.emleitor{overflow:hidden}
       else { S.D = novoPlano(S.diag); S.versao = 0; S.status = 'rascunho'; }
       S.aba = ls('mp27_aba') || 'inicio';
       corretor();
-    }).catch(function (x) { if (/Sessão|acesso/.test(x.message)) { ls('mp27_token', null); return telaLogin(x.message); } app.innerHTML = '<div class="wrap center"><div><div class="erro">' + esc(x.message) + '</div><button class="btn" onclick="location.reload()">Tentar de novo</button></div></div>'; });
+    }).catch(function (x) { if (MODO === 'como' && /administrador/.test(x.message)) { ls('mp27_gestor', null); return telaLogin('Para ver o app como o corretor, entre com o seu e-mail de gestor.'); } if (/Sessão|acesso/.test(x.message)) { ls('mp27_token', null); return telaLogin(x.message); } app.innerHTML = '<div class="wrap center"><div><div class="erro">' + esc(x.message) + '</div><button class="btn" onclick="location.reload()">Tentar de novo</button></div></div>'; });
   }
 
   // ================= PLANO NOVO (pré-preenchido pelo iList) =================
