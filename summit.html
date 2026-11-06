@@ -100,6 +100,14 @@ body.emleitor{overflow:hidden}
 .tv .cr.novo{border-color:var(--ok);box-shadow:0 0 0 2px var(--ok),0 0 28px rgba(62,224,143,.55);animation:crnovo 1.6s ease-in-out infinite}
 @keyframes crnovo{50%{box-shadow:0 0 0 2px var(--ok),0 0 44px rgba(62,224,143,.85)}}
 .chip.novo{background:#0f2a1d;border-color:var(--ok);color:var(--ok);font-size:11px;vertical-align:middle}
+
+.boasv{position:fixed;inset:0;z-index:40;background:radial-gradient(1200px 600px at 50% -10%,rgba(47,228,255,.14),transparent),var(--bg);overflow:auto;padding:24px 16px calc(24px + env(safe-area-inset-bottom))}
+body.combv{overflow:hidden}
+.bvin{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.bvin .logo{font-size:20px}.bvin h1{font-size:26px;line-height:1.25;margin:8px 0 0}
+.bvlead{color:var(--mu);margin:0 0 4px;font-size:17px}
+.bvc{background:var(--pn);border:1px solid var(--ln);border-radius:var(--r);padding:14px 16px}.bvc h3{margin:0 0 6px;color:var(--ac)}.bvc p{margin:0}
+.bvgo{font-size:19px;padding:16px 26px;margin:8px auto 0;min-width:220px;box-shadow:0 0 22px rgba(47,228,255,.45)}
 </style></head>
 <body><div id="app"></div>
 <script>window.SUMMIT_API="https://script.google.com/macros/s/AKfycbzuymYfKYw90PZCY3AB6FHqTc7OmkxA5lEmw_s8eTJRW-NsKRYki9W26Q22E5ZFQ3Be/exec";</script>
@@ -523,7 +531,7 @@ body.emleitor{overflow:hidden}
     [B.pg - 1, B.pg + 1].forEach(function (p) { if (p >= 0 && p < BOOK_TOTAL) { var i = new Image(); i.src = arqPag(p); } });
   }
   function telaLarga() { return window.matchMedia && window.matchMedia('(min-width:1180px)').matches; }
-  function bookIr(p, manual) { p = Math.max(0, Math.min(BOOK_TOTAL - 1, p)); if (manual) B.seguir = false; B.pg = p; bookRender(); }
+  function bookIr(p, manual) { p = Math.max(0, Math.min(BOOK_TOTAL - 1, p)); if (manual) B.seguir = false; B.pg = p; if (S.modo === 'book') ls('mp27_pg', String(p)); bookRender(); }
   function bookAbrir(p) { if (p !== undefined) bookIr(p, true); B.aberto = true; bookRender(); }
   function bookMontar() {
     if ($('#bookov')) return;
@@ -532,7 +540,7 @@ body.emleitor{overflow:hidden}
     var f = document.createElement('button'); f.id = 'bookfab'; f.className = 'bookfab'; f.onclick = function () { bookAbrir(); }; document.body.appendChild(f);
     window.addEventListener('resize', bookRender);
     document.addEventListener('keydown', function (e) { if (!B.aberto && !telaLarga() && S.modo !== 'book') return; if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if (e.key === 'ArrowRight') bookIr(B.pg + 1, true); if (e.key === 'ArrowLeft') bookIr(B.pg - 1, true); if (e.key === 'Escape') { B.aberto = false; bookRender(); } });
-    B.pg = PAG_ABA[S.aba] || 11; bookRender();
+    var pgSalva = parseInt(ls('mp27_pg'), 10); B.pg = S.modo === 'book' ? (pgSalva >= 0 && pgSalva < BOOK_TOTAL ? pgSalva : 0) : (PAG_ABA[S.aba] || 11); bookRender();   // book abre na capa (ou onde o corretor parou)
     var acompanha = function () {
       chamar('ritmo', [S.token]).then(function (r) {
         var p = r.pagina > 0 ? r.pagina : (PAG_ETAPA[r.etapa] || null);
@@ -629,6 +637,22 @@ body.emleitor{overflow:hidden}
     $('#vbook').onclick = voltarBook;
     if (!S.modo) S.modo = ls('mp27_modo') || 'book';
     leitorMontar(); render(); bookMontar(); leitorRender();
+    if (!S.bvOk) boasVindas();
+  }
+  // ================= BOAS-VINDAS (máscara antes do book, toda vez que o corretor entra) =================
+  function boasVindas() {
+    var bv = $('#boasv'); if (!bv) { bv = document.createElement('div'); bv.id = 'boasv'; bv.className = 'boasv'; document.body.appendChild(bv); }
+    var nome = esc(String((S.eu && S.eu.nome) || '').split(' ')[0]);
+    bv.innerHTML = '<div class="bvin"><span class="logo">RE/<span>MAX</span> Inovelar</span>' +
+      '<h1>Olá, ' + nome + '! Boas-vindas ao seu Agent Summit 2027.</h1>' +
+      '<p class="bvlead">Este é o lugar onde você vai ler o book e montar o seu plano de 2027.</p>' +
+      '<div class="bvc"><h3>⚙️ Por que a Inovelar criou este sistema</h3><p>Você faz parte do nosso time, e queremos facilitar o seu trabalho. Por isso automatizamos o Summit: o book fica na tela; nas páginas de exercício aparece o botão <b>✍️ Preencher</b>; as contas são feitas sozinhas; os seus números do iList já vêm carregados; e tudo salva enquanto você digita, em qualquer aparelho.</p></div>' +
+      '<div class="bvc"><h3>📘 O material é da RE/MAX Brasil</h3><p>Todo o conteúdo original do Agent Summit — o book, os exercícios e a metodologia — é fornecido e elaborado pela <b>RE/MAX Brasil</b>. Nada do conteúdo foi mudado: a Inovelar só levou para o digital.</p></div>' +
+      '<div class="bvc"><h3>🎯 Preencha com atenção</h3><p>O seu plano não termina no evento. Ele vira o seu acompanhamento de 2027: suas metas, o painel da gestão e o retorno que você vai receber ao longo do ano. Use números reais e responda com calma. Um plano bem feito é um ano acompanhado de perto.</p></div>' +
+      (S.como ? '<p class="sub">👁 Vendo como ' + esc(S.como) + ' — nada é salvo.</p>' : '') +
+      '<button class="btn bvgo" id="bvGo">Começar ›</button></div>';
+    document.body.classList.add('combv');
+    $('#bvGo').onclick = function () { S.bvOk = true; bv.remove(); document.body.classList.remove('combv'); window.scrollTo(0, 0); };
   }
   function mover(d) { var i = ABAS.map(function (a) { return a.id; }).indexOf(S.aba); i = Math.max(0, Math.min(ABAS.length - 1, i + d)); irPara(ABAS[i].id); }
   function irPara(id) { if (S.sujo) salvar(); S.aba = id; ls('mp27_aba', id); render(); window.scrollTo(0, 0); }
