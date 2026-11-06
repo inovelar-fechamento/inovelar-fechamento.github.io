@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex"><meta name="theme-color" content="#070b16"><title>Meu Plano 2027 · RE/MAX Inovelar</title>
+<style>:root{--bg:#070b16;--pn:#0e1528;--pn2:#131d36;--ln:#22305a;--tx:#e6ecff;--mu:#8fa0c8;--ac:#2fe4ff;--ok:#3ee08f;--wa:#ffc845;--er:#ff5d73;--rx:#e11b22;--r:14px}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--ac)}button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:860px;margin:0 auto;padding:16px 16px 120px}
+h1{font-size:22px;margin:4px 0 2px}h2{font-size:19px;margin:22px 0 8px;color:var(--ac)}h3{font-size:16px;margin:18px 0 6px}
+.sub{color:var(--mu);font-size:14px;margin:0 0 12px}
+.card{background:var(--pn);border:1px solid var(--ln);border-radius:var(--r);padding:14px;margin:12px 0}
+.row{display:grid;grid-template-columns:1fr 150px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed #1c2748}
+.row:last-child{border-bottom:0}.row label{font-size:14px}.row small{display:block;color:var(--mu);font-size:12px}
+input[type=text],input[type=email],input[type=date],select,textarea{width:100%;background:var(--pn2);border:1px solid var(--ln);border-radius:10px;padding:10px;outline:0}
+input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-height:76px;resize:vertical}
+.num{text-align:right}.pre{border-color:#2b5f88!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:12px;padding:12px 16px;background:var(--ac);color:#04121a;font-weight:700;cursor:pointer;min-height:46px}
+.btn.sec{background:var(--pn2);color:var(--tx);border:1px solid var(--ln)}.btn.red{background:var(--rx);color:#fff}.btn:disabled{opacity:.5;cursor:default}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.res{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;background:#0b2232;border:1px solid #17506b;margin-top:8px;font-weight:700}
+.res b{color:var(--ac);font-size:18px;white-space:nowrap}
+.big{font-size:30px;font-weight:800;color:var(--ac)}
+.aviso{border-left:4px solid var(--wa);background:#2a2410;padding:10px 12px;border-radius:8px;margin:10px 0;font-size:14px}
+.erro{border-left:4px solid var(--er);background:#2a1016;padding:10px 12px;border-radius:8px;margin:10px 0;font-size:14px}
+.ok{border-left:4px solid var(--ok);background:#0f2a1d;padding:10px 12px;border-radius:8px;margin:10px 0;font-size:14px}
+.chip{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;background:var(--pn2);border:1px solid var(--ln)}
+.chip.aceito{background:#0f2a1d;border-color:var(--ok);color:var(--ok)}.chip.rascunho{background:#2a2410;border-color:var(--wa);color:var(--wa)}.chip.nao{color:var(--mu)}
+.top{position:sticky;top:0;z-index:5;background:rgba(7,11,22,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--ln)}
+.top .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.logo{font-weight:900;letter-spacing:.5px}.logo span{color:var(--rx)}
+.salvo{margin-left:auto;font-size:12px;color:var(--mu)}
+.nav{display:flex;gap:6px;overflow-x:auto;padding:8px 16px;max-width:860px;margin:0 auto;scrollbar-width:none}
+.nav button{flex:0 0 auto;border:1px solid var(--ln);background:var(--pn);border-radius:999px;padding:7px 12px;font-size:13px;cursor:pointer}
+.nav button.on{background:var(--ac);color:#04121a;border-color:var(--ac);font-weight:700}.nav button.feito::after{content:" ✓";color:var(--ok)}
+.prog{height:4px;background:var(--pn2)}.prog i{display:block;height:4px;background:linear-gradient(90deg,var(--ac),var(--ok));transition:width .4s}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tab12{overflow-x:auto}.tab12 table{border-collapse:collapse;min-width:900px;font-size:13px}
+.tab12 th,.tab12 td{border:1px solid var(--ln);padding:4px}.tab12 th{background:var(--pn2);font-weight:600}.tab12 td input{padding:6px;border-radius:6px;min-width:58px}
+.tab12 td.c{text-align:right;font-weight:700;color:var(--ac);padding:4px 8px}
+.cock{display:grid;grid-template-columns:1fr 1fr;gap:10px}.cock .k{background:var(--pn2);border-radius:12px;padding:10px}.cock .k small{color:var(--mu);display:block;font-size:12px}.cock .k b{font-size:18px}
+.pill{display:flex;gap:6px;flex-wrap:wrap}.pill label{border:1px solid var(--ln);border-radius:999px;padding:7px 11px;font-size:14px;cursor:pointer;background:var(--pn2)}
+.pill input{display:none}.pill input:checked+span{color:var(--ac);font-weight:700}
+.check label{display:flex;gap:8px;align-items:flex-start;padding:5px 0;font-size:14px}.check input{width:20px;height:20px;margin-top:1px}
+.center{min-height:80vh;display:grid;place-items:center;text-align:center}
+.codigo{font-size:28px;letter-spacing:8px;text-align:center!important}
+.hide{display:none!important}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--pn2);border:1px solid var(--ac);padding:10px 16px;border-radius:12px;z-index:20;max-width:92vw}
+.foot{position:fixed;left:0;right:0;bottom:0;background:rgba(7,11,22,.96);border-top:1px solid var(--ln);padding:10px 16px;display:flex;gap:8px;justify-content:center;z-index:5}
+/* telão */
+.tv{padding:22px 28px;min-height:100vh}.tv h1{font-size:34px}.tv .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:16px 0}
+.tv .kpi{background:var(--pn);border:1px solid var(--ln);border-radius:16px;padding:14px}.tv .kpi small{color:var(--mu);font-size:14px}.tv .kpi b{display:block;font-size:30px;color:var(--ac)}
+.tv .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}.tv .cards .cr{padding:10px 12px}.tv .cards .cr h4{font-size:17px}.tv .cards .l{font-size:14px}
+.tv .cr{background:var(--pn);border:1px solid var(--ln);border-radius:16px;padding:14px;position:relative;overflow:hidden}
+.tv .cr h4{margin:0 0 4px;font-size:20px}.tv .cr .l{display:flex;justify-content:space-between;font-size:15px;padding:2px 0}.tv .cr .l b{color:var(--ac)}
+.tv .bar{height:6px;background:var(--pn2);border-radius:9px;margin:8px 0}.tv .bar i{display:block;height:6px;border-radius:9px;background:var(--ac)}
+.tv .cr.aceito{border-color:var(--ok);box-shadow:0 0 18px rgba(62,224,143,.25)}
+.adm table{width:100%;border-collapse:collapse;font-size:14px}.adm th,.adm td{border-bottom:1px solid var(--ln);padding:8px 6px;text-align:left;vertical-align:top}
+@media(max-width:560px){.row{grid-template-columns:1fr 120px}.grid2,.cock{grid-template-columns:1fr}.tv .kpis{grid-template-columns:1fr 1fr}}
+@media print{.top,.nav,.foot,.btns,.btn{display:none!important}body{background:#fff;color:#000}.card{border-color:#999;background:#fff}}
+</style></head>
+<body><div id="app"></div>
+<script>window.SUMMIT_API="https://script.google.com/macros/s/AKfycbzuymYfKYw90PZCY3AB6FHqTc7OmkxA5lEmw_s8eTJRW-NsKRYki9W26Q22E5ZFQ3Be/exec";</script>
+<script>/* Motor de cálculo do "Meu Plano 2027" — Agent Summit RE/MAX Inovelar.
+   Fonte única das contas (book Agent Summit 2027, p.21–31). Usado pela página,
+   pelo telão, pelo Apps Script e pelos testes. Sem dependências.
+   Todas as contas em centavos onde há dinheiro, para não acumular erro de ponto flutuante. */
+(function (root) {
+  'use strict';
+
+  // ---------- utilidades ----------
+  function num(v) {                       // aceita 1234.5, "1.234,50", "R$ 1.234,50", "45%", "", null
+    if (v === null || v === undefined || v === '') return null;
+    if (typeof v === 'number') return isFinite(v) ? v : null;
+    var s = String(v).trim().replace(/R\$|%|\s/g, '');
+    if (!s) return null;
+    if (s.indexOf(',') >= 0) s = s.replace(/\./g, '').replace(',', '.');
+    else if (/^-?\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, '');   // 397.000 = trezentos e noventa e sete mil
+    var n = Number(s);
+    return isFinite(n) ? n : null;
+  }
+  function cent(v) { var n = num(v); return n === null ? null : Math.round(n * 100); }
+  function reais(c) { return c === null ? null : c / 100; }
+  function pct(v) {                        // 45 -> 0.45 ; 0.45 -> 0.45 ; "45%" -> 0.45
+    var n = num(v); if (n === null) return null;
+    return n > 1 ? n / 100 : n;
+  }
+  function soma(arr) { var t = 0, tem = false; (arr || []).forEach(function (v) { var c = cent(v); if (c !== null) { t += c; tem = true; } }); return tem ? t : null; }
+  function roundHalfUp(x) { return Math.floor(x + 0.5 + 1e-9); }
+
+  // ---------- tabelas do book ----------
+  var CLUBES = [ // p.27 — faturamento (VGC) do ano civil
+    { nome: 'Pinnacle', min: 6920415.00 },
+    { nome: 'Diamond', min: 3460208.00 },
+    { nome: 'Titan', min: 2595156.00 },
+    { nome: "Chairman's", min: 1730104.00 },
+    { nome: 'Platinum', min: 865052.00 },
+    { nome: '100%', min: 346021.00 },
+    { nome: 'Executive', min: 173010.00 }
+  ];
+  function clube(vgc) {
+    var v = num(vgc); if (v === null) return null;
+    for (var i = 0; i < CLUBES.length; i++) if (v >= CLUBES[i].min) return CLUBES[i].nome;
+    return 'Abaixo do ' + CLUBES[CLUBES.length - 1].nome;
+  }
+  function proximoClube(vgc) {
+    var v = num(vgc) || 0;
+    for (var i = CLUBES.length - 1; i >= 0; i--) if (v < CLUBES[i].min) return { nome: CLUBES[i].nome, falta: Math.round((CLUBES[i].min - v) * 100) / 100 };
+    return null;
+  }
+  var REGUA_CRE = [ // p.30
+    { max: 4, txt: 'Não tem negócio' },
+    { max: 10, txt: 'Negócio lento' },
+    { max: 15, txt: 'Negócio — ciclo saudável' },
+    { max: 18, txt: 'Negócio feliz' },
+    { max: 23, txt: 'Alta performance — exige estrutura de apoio' },
+    { max: Infinity, txt: 'Perda de eficácia — excesso de contratos sem apoio' }
+  ];
+  function reguaCRE(n) { var v = num(n); if (v === null) return null; for (var i = 0; i < REGUA_CRE.length; i++) if (v <= REGUA_CRE[i].max) return REGUA_CRE[i].txt; }
+  var FAIXAS = [40, 45, 60, 70]; // p.26
+  // tabela vinda da aba CONFIG (muda todo ano). Só aceita se estiver completa e coerente; senão mantém a do book.
+  function configurar(cfg) {
+    if (!cfg) return false; var ok = false;
+    if (cfg.clubes && cfg.clubes.length) {
+      var l = cfg.clubes.map(function (c) { return { nome: String(c.nome || '').trim(), min: num(c.min) }; }).filter(function (c) { return c.nome && c.min > 0; });
+      if (l.length === cfg.clubes.length) { l.sort(function (a, b) { return b.min - a.min; }); CLUBES.length = 0; l.forEach(function (c) { CLUBES.push(c); }); ok = true; }
+    }
+    if (cfg.faixas && cfg.faixas.length) { var f = cfg.faixas.map(num).filter(function (x) { return x > 0 && x <= 100; }); if (f.length === cfg.faixas.length) { FAIXAS.length = 0; f.forEach(function (x) { FAIXAS.push(x); }); } }
+    return ok;
+  }
+  function clubeMinimo() { return CLUBES[CLUBES.length - 1].min; }
+  var PONTOS = { contato: 0.5, v1: 1, cre: 2, venda: 4 }; // p.35
+  var AUTO = [ // p.16 — soma das 6 notas (1 a 5)
+    { max: 12, txt: 'Você executa. Seu desafio é ambição, não disciplina. Suba a meta.' },
+    { max: 20, txt: 'Você executa em partes. Escolha as duas afirmações de maior nota e ataque só elas em 2027.' },
+    { max: 30, txt: 'A execução é o seu gargalo. Planeje menor e cumpra. Use o pacto e cobre o seu broker pela cadência.' }
+  ];
+
+  // ---------- passo 2 ----------
+  var GRUPOS_PESSOAL = ['casa', 'transporte', 'saude', 'educacao', 'pessoal', 'lazer', 'financeiro', 'imprevistos'];
+  var GRUPOS_NEGOCIO = ['locomocao', 'mktCaptacao', 'mktVenda', 'portalBoost', 'administrativo', 'formacao'];
+
+  function passo2(p) {
+    p = p || {};
+    var pes = p.pessoal || {}, neg = p.negocio || {}, sonhos = p.sonhos || [];
+    var pesMes = soma(GRUPOS_PESSOAL.map(function (k) { return pes[k]; }));
+    var negMes = soma(GRUPOS_NEGOCIO.map(function (k) { return neg[k]; }));
+    var sonhosAno = soma(sonhos.map(function (s) { return s && s.valor; }));
+    var pesAno = pesMes === null ? null : pesMes * 12;
+    var negAno = negMes === null ? null : negMes * 12;
+    var sub = (pesAno || 0) + (negAno || 0) + (sonhosAno || 0);
+    var aliq = pct(p.aliquota);
+    var estilo = null, erro = null;
+    if (pesAno === null && negAno === null && sonhosAno === null) estilo = null;
+    else if (aliq === null) erro = 'Informe a alíquota de imposto (linha 5).';
+    else if (aliq >= 1 || aliq < 0) erro = 'A alíquota precisa ficar entre 0% e 99%.';
+    else estilo = Math.round(sub / (1 - aliq));               // centavos
+    return {
+      pessoalMes: reais(pesMes), pessoalAno: reais(pesAno),
+      negocioMes: reais(negMes), negocioAno: reais(negAno),
+      sonhosAno: reais(sonhosAno), subtotal: reais(sub),
+      aliquota: aliq, estiloVidaAno: reais(estilo),
+      estiloVidaMes: estilo === null ? null : Math.round(estilo / 12) / 100,
+      erro: erro
+    };
+  }
+
+  // ---------- passo 3 ----------
+  function passo3(p, estiloVidaAno) {
+    p = p || {};
+    var out = { erros: [] };
+    var ev = num(estiloVidaAno), faixa = pct(p.faixa), ticket = num(p.ticket), perc = pct(p.percTransacao), conv = pct(p.conversao);
+    out.estiloVida = ev; out.faixa = faixa; out.ticket = ticket; out.percTransacao = perc; out.conversao = conv;
+    if (ev !== null && faixa) out.comissaoBruta = Math.round(ev / faixa * 100) / 100;
+    else { out.comissaoBruta = null; if (!faixa) out.erros.push('Escolha a sua faixa de comissionamento (linha 2).'); }
+    if (ticket !== null && perc !== null) out.comissaoMedia = Math.round(ticket * perc * 100) / 100;
+    else { out.comissaoMedia = null; if (ticket === null) out.erros.push('Informe o ticket médio (linha 4).'); if (perc === null) out.erros.push('Informe o percentual de comissão por transação (linha 5).'); }
+    if (out.comissaoBruta !== null && out.comissaoMedia) {
+      out.transacoesExatas = out.comissaoBruta / out.comissaoMedia;
+      out.transacoes = Math.ceil(out.transacoesExatas - 1e-9);   // book: 27,16 -> 28 (sempre para cima)
+    } else out.transacoes = null;
+    if (out.transacoes !== null && conv) {
+      out.captacoesExatas = out.transacoes / conv;
+      out.captacoes = roundHalfUp(out.captacoesExatas);         // book: 127,27 -> 127
+      out.captacoesMes = roundHalfUp(out.captacoes / 12);         // book: 10,58 -> 11
+      out.captacoesMesExatas = out.captacoes / 12;
+    } else { out.captacoes = null; out.captacoesMes = null; if (!conv) out.erros.push('Informe a conversão das captações (linha 2 da p.29).'); }
+    if (out.comissaoBruta !== null) { out.clube = clube(out.comissaoBruta); out.proximoClube = proximoClube(out.comissaoBruta); }
+    return out;
+  }
+
+  // carteira (p.30): captações/mês × meses na carteira ≈ CREs ativas
+  function carteira(captacoesMes, mesesNaCarteira) {
+    var c = num(captacoesMes), m = num(mesesNaCarteira);
+    if (c === null || m === null) return null;
+    var cres = Math.round(c * m * 10) / 10;
+    return { cresAtivas: cres, situacao: reguaCRE(cres), alerta: cres > 18 ? 'Passou de 18: o plano pede conversão maior, ticket maior ou estrutura de apoio — não só mais captação.' : null };
+  }
+
+  // metas mês a mês (p.31): estoque = inicial + novos − cancelados/expirados − vendidos
+  function metasMensais(m) {
+    m = m || {};
+    var ini = num(m.cresIniciais) || 0, est = [], acum = ini, linhas = ['novas', 'perdidas', 'vendidas', 'transCaptacao', 'transVenda', 'comissaoMedia'];
+    var tot = {}; linhas.forEach(function (l) { tot[l] = 0; });
+    var vgc = [], trans = [];
+    for (var i = 0; i < 12; i++) {
+      var g = function (l) { return num((m[l] || [])[i]) || 0; };
+      acum = acum + g('novas') - g('perdidas') - g('vendidas'); est.push(Math.round(acum * 100) / 100);
+      var t = g('transCaptacao') + g('transVenda'); trans.push(t);
+      vgc.push(Math.round(t * g('comissaoMedia') * 100) / 100);
+      linhas.forEach(function (l) { tot[l] += g(l); });
+    }
+    return { estoque: est, transacoes: trans, vgc: vgc, totalTransacoes: trans.reduce(function (a, b) { return a + b; }, 0), totalVGC: Math.round(vgc.reduce(function (a, b) { return a + b; }, 0) * 100) / 100, totais: tot, estoqueFinal: est[11] };
+  }
+
+  // funil (p.36): de trás para frente
+  function funil(f) {
+    f = f || {};
+    var cres = num(f.cresMes), v2cre = pct(f.taxaV2paraCRE), v1v2 = pct(f.taxaV1paraV2);
+    var v2 = cres !== null && v2cre ? cres / v2cre : null;
+    var v1 = v2 !== null && v1v2 ? v2 / v1v2 : null;
+    var contatosSem = v1 !== null ? v1 / 4 : null;
+    var r = function (x) { return x === null ? null : Math.ceil(x - 1e-9); };
+    return { v2Mes: r(v2), v1Mes: r(v1), contatosSemana: r(contatosSem) };
+  }
+
+  function autoavaliacao(notas) {
+    var t = 0, n = 0; (notas || []).forEach(function (v) { var x = num(v); if (x !== null) { t += x; n++; } });
+    if (n < 6) return { total: n ? t : null, faltam: 6 - n, leitura: null };
+    for (var i = 0; i < AUTO.length; i++) if (t <= AUTO[i].max) return { total: t, faltam: 0, leitura: AUTO[i].txt };
+  }
+
+  // teste de realidade / plano B — compara o plano com os 12 meses do iList (p.14)
+  function realidade(plano, hist) {
+    hist = hist || {};
+    var tr = num(hist.transacoes), vgcH = num(hist.comissao), cap = num(hist.cres);
+    var o = { temHistorico: !!(tr || vgcH || cap) };
+    if (!o.temHistorico || !plano) return o;
+    if (tr && plano.transacoes) { o.multTransacoes = Math.round(plano.transacoes / tr * 100) / 100; }
+    if (cap && plano.captacoes) { o.multCaptacoes = Math.round(plano.captacoes / cap * 100) / 100; }
+    if (vgcH && plano.comissaoBruta) { o.crescimentoVGC = Math.round((plano.comissaoBruta / vgcH - 1) * 1000) / 10; }
+    var m = o.multTransacoes || o.multCaptacoes || 0;
+    o.nivel = !m ? null : m <= 1.3 ? 'realista' : m <= 2 ? 'desafiador' : 'muito acima do histórico';
+    // Plano B = mantém o ritmo histórico com +20% de esforço (régua conservadora da loja)
+    if (tr) {
+      o.planoB = { transacoes: Math.ceil(tr * 1.2 - 1e-9) };
+      if (plano.comissaoMedia) o.planoB.vgc = Math.round(o.planoB.transacoes * plano.comissaoMedia * 100) / 100;
+      if (o.planoB.vgc) o.planoB.clube = clube(o.planoB.vgc);
+    }
+    return o;
+  }
+
+  // simulador (p.29 ao contrário): mais captações -> mais transações (pela conversão) -> mais VGC (pela comissão média)
+  // base = transações × comissão média (mesma conta das metas da p.31); arredondamentos para baixo = promessa conservadora
+  function simulaCaptacao(p3, extraMes) {
+    if (!p3 || !p3.transacoes || !p3.comissaoMedia || !p3.conversao) return null;
+    var extraAno = Math.round(num(extraMes) * 12), conv = p3.conversao;
+    var transExtra = Math.floor(extraAno * conv + 1e-9);
+    var base = Math.round(p3.transacoes * p3.comissaoMedia * 100) / 100;
+    var vgcExtra = Math.round(transExtra * p3.comissaoMedia * 100) / 100, novo = Math.round((base + vgcExtra) * 100) / 100;
+    return { captacoesMes: p3.captacoesMes + num(extraMes), captacoesAno: p3.captacoes + extraAno, transacoesExtra: transExtra, transacoes: p3.transacoes + transExtra, vgcBase: base, vgcExtra: vgcExtra, vgc: novo, clube: clube(novo) };
+  }
+  function paraProximoClube(p3) {
+    if (!p3 || !p3.transacoes || !p3.comissaoMedia || !p3.conversao) return null;
+    var base = p3.transacoes * p3.comissaoMedia, prox = proximoClube(base); if (!prox) return null;
+    var alvo = null; for (var i = 0; i < CLUBES.length; i++) if (CLUBES[i].nome === prox.nome) alvo = CLUBES[i].min;
+    var trans = Math.ceil((alvo - base) / p3.comissaoMedia - 1e-9);           // vendas a mais
+    var capAno = Math.ceil(trans / p3.conversao - 1e-9);                      // captações a mais no ano
+    var capMes = Math.ceil(capAno / 12 - 1e-9);                               // por mês (para cima: garante o clube)
+    var conf = simulaCaptacao(p3, capMes);
+    return { clube: prox.nome, transacoesExtra: trans, captacoesAno: capAno, captacoesMes: capMes, vgcComIsso: conf ? conf.vgc : null, atinge: conf ? conf.vgc >= alvo : null };
+  }
+
+  function plano(d) {
+    d = d || {};
+    var p2 = passo2(d.passo2);
+    var p3 = passo3(d.passo3, p2.estiloVidaAno);
+    var cart = p3.captacoesMes !== null ? carteira(p3.captacoesMes, (d.passo3 || {}).mesesCarteira) : null;
+    return { passo2: p2, passo3: p3, carteira: cart, metas: metasMensais(d.metas), funil: funil(d.funil), auto: autoavaliacao((d.diagnostico || {}).notas), realidade: realidade(p3, d.historico) };
+  }
+
+  var API = { num: num, pct: pct, clube: clube, proximoClube: proximoClube, reguaCRE: reguaCRE, passo2: passo2, passo3: passo3, carteira: carteira, metasMensais: metasMensais, funil: funil, autoavaliacao: autoavaliacao, realidade: realidade, plano: plano, simulaCaptacao: simulaCaptacao, paraProximoClube: paraProximoClube, configurar: configurar, clubeMinimo: clubeMinimo, CLUBES: CLUBES, FAIXAS: FAIXAS, PONTOS: PONTOS, GRUPOS_PESSOAL: GRUPOS_PESSOAL, GRUPOS_NEGOCIO: GRUPOS_NEGOCIO };
+  if (typeof module !== 'undefined' && module.exports) module.exports = API; else root.Motor = API;
+})(this);
+</script>
+<script>/* Meu Plano 2027 — tela (corretor, telão e admin). Depende de Motor (motor.js). */
+(function () {
+  'use strict';
+  var API = window.SUMMIT_API || '__API__';
+  var VERSAO_TELA = '1.0.0';
+  var M = window.Motor, $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var app = $('#app');
+  var S = { token: null, eu: null, D: null, versao: 0, status: 'rascunho', diag: null, aba: 'inicio', sujo: false, salvando: false, fila: null };
+
+  // ---------------- armazenamento local (pode falhar em aba anônima) ----------------
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
+
+  // ---------------- chamada ao servidor com nova tentativa ----------------
+  function chamar(fn, args, tent) {
+    tent = tent || 0;
+    return fetch(API, { method: 'POST', body: JSON.stringify({ fn: fn, args: args || [] }), credentials: 'omit', headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (!j.ok) { var e = new Error(j.erro || 'Erro'); e.publico = true; throw e; } return j.r; })
+      .catch(function (e) {
+        if (e.publico) throw e;
+        if (tent < 2) return new Promise(function (ok) { setTimeout(ok, 1200 * (tent + 1)); }).then(function () { return chamar(fn, args, tent + 1); });
+        var x = new Error(location.hostname === 'inovelar-fechamento.github.io' ? 'Sem conexão com o servidor. Confira a internet e tente de novo.' : 'Sem conexão: abra pelo link oficial inovelar-fechamento.github.io/summit.html'); x.publico = true; throw x;
+      });
+  }
+  function toast(m, ms) { var t = document.createElement('div'); t.className = 'toast'; t.textContent = m; document.body.appendChild(t); setTimeout(function () { t.remove(); }, ms || 3200); }
+  function esc(s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function brl(v, dec) { var n = M.num(v); if (n === null) return '—'; return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: dec === 0 ? 0 : 2, maximumFractionDigits: dec === 0 ? 0 : 2 }); }
+  function nfmt(v, d) { var n = M.num(v); if (n === null) return '—'; return n.toLocaleString('pt-BR', { maximumFractionDigits: d === undefined ? 1 : d }); }
+  function pfmt(v) { var n = M.pct(v); return n === null ? '—' : (n * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%'; }
+
+  // ---------------- caminho por endereço ----------------
+  var q = new URLSearchParams(location.search);
+  var MODO = q.get('v') || (q.has('telao') ? 'telao' : q.has('acessos') ? 'acessos' : q.has('admin') ? 'admin' : 'corretor');
+  if (['corretor', 'admin', 'telao', 'acessos'].indexOf(MODO) < 0) MODO = 'corretor';
+  var CHAVE_GESTOR = q.get('g');
+  if (q.get('t')) { ls('mp27_token', q.get('t')); history.replaceState(null, '', location.pathname + (MODO !== 'corretor' ? '?v=' + MODO : '')); }
+
+  // ================= LOGIN =================
+  function telaLogin(msg) {
+    app.innerHTML = '<div class="wrap center"><div style="width:100%;max-width:420px">' +
+      '<div class="logo" style="font-size:26px">RE/<span>MAX</span> Inovelar</div><h1>Meu Plano 2027</h1><p class="sub">Agent Summit · 18 e 19/11/2026</p>' +
+      (msg ? '<div class="aviso">' + esc(msg) + '</div>' : '') +
+      (location.hostname !== 'inovelar-fechamento.github.io' && location.protocol !== 'file:' ? '<div class="aviso">Você abriu uma cópia do arquivo. O app só se conecta pelo link oficial: <b>inovelar-fechamento.github.io/summit.html</b></div>' : '') +
+      '<div class="card" id="passoEmail"><label>Seu e-mail</label><input id="em" type="email" autocomplete="email" placeholder="seuemail@remax.com.br" value="' + esc(ls('mp27_email') || '') + '"><div class="btns"><button class="btn" id="bEm" style="width:100%">Receber código</button></div></div>' +
+      '<div class="card hide" id="passoCod"><label>Digite o código de 6 números que chegou no seu e-mail</label><input id="cod" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="7" class="codigo"><div class="btns"><button class="btn" id="bCod" style="width:100%">Entrar</button></div><p class="sub" style="margin-top:10px">Não chegou? Olhe o spam ou <a href="#" id="trocar">pedir de novo</a>. O Brenno e a Andréia também conseguem ver o seu código.</p></div>' +
+      '</div></div>';
+    var em = $('#em'), bEm = $('#bEm');
+    bEm.onclick = function () {
+      var e = em.value.trim(); if (!e) return em.focus(); bEm.disabled = true; bEm.textContent = 'Enviando…';
+      chamar('pedirCodigo', [e]).then(function (r) { ls('mp27_email', e); $('#passoEmail').classList.add('hide'); $('#passoCod').classList.remove('hide'); $('#cod').focus(); if (r.aviso) toast(r.aviso, 7000); })
+        .catch(function (x) { toast(x.message, 5000); }).then(function () { bEm.disabled = false; bEm.textContent = 'Receber código'; });
+    };
+    em.onkeydown = function (ev) { if (ev.key === 'Enter') bEm.click(); };
+    $('#trocar').onclick = function (ev) { ev.preventDefault(); $('#passoCod').classList.add('hide'); $('#passoEmail').classList.remove('hide'); };
+    var bCod = $('#bCod'), cod = $('#cod');
+    bCod.onclick = function () {
+      bCod.disabled = true; bCod.textContent = 'Entrando…';
+      chamar('entrar', [em.value.trim(), cod.value]).then(function (r) { ls('mp27_token', r.token); S.token = r.token; iniciar(); })
+        .catch(function (x) { toast(x.message, 5000); bCod.disabled = false; bCod.textContent = 'Entrar'; });
+    };
+    cod.oninput = function () { if (cod.value.replace(/\D/g, '').length === 6) bCod.click(); };
+  }
+  function sair() { ls('mp27_token', null); ls('mp27_gestor', null); location.href = location.pathname + (MODO !== 'corretor' ? '?v=' + MODO : ''); }
+
+  // ================= INÍCIO =================
+  function iniciar() {
+    if (CHAVE_GESTOR) {   // painel privado do Brenno no Claude: entra direto, sem código
+      var k = CHAVE_GESTOR; CHAVE_GESTOR = null; history.replaceState(null, '', location.pathname + '?v=' + MODO);
+      app.innerHTML = '<div class="center"><p class="sub">Entrando…</p></div>';
+      return chamar('entrarGestor', [k]).then(function (r) { ls('mp27_gestor', r.token); S.token = r.token; iniciar(); }).catch(function (x) { telaLogin(x.message); });
+    }
+    if (MODO !== 'corretor' && ls('mp27_gestor')) S.token = S.token || ls('mp27_gestor');
+    S.token = S.token || ls('mp27_token');
+    if (!S.token) return telaLogin();
+    app.innerHTML = '<div class="center"><p class="sub">Carregando…</p></div>';
+    if (MODO === 'telao') return telao();
+    chamar('carregar', [S.token]).then(function (r) {
+      S.eu = r; aplicaConfig(r.config);
+      if (MODO === 'admin' || MODO === 'acessos') { if (!r.admin) return telaLogin('Este acesso é só do Brenno e da Andréia.'); return MODO === 'admin' ? admin() : acessos(); }
+      if (r.admin) { location.href = location.pathname + '?v=admin'; return; }
+      S.diag = r.diagnostico || {};
+      if (r.plano) { S.D = r.plano.dados || {}; S.versao = r.plano.versao; S.status = r.plano.status; S.aceiteEm = r.plano.aceiteEm; }
+      else { S.D = novoPlano(S.diag); S.versao = 0; S.status = 'rascunho'; }
+      S.aba = ls('mp27_aba') || 'inicio';
+      corretor();
+    }).catch(function (x) { if (/Sessão|acesso/.test(x.message)) { ls('mp27_token', null); return telaLogin(x.message); } app.innerHTML = '<div class="wrap center"><div><div class="erro">' + esc(x.message) + '</div><button class="btn" onclick="location.reload()">Tentar de novo</button></div></div>'; });
+  }
+
+  // ================= PLANO NOVO (pré-preenchido pelo iList) =================
+  var DK = { comissao: 'Comissão recebida (R$)', transacoes: 'Transações fechadas', cres: 'CREs captadas (novas propriedades)', conversao: 'Conversão das CREs (%)', ticket: 'Ticket médio (R$)', dias: 'Dias medianos captar→vender', ativos: 'Imóveis ativos hoje (venda)', revisado: '% carteira com preço revisado' };
+  function dval(k) { var v = S.diag && S.diag[DK[k]]; var n = M.num(v); return n === null ? '' : String(n).replace('.', ','); }
+  function novoPlano(diag) {
+    S.diag = diag || {};
+    var n = {}; Object.keys(DK).forEach(function (k) { n[k] = dval(k); });
+    return {
+      diag: { num: n, conferido: false, origens: {}, top3: ['', '', ''], notas: ['', '', '', '', '', ''] },
+      p1: { q: ['', '', '', '', '', '', ''], frase: '' },
+      passo2: { pessoal: {}, negocio: {}, sonhos: [{}, {}, {}], aliquota: '' },
+      passo3: { faixa: '', ticket: n.ticket, percTransacao: String(S.percPadrao || 3), conversao: n.conversao, mesesCarteira: '', faixaAlvo: '', clubeAlvo: '' },
+      metas: { cresIniciais: n.ativos, novas: [], perdidas: [], vendidas: [], transCaptacao: [], transVenda: [], comissaoMedia: [] },
+      p4: {}, p5: { horas: {}, funil: {}, regua: {}, canais: [], hab: [{}, {}, {}] }, p6: { comp: ['', '', ''], broker: ['', '', ''] },
+      trilha: { checks: {} }
+    };
+  }
+  function ehNovo() { var d = S.diag || {}; return String(d['Novo? (aviso)'] || '').toUpperCase() === 'SIM'; }
+
+  // ================= CONTAS =================
+  function calc() {
+    var D = S.D, h = { transacoes: D.diag.num.transacoes, comissao: D.diag.num.comissao, cres: D.diag.num.cres };
+    var r = M.plano({ passo2: D.passo2, passo3: D.passo3, metas: D.metas, diagnostico: { notas: D.diag.notas }, historico: h,
+      funil: { cresMes: null } });
+    r.funil = M.funil({ cresMes: r.passo3.captacoesMes, taxaV2paraCRE: D.p5.funil.v2cre, taxaV1paraV2: D.p5.funil.v1v2 });
+    var vgcMeta = r.metas.totalVGC || r.passo3.comissaoBruta || 0;
+    r.vgcMeta = vgcMeta; r.clubeMeta = vgcMeta ? M.clube(vgcMeta) : '';
+    return r;
+  }
+  var CAMPOS_PCT = [['diag.num.comissao'], ['p1.frase'], ['passo2.aliquota'], ['passo3.faixa'], ['passo3.ticket'], ['passo3.conversao'], ['passo3.mesesCarteira'], ['p4.regiao'], ['p4.tipo'], ['p5.diaRevisao'], ['p5.regua.qtdMes'], ['p6.comp.0'], ['p6.cadencia']];
+  function pega(o, cam) { return cam.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, o); }
+  function pctPreenchido() {
+    var D = S.D, t = CAMPOS_PCT.length + 2, f = 0;
+    CAMPOS_PCT.forEach(function (c) { var v = pega(D, c[0]); if (v !== undefined && v !== null && String(v).trim() !== '') f++; });
+    if (M.passo2(D.passo2).pessoalMes) f++; if ((D.metas.novas || []).some(function (x) { return String(x || '') !== ''; })) f++;
+    return Math.round(f / t * 100);
+  }
+  function resumo(r) {
+    return { vgcMeta: r.vgcMeta, transacoes: r.passo3.transacoes || 0, captacoes: r.passo3.captacoes || 0,
+      cresFim: (r.metas.estoqueFinal || (r.carteira && r.carteira.cresAtivas) || 0), clube: r.clubeMeta || '', estiloVidaAno: r.passo2.estiloVidaAno || 0, nivel: (r.realidade && r.realidade.nivel) || '' };
+  }
+
+  // ================= SALVAR (automático) =================
+  function marcarSujo() { S.sujo = true; atualizaSalvo('Salvando…'); clearTimeout(S.fila); S.fila = setTimeout(salvar, 1800); }
+  function atualizaSalvo(t) { var e = $('#salvo'); if (e) e.textContent = t; }
+  function salvar() {
+    if (S.salvando) { clearTimeout(S.fila); S.fila = setTimeout(salvar, 800); return; }
+    if (!S.sujo || S.status === 'aceito') return;
+    S.salvando = true; S.sujo = false;
+    var r = calc(); S.D.__resumo = resumo(r);
+    var abaNome = (ABAS.filter(function (a) { return a.id === S.aba; })[0] || {}).t || '';
+    chamar('salvar', [S.token, S.D, S.versao, { passo: abaNome, pct: pctPreenchido() }]).then(function (x) {
+      if (x.conflito) { S.D = x.dados; S.versao = x.versao; toast(x.msg, 6000); render(); return; }
+      S.versao = x.versao; atualizaSalvo('Salvo ' + x.salvoEm.slice(11, 16)); ls('mp27_backup', JSON.stringify({ v: S.versao, d: S.D }));
+    }).catch(function (e) { S.sujo = true; atualizaSalvo('⚠ não salvou — tentando de novo'); toast(e.message, 4000); clearTimeout(S.fila); S.fila = setTimeout(salvar, 6000); })
+      .then(function () { S.salvando = false; });
+  }
+  window.addEventListener('beforeunload', function (e) { if (S.sujo) { salvar(); e.preventDefault(); e.returnValue = ''; } });
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden' && S.sujo) salvar(); });
+
+  // ================= campos =================
+  function setCam(cam, v) { var ks = cam.split('.'), o = S.D; for (var i = 0; i < ks.length - 1; i++) { if (o[ks[i]] == null) o[ks[i]] = /^\d+$/.test(ks[i + 1]) ? [] : {}; o = o[ks[i]]; } o[ks[ks.length - 1]] = v; }
+  function trava() { return S.status === 'aceito' ? ' disabled' : ''; }
+  function inp(cam, ph, tipo, cls) { var v = pega(S.D, cam); return '<input type="text" ' + (tipo === 'n' ? 'inputmode="decimal" ' : '') + 'class="' + (tipo === 'n' ? 'num ' : '') + (cls || '') + '" data-c="' + cam + '" value="' + esc(v == null ? '' : v) + '" placeholder="' + esc(ph || '') + '"' + trava() + '>'; }
+  function txa(cam, ph) { return '<textarea data-c="' + cam + '" placeholder="' + esc(ph || '') + '"' + trava() + '>' + esc(pega(S.D, cam) || '') + '</textarea>'; }
+  function sel(cam, ops) { var v = String(pega(S.D, cam) || ''); return '<select data-c="' + cam + '"' + trava() + '><option value="">—</option>' + ops.map(function (o) { var val = o[0] !== undefined && Array.isArray(o) ? o[0] : o, t = Array.isArray(o) ? o[1] : o; return '<option value="' + esc(val) + '"' + (String(val) === v ? ' selected' : '') + '>' + esc(t) + '</option>'; }).join('') + '</select>'; }
+  function linha(rot, campo, dica) { return '<div class="row"><label>' + rot + (dica ? '<small>' + dica + '</small>' : '') + '</label>' + campo + '</div>'; }
+  function res(rot, val, id) { return '<div class="res"' + (id ? ' id="' + id + '"' : '') + '><span>' + rot + '</span><b>' + val + '</b></div>'; }
+  function ligaCampos(root) {
+    $$('[data-c]', root).forEach(function (el) {
+      var ev = el.tagName === 'SELECT' || el.type === 'checkbox' ? 'change' : 'input';
+      el.addEventListener(ev, function () {
+        var v = el.type === 'checkbox' ? el.checked : el.value;
+        if (el.classList.contains('num') && v !== '' && M.num(v) === null) { el.style.borderColor = 'var(--er)'; return; }
+        if (el.classList.contains('num') && M.num(v) !== null && M.num(v) < 0) { el.style.borderColor = 'var(--er)'; toast('Use só valores positivos.'); return; }
+        el.style.borderColor = ''; setCam(el.getAttribute('data-c'), v); marcarSujo(); recalc();
+      });
+    });
+  }
+
+  // ================= ABAS =================
+  var ABAS = [
+    { id: 'inicio', t: 'Início' }, { id: 'diag', t: 'Diagnóstico' }, { id: 'p1', t: '1 · Porquê' }, { id: 'p2', t: '2 · Estilo de vida' },
+    { id: 'p3', t: '3 · Metas' }, { id: 'p4', t: '4 · Onde jogo' }, { id: 'p5', t: '5 · Execução' }, { id: 'p6', t: '6 · Acompanho' },
+    { id: 'trilha', t: 'Trilha Ativação' }, { id: 'cockpit', t: 'Cockpit' }, { id: 'aceite', t: 'Aceite' }, { id: 'claude', t: 'Levar p/ meu Claude' }
+  ];
+  function corretor() {
+    app.innerHTML = '<div class="top"><div class="in"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo" id="salvo">' + (S.status === 'aceito' ? '✓ Aceito' : 'Tudo salvo') + '</span></div><div class="prog"><i id="pg" style="width:0"></i></div><div class="nav" id="nav"></div></div><div class="wrap" id="corpo"></div>' +
+      '<div class="foot"><button class="btn sec" id="ant">‹ Voltar</button><button class="btn" id="prox">Avançar ›</button></div>';
+    $('#ant').onclick = function () { mover(-1); }; $('#prox').onclick = function () { mover(1); };
+    render();
+  }
+  function mover(d) { var i = ABAS.map(function (a) { return a.id; }).indexOf(S.aba); i = Math.max(0, Math.min(ABAS.length - 1, i + d)); irPara(ABAS[i].id); }
+  function irPara(id) { if (S.sujo) salvar(); S.aba = id; ls('mp27_aba', id); render(); window.scrollTo(0, 0); }
+  function render() {
+    $('#nav').innerHTML = ABAS.map(function (a) { return '<button data-a="' + a.id + '" class="' + (a.id === S.aba ? 'on' : '') + '">' + a.t + '</button>'; }).join('');
+    $$('#nav button').forEach(function (b) { b.onclick = function () { irPara(b.getAttribute('data-a')); }; });
+    var on = $('#nav .on'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' });
+    $('#corpo').innerHTML = (TELAS[S.aba] || TELAS.inicio)();
+    ligaCampos($('#corpo')); if (EXTRA[S.aba]) EXTRA[S.aba](); recalc();
+  }
+  function recalc() {
+    var r = calc(); $('#pg') && ($('#pg').style.width = pctPreenchido() + '%');
+    $$('[data-r]').forEach(function (el) { var f = RES[el.getAttribute('data-r')]; if (f) el.innerHTML = f(r); });
+  }
+
+  // resultados dinâmicos (atualizam ao digitar)
+  var RES = {
+    auto: function (r) { var a = r.auto; return a.leitura ? '<div class="res"><span>Total ' + a.total + '</span></div><div class="ok">' + a.leitura + '</div>' : '<p class="sub">Falta dar nota em ' + a.faltam + ' afirmação(ões).</p>'; },
+    p2: function (r) { var p = r.passo2; return res('Orçamento pessoal · mês', brl(p.pessoalMes)) + res('Orçamento pessoal · ano (×12)', brl(p.pessoalAno)) + res('Orçamento do negócio · mês', brl(p.negocioMes)) + res('Orçamento do negócio · ano (×12)', brl(p.negocioAno)) + res('Sonhos no ano', brl(p.sonhosAno)) + res('Subtotal', brl(p.subtotal)) + (p.erro ? '<div class="aviso">' + p.erro + '</div>' : '') + '<div class="card" style="text-align:center"><small class="sub">O NÚMERO DO MEU ESTILO DE VIDA</small><div class="big">' + brl(p.estiloVidaAno) + '</div><span class="sub">por ano · ' + brl(p.estiloVidaMes) + ' por mês</span></div>'; },
+    p3a: function (r) { var p = r.passo3; return res('3 · Comissão bruta que preciso gerar', vgcHtml(p.comissaoBruta)) + avisoClube(p.comissaoBruta) + res('6 · Comissão média por transação', brl(p.comissaoMedia)) + '<div class="card" style="text-align:center"><small class="sub">7 · TRANSAÇÕES QUE PRECISO FECHAR EM 2027</small><div class="big">' + (p.transacoes === null ? '—' : p.transacoes) + '</div>' + (p.clube ? '<span class="chip">Clube com essa comissão: ' + esc(p.clube) + '</span>' : '') + (p.proximoClube ? ' <span class="sub">Faltam ' + brl(p.proximoClube.falta, 0) + ' para o ' + esc(p.proximoClube.nome) + '</span>' : '') + '</div>' + (p.erros.length ? '<div class="aviso">' + p.erros.join('<br>') + '</div>' : ''); },
+    sim: function (r) {
+      var p = r.passo3; if (!p.transacoes || !p.captacoes) return '';
+      var linhas = [1, 2, 3].map(function (n) { var x = M.simulaCaptacao(p, n); return '<tr><td>+' + n + ' por mês (' + x.captacoesMes + '/mês)</td><td>+' + x.transacoesExtra + ' vendas</td><td>+' + brl(x.vgcExtra, 0) + '</td><td><b style="' + corVGC(x.vgc) + '">' + brl(x.vgc, 0) + '</b><br><small>' + esc(x.clube) + '</small></td></tr>'; }).join('');
+      var pc = M.paraProximoClube(p);
+      return '<div class="card" style="border-color:var(--ok)"><h3 style="margin-top:0">E se eu captar mais?</h3><p class="sub">Pelas suas próprias contas: cada captação a mais, com a sua conversão de ' + pfmt(p.conversao) + ', vira venda; cada venda vale ' + brl(p.comissaoMedia, 0) + ' de comissão. Mais captação → mais vendas → mais VGC.</p>' +
+        '<div class="tab12"><table style="min-width:0;width:100%"><tr><th>Captações a mais</th><th>Vendas a mais no ano</th><th>VGC a mais</th><th>VGC 2027</th></tr>' + linhas + '</table></div>' +
+        (pc ? '<div class="ok" style="margin-top:10px">Para chegar ao <b>' + esc(pc.clube) + '</b>: <b>+' + pc.captacoesMes + ' captações por mês</b> (' + pc.captacoesAno + ' no ano), o que, pela sua conversão, dá cerca de +' + pc.transacoesExtra + ' vendas e leva o seu VGC para ' + brl(pc.vgcComIsso, 0) + '.</div>' : '') +
+        '<p class="sub" style="margin-bottom:0">Conta conservadora: as vendas a mais são arredondadas para baixo. Vale enquanto a sua conversão e o seu ticket se mantiverem — captação fora de preço não converte (p.29).</p></div>';
+    },
+    p3b: function (r) { var p = r.passo3; return res('3 · Captações que preciso fazer em 2027', p.captacoes === null ? '—' : p.captacoes) + res('4 · Captações por mês', p.captacoesMes === null ? '—' : p.captacoesMes + ' <small style="font-weight:400">(' + nfmt(p.captacoesMesExatas) + ')</small>'); },
+    real: function (r) { var x = r.realidade; if (!x.temHistorico) return '<div class="aviso">Você ainda não tem histórico de 12 meses no iList. Confirme as metas com o seu broker.</div>'; var cor = x.nivel === 'realista' ? 'ok' : x.nivel === 'desafiador' ? 'aviso' : 'erro'; return '<div class="' + cor + '"><b>Teste de realidade: ' + (x.nivel || '—') + '.</b> ' + (x.multTransacoes ? 'Seu plano pede ' + nfmt(x.multTransacoes, 2) + '× as transações dos últimos 12 meses. ' : '') + (x.crescimentoVGC !== undefined ? 'Comissão ' + (x.crescimentoVGC >= 0 ? '+' : '') + nfmt(x.crescimentoVGC) + '% sobre o ano. ' : '') + (x.nivel === 'muito acima do histórico' ? 'O book diz: suba o ticket, suba a captação ou revise o estilo de vida — e decida agora.' : '') + '</div>' + (x.planoB ? '<div class="card"><b>Plano B (ritmo do seu histórico + 20%)</b>' + res('Transações', x.planoB.transacoes) + (x.planoB.vgc ? res('VGC', brl(x.planoB.vgc, 0)) + res('Clube', esc(x.planoB.clube)) : '') + '</div>' : ''); },
+    cart: function (r) { var c = r.carteira; return c ? res('CREs ativas estimadas', nfmt(c.cresAtivas)) + '<div class="' + (c.alerta ? 'aviso' : 'ok') + '">' + esc(c.situacao) + (c.alerta ? ' — ' + c.alerta : '') + '</div>' : '<p class="sub">Preencha as captações por mês (Passo 3) e quantos meses o imóvel fica na sua carteira.</p>'; },
+    metas: function (r) { var m = r.metas; return res('Estoque no fim de 2027', nfmt(m.estoqueFinal)) + res('Transações no ano', nfmt(m.totalTransacoes)) + res('VGC no ano', vgcHtml(m.totalVGC)) + res('Clube', m.totalVGC ? esc(M.clube(m.totalVGC)) : '—') + avisoClube(m.totalVGC) + mesesCalc(m); },
+    funil: function (r) { var f = r.funil; return res('Segundas visitas (V2) por mês', f.v2Mes === null ? '—' : f.v2Mes) + res('Primeiras visitas (V1) por mês', f.v1Mes === null ? '—' : f.v1Mes) + res('Contatos com agendamento por semana', f.contatosSemana === null ? '—' : f.contatosSemana); },
+    horas: function () { var h = S.D.p5.horas || {}, t = ['prosp', 'visProp', 'atend', 'acomp'].reduce(function (a, k) { return a + (M.num(h[k]) || 0); }, 0); return res('Total de horas por semana', nfmt(t)); },
+    cock: function (r) { return cockpit(r); }
+  };
+  function mesesCalc(m) { return '<div class="tab12"><table><tr><th></th>' + MESES.map(function (x) { return '<th>' + x + '</th>'; }).join('') + '</tr><tr><th>Estoque</th>' + m.estoque.map(function (v) { return '<td class="c">' + nfmt(v) + '</td>'; }).join('') + '</tr><tr><th>Transações</th>' + m.transacoes.map(function (v) { return '<td class="c">' + nfmt(v) + '</td>'; }).join('') + '</tr><tr><th>VGC</th>' + m.vgc.map(function (v) { return '<td class="c">' + nfmt(v, 0) + '</td>'; }).join('') + '</tr></table></div>'; }
+  var EXEC_MIN = M.clubeMinimo(); // primeiro clube — vem da aba CONFIG (muda todo ano)
+  function aplicaConfig(cfg) { if (cfg && M.configurar(cfg)) EXEC_MIN = M.clubeMinimo(); if (cfg && cfg.percPadrao) S.percPadrao = cfg.percPadrao; }
+  function corVGC(v) { var n = M.num(v); if (!n) return ''; return n >= EXEC_MIN ? 'color:var(--ok)' : 'color:var(--er)'; }
+  function vgcHtml(v, dec) { var n = M.num(v); if (!n) return '—'; return '<span style="' + corVGC(n) + '">' + brl(n, dec) + '</span>'; }
+  function avisoClube(v) { var n = M.num(v); if (!n) return ''; if (n >= EXEC_MIN) { var c = M.clube(n), p = M.proximoClube(n); return '<div class="ok">Com esse planejamento você atinge o clube <b>' + esc(c) + '</b>.' + (p ? ' Faltam ' + brl(p.falta, 0) + ' para o ' + esc(p.nome) + '.' : '') + '</div>'; } return '<div class="erro"><b>Atenção:</b> com esse planejamento você não atinge nenhum clube. O primeiro, o ' + esc(M.CLUBES[M.CLUBES.length - 1].nome) + ', começa em ' + brl(EXEC_MIN, 0) + ' de VGC no ano — faltam ' + brl(EXEC_MIN - n, 0) + '. Nada fica travado: é só um alerta para você decidir.</div>'; }
+  var MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+  var ORIGENS = [['indCliente', 'Indicação de cliente'], ['indAmigo', 'Indicação de amigo, vizinho ou ex-colega'], ['portaria', 'Portaria, zelador ou síndico'], ['parceria', 'Parceria com colega REMAX'], ['portalRemax', 'Portal REMAX'], ['portais', 'Portais imobiliários'], ['anuncios', 'Anúncios Meta e Google'], ['redes', 'Redes sociais'], ['impresso', 'Material impresso, placa, carro adesivado'], ['openhouse', 'Open house e eventos']];
+  var AFIRM = ['Minhas metas do ano passado eram irreais para o meu momento', 'Não tive disciplina para manter a rotina que eu mesmo defini', 'Deixei imóveis parados na carteira sem revisar o preço', 'Trabalhei espalhado, sem território ou especialidade definida', 'Não acompanhei meus números durante o ano', 'Fiquei sobrecarregado e abandonei o plano no meio do caminho'];
+  var PERG = ['O que te inspira a acordar e trabalhar todos os dias?', 'Quais são suas metas de longo prazo na carreira de corretor imobiliário?', 'O que significa ‘sucesso’ para você?', 'Que aspecto do seu trabalho te traz mais satisfação?', 'Como você gostaria de ser lembrado pelos seus clientes e colegas?', 'O que te motivou a escolher a carreira de corretor imobiliário?', 'Quem ficará orgulhoso de você quando conseguir?'];
+  var PESSOAL = [['casa', 'Casa', 'Aluguel ou prestação, condomínio, IPTU, contas, mercado'], ['transporte', 'Transporte', 'Prestação, seguro, IPVA, combustível, estacionamento, app'], ['saude', 'Saúde', 'Plano, farmácia, dentista'], ['educacao', 'Educação', 'Escola, faculdade, cursos, material'], ['pessoal', 'Pessoal', 'Cuidados, academia, roupas, contribuições'], ['lazer', 'Lazer', 'Restaurantes, viagens, assinaturas'], ['financeiro', 'Financeiro', 'Tarifas, anuidades, empréstimos, pensão'], ['imprevistos', 'Imprevistos', 'Manutenção, presentes, auxílio à família']];
+  var NEGOCIO = [['locomocao', 'Locomoção', 'Carro a trabalho, combustível, estacionamento, app'], ['mktCaptacao', 'Marketing de captação', 'Prospecção do proprietário, impressos, brindes, patrocínios'], ['mktVenda', 'Marketing de venda', 'Portais, fotos, tour virtual, anúncios, placas'], ['portalBoost', 'Portal Boost', 'Mais visibilidade para seus imóveis'], ['administrativo', 'Administrativo', 'Fee da franquia, CRECI, REMARKT, telefonia, assistente'], ['formacao', 'Formação e eventos', 'Cursos, inscrições, viagens de treinamento']];
+  var CANAIS = ['Indicações e rede de relacionamento', 'Redes sociais e conteúdo próprio', 'Portaria, zelador e síndico', 'Carta aos vizinhos e material impresso', 'Parceria 50/50 com colegas REMAX', 'Placas e carro adesivado', 'Portais imobiliários', 'Open house e safári de corretores', 'Anúncios Meta e Google', 'Patrocínio local (comércio, associação, time)', 'Portal Boost'];
+
+  var TELAS = {
+    inicio: function () {
+      var n = ehNovo(), d = S.diag || {};
+      return '<h1>Olá, ' + esc(S.eu.nome.split(' ')[0]) + '!</h1><p class="sub">Este é o seu plano de 2027, no mesmo roteiro do book do Agent Summit. Tudo salva sozinho enquanto você digita — pode parar e voltar depois, em qualquer aparelho.</p>' +
+        (S.status === 'aceito' ? '<div class="ok">Seu plano foi aceito em ' + esc(S.aceiteEm) + '. Para mudar algo, peça ao Brenno ou à Andréia para reabrir.</div>' : '') +
+        (n ? '<div class="aviso"><b>Aviso:</b> ' + esc(d['Motivo do aviso'] || 'você ainda tem pouco histórico na loja') + '. Você pode preencher tudo normalmente; onde não houver dados anteriores, confirme os números com o seu broker. Se está começando, faça o Diagnóstico e os Passos 1 a 3 e siga para a <a href="#" data-ir="trilha">Trilha Ativação</a>.</div>' : '') +
+        '<div class="card"><h3 style="margin-top:0">Como funciona</h3><ol style="margin:0;padding-left:20px"><li>Confira os seus números dos últimos 12 meses (já trouxemos do iList).</li><li>Passos 1 a 6: o seu porquê, o número do seu estilo de vida, as metas, onde você joga, a sua semana e o acompanhamento.</li><li>Cockpit: o plano numa página.</li><li>Aceite por código no e-mail — vale como a sua assinatura.</li></ol></div>' +
+        '<div class="btns"><button class="btn" data-ir="diag">Começar pelo Diagnóstico ›</button><button class="btn sec" id="bSair">Sair deste aparelho</button></div>';
+    },
+    diag: function () {
+      var nums = [['comissao', 'Comissão recebida (R$)'], ['transacoes', 'Transações fechadas*'], ['cres', 'Captações com representação exclusiva (CREs)'], ['conversao', 'Conversão das CREs (%)'], ['ticket', 'Ticket médio das transações vendidas (R$)'], ['dias', 'Dias medianos entre captar e vender'], ['ativos', 'Imóveis ativos na carteira hoje'], ['revisado', '% da carteira que teve o preço revisado']];
+      var temDado = Object.keys(DK).some(function (k) { return dval(k) !== ''; });
+      return '<h1>Diagnóstico · Onde eu estou</h1><p class="sub">p.14 a 16 do book · últimos 12 meses (01/11/2025 a 31/10/2026) · fonte: relatórios oficiais do iList</p>' +
+        '<h2>Meu ano em números</h2>' + (temDado ? '<div class="aviso">Trouxemos estes números dos relatórios do iList. <b>Confira: se algum não bater com o que você tem, pode alterar.</b> Os campos com borda azul vieram do iList.</div>' : '<div class="aviso">Não encontramos histórico seu no iList. Preencha com os seus números ou deixe em branco e confirme com o seu broker.</div>') +
+        '<div class="card">' + nums.map(function (x) { return linha(x[1], inp('diag.num.' + x[0], k_ph(x[0]), 'n', dval(x[0]) !== '' ? 'pre' : ''), x[0] === 'revisado' ? 'Este não vem do iList — estime.' : (x[0] === 'transacoes' ? 'Cada lado do negócio conta 1; parceria conta 0,5.' : '')); }).join('') +
+        '<div class="check"><label><input type="checkbox" data-c="diag.conferido"' + (S.D.diag.conferido ? ' checked' : '') + trava() + '> Conferi os meus números</label></div></div>' +
+        origensHtml() +
+        '<h2>Minhas 3 maiores origens do ano</h2><div class="card">' + [0, 1, 2].map(function (i) { return linha('0' + (i + 1), sel('diag.top3.' + i, ORIGENS.map(function (o) { return o[1]; }))); }).join('') + '<p class="sub">Essas três recebem o seu investimento em 2027.</p></div>' +
+        '<h2>Onde eu estou hoje</h2><p class="sub">Nota de 1 (discordo totalmente) a 5 (concordo totalmente).</p><div class="card">' + AFIRM.map(function (a, i) { return linha((i + 1) + '. ' + a, sel('diag.notas.' + i, ['1', '2', '3', '4', '5'])); }).join('') + '<div data-r="auto"></div></div>';
+    },
+    p1: function () {
+      return '<h1>Passo 1 · Aspirações</h1><p class="sub">Saber o seu “porquê” é mais importante do que saber o seu “como”. Imagine um cenário em que dinheiro não é mais uma preocupação.</p>' +
+        PERG.map(function (p, i) { return '<div class="card"><b>0' + (i + 1) + ' · ' + p + '</b>' + txa('p1.q.' + i) + '</div>'; }).join('') +
+        '<div class="card" style="border-color:var(--ac)"><b>Com base nas respostas, como você resume o seu principal porquê em uma frase?</b>' + txa('p1.frase', 'Meu porquê é…') + '</div>' + mentorBox('p1');
+    },
+    p2: function () {
+      return '<h1>Passo 2 · Quanto custa a vida que eu quero</h1><p class="sub">Estime o gasto mensal de cada grupo. Não busque exatidão, busque ordem de grandeza. Despesa anual entra dividida por 12 (IPVA de R$ 1.200 = R$ 100 por mês).</p>' +
+        '<div class="aviso">Só você, o Brenno e a Andréia veem estes valores. No telão aparece apenas a soma da loja.</div>' +
+        '<h2>Meu orçamento pessoal (p.21)</h2><div class="card">' + PESSOAL.map(function (g) { return linha(g[1], inp('passo2.pessoal.' + g[0], 'R$ /mês', 'n'), g[2]); }).join('') + '</div>' +
+        '<h2>Meu orçamento do negócio (p.22)</h2><div class="card">' + NEGOCIO.map(function (g) { return linha(g[1], inp('passo2.negocio.' + g[0], 'R$ /mês', 'n'), g[2]); }).join('') + '</div>' +
+        '<h2>Meus sonhos (p.23)</h2><p class="sub">Três coisas que você quer realizar em 2027 e que custam dinheiro. Sonho com valor escrito é meta.</p><div class="card">' + [0, 1, 2].map(function (i) { return '<div class="grid2" style="margin:6px 0">' + inp('passo2.sonhos.' + i + '.nome', 'Meu sonho ' + (i + 1)) + inp('passo2.sonhos.' + i + '.valor', 'R$ no ano', 'n') + '</div>'; }).join('') + '</div>' +
+        '<h2>O número do meu estilo de vida (p.24)</h2><div class="card">' + linha('Minha alíquota estimada de imposto (%)', inp('passo2.aliquota', 'ex.: 15', 'n'), 'Use a alíquota efetiva que você já paga; se não souber, pergunte ao seu contador. Não é orientação fiscal.') + '<div data-r="p2"></div></div>';
+    },
+    p3: function () {
+      var d = S.D.diag.num;
+      return '<h1>Passo 3 · Onde eu quero chegar</h1><p class="sub">Ao fim deste passo você vai saber quantas transações, quantas captações e que tamanho de carteira o seu ano exige.</p>' +
+        '<h2>Da comissão à transação (p.26)</h2><div class="card">' + linha('1 · O número do meu estilo de vida', '<b class="num" style="display:block">' + brl(calc().passo2.estiloVidaAno) + '</b>', 'Vem do Passo 2') +
+        linha('2 · Minha faixa de comissionamento hoje (%)', sel('passo3.faixa', M.FAIXAS.map(function (f) { return [String(f), f + '%']; })), '40% início · 45% crescimento · 60% performance sólida · 70% máxima comissão') +
+        linha('4 · Meu ticket médio (R$)', inp('passo3.ticket', '', 'n', d.ticket ? 'pre' : ''), 'Do Diagnóstico' + (d.ticket ? ': ' + brl(d.ticket, 0) : '')) +
+        linha('5 · Percentual de comissão por transação (%)', inp('passo3.percTransacao', '3', 'n'), 'O book usa 3%') + '<div data-r="p3a"></div></div><div data-r="real"></div>' +
+        '<div class="card"><h3 style="margin-top:0">Minha próxima faixa</h3>' + linha('Faixa que quero alcançar (%)', sel('passo3.faixaAlvo', M.FAIXAS.map(function (f) { return [String(f), f + '%']; }))) + linha('Clube que quero conquistar em 2027', sel('passo3.clubeAlvo', M.CLUBES.slice().reverse().map(function (c) { return c.nome; }))) + '</div>' +
+        '<h2>Da transação à captação (p.29)</h2><div class="card">' + linha('2 · Minha conversão da captação (%)', inp('passo3.conversao', 'ex.: 22', 'n', d.conversao ? 'pre' : ''), 'Do Diagnóstico' + (d.conversao ? ': ' + d.conversao + '%' : '') + ' · sem histórico, combine com o broker') + '<div data-r="p3b"></div><div data-r="sim"></div><p class="sub">Carteira só é real com preço correto. Não aceite captação só para aumentar a carteira.</p></div>' +
+        '<h2>Minha carteira alvo (p.30)</h2><div class="card">' + linha('Quantos meses, em média, cada imóvel fica na sua carteira', inp('passo3.mesesCarteira', 'ex.: 3', 'n')) + '<div data-r="cart"></div><p class="sub">Régua: 0–4 não tem negócio · 5–10 lento · 11–15 saudável · 16–18 negócio feliz · 19–23 alta performance com apoio · mais de 23 perda de eficácia.</p></div>' +
+        '<h2>Minhas metas para 2027 (p.31)</h2><div class="card">' + linha('Quantidade inicial de CREs ativas', inp('metas.cresIniciais', '', 'n', d.ativos ? 'pre' : '')) + '<div class="btns"><button class="btn sec" id="bDistr"' + trava() + '>Distribuir minhas metas nos 12 meses</button></div><p class="sub">Preenche os meses a partir das contas acima: captações do Passo 3, vendidas pela sua conversão e canceladas/expiradas para a carteira chegar à carteira alvo (p.30). Você ajusta mês a mês depois.</p>' + tabelaMetas() + '<div data-r="metas"></div></div>';
+    },
+    p4: function () {
+      return '<h1>Passo 4 · Onde eu jogo</h1><p class="sub">A essência da estratégia é definir o que não será feito.</p><div class="card">' +
+        linha('01 · Região — minha área de atuação', inp('p4.regiao', 'ex.: Samambaia Sul, quadras 300 a 500')) + linha('Quanto da minha carteira está hoje na região (%)', inp('p4.regiaoHoje', '', 'n')) + linha('Meta para o fim de 2027 (%)', inp('p4.regiaoMeta', '', 'n')) +
+        linha('02 · Tipo de imóvel em que quero ser referência', inp('p4.tipo', 'ex.: apartamento de 2 quartos')) + linha('03 · Faixa de preço — de (R$)', inp('p4.faixaDe', '', 'n')) + linha('até (R$)', inp('p4.faixaAte', '', 'n')) +
+        linha('Quanto da minha carteira quero nesse tipo e faixa no fim de 2027 (%)', inp('p4.pctTipoMeta', '', 'n')) + '</div><div class="ok">+45% de vendas e ciclo 25 dias mais rápido quando o imóvel está no seu posicionamento (BI REMAX Brasil, set/2026).</div>';
+    },
+    p5: function () {
+      return '<h1>Passo 5 · Como eu executo</h1><p class="sub">Plano que não vira semana não vira resultado.</p>' +
+        '<h2>Minha semana padrão (p.35)</h2><div class="card">' + linha('Posicionamento e prospecção', inp('p5.horas.prosp', 'h', 'n'), 'Presença na região (1 h/dia), lista FROG, FSBO, ligações') + linha('Visitas ao proprietário', inp('p5.horas.visProp', 'h', 'n'), 'V1, V2, Plano de Marketing e ACM') + linha('Atendimento ao comprador', inp('p5.horas.atend', 'h', 'n'), 'Visitas, propostas, negociação') + linha('Acompanhamento e revisão', inp('p5.horas.acomp', 'h', 'n'), 'Relatório ao proprietário, imóveis parados, revisão de preço') + '<div data-r="horas"></div>' + linha('Meu dia de revisão de estoque', sel('p5.diaRevisao', ['seg', 'ter', 'qua', 'qui', 'sex'])) + '<p class="sub">Regra dos 4 pontos: contato com agendamento 0,5 · V1 1 · CRE assinada 2 · venda 4. Nenhum dia termina sem 4 pontos.</p></div>' +
+        '<h2>Meu funil de captação (p.36)</h2><div class="card">' + linha('De cada 100 segundas visitas (V2), quantas viram CRE (%)', inp('p5.funil.v2cre', 'ex.: 50', 'n')) + linha('De cada 100 primeiras visitas (V1), quantas viram V2 (%)', inp('p5.funil.v1v2', 'ex.: 60', 'n')) + '<div data-r="funil"></div>' + linha('Pessoas no meu CRM hoje', inp('p5.crmHoje', '', 'n')) + linha('Quantas quero ter no fim de 2027', inp('p5.crmMeta', '', 'n')) + '</div>' +
+        '<h2>Minha régua de revisão de preço (p.37)</h2><div class="card"><p class="sub" style="margin-top:0">Dia 30: leitura de mercado · Dia 60: primeira revisão · Dia 90: decisão com o proprietário.</p>' + linha('Todo mês eu reviso o preço de pelo menos (imóveis)', inp('p5.regua.qtdMes', '', 'n')) + linha('Nenhum imóvel meu passa de (dias) sem revisão', inp('p5.regua.maxDias', '', 'n')) + linha('Meu ritual de revisão acontece', inp('p5.regua.ritual', 'ex.: toda terça, 9h')) + '</div>' +
+        '<h2>Onde vou investir em marketing (p.38)</h2><div class="card"><p class="sub" style="margin-top:0">Escolha no máximo 3 canais.</p><div class="check" id="canais">' + CANAIS.map(function (c) { return '<label><input type="checkbox" data-canal="' + esc(c) + '"' + ((S.D.p5.canais || []).indexOf(c) >= 0 ? ' checked' : '') + trava() + '> ' + c + '</label>'; }).join('') + '</div>' + linha('Quanto vou investir por mês (R$)', inp('p5.investMes', '', 'n'), 'Confira com o orçamento do negócio (Passo 2)') + '</div>' +
+        '<h2>Minha agenda de desenvolvimento (p.39)</h2><div class="card">' + [0, 1, 2].map(function (i) { return '<div style="margin:8px 0"><b>' + (i + 1) + '</b>' + inp('p5.hab.' + i + '.hab', 'Habilidade que quero desenvolver') + '<div class="grid2" style="margin-top:6px">' + inp('p5.hab.' + i + '.num', 'Número que ela melhora') + inp('p5.hab.' + i + '.onde', 'Onde vou aprender') + '</div></div>'; }).join('') + linha('Horas por semana reservadas para aprender', inp('p5.horasEstudo', '', 'n')) + '</div>';
+    },
+    p6: function () {
+      return '<h1>Passo 6 · Como eu acompanho</h1><p class="sub">O painel mensal e o acompanhamento semanal ficam neste app durante 2027 — sem imprimir nada.</p>' +
+        '<h2>Meu pacto com o broker (p.44)</h2><div class="card"><b>Eu, ' + esc(S.eu.nome) + ', me comprometo a:</b>' + [0, 1, 2].map(function (i) { return '<div style="margin:6px 0">' + inp('p6.comp.' + i, '0' + (i + 1)) + '</div>'; }).join('') +
+        '<b>O broker se compromete a (combinem juntos):</b>' + [0, 1, 2].map(function (i) { return '<div style="margin:6px 0">' + inp('p6.broker.' + i, '0' + (i + 1)) + '</div>'; }).join('') +
+        linha('Nossa cadência de acompanhamento', sel('p6.cadencia', ['semanal', 'quinzenal', 'mensal'])) + linha('Dia e hora', inp('p6.diaHora', 'ex.: segunda, 9h')) + '</div><div class="aviso"><b>A regra do primeiro mês:</b> fechou um mês sem comissão? Na mesma semana, sente com o seu broker e revisem juntos o funil e a carteira.</div>';
+    },
+    trilha: function () {
+      var sem = { s1: ['CRECI e cadastro na unidade em dia', 'Foto profissional, cartão e assinatura de e-mail no padrão REMAX', 'Acesso ao iList e ao MaxCenter funcionando', 'Estudar a Cartilha do Corretor (Introdução até Passo 1)', 'Mensagem sobre a nova carreira para 20 pessoas por dia', 'Reuniões da imobiliária, FIC e Universidade REMAX'], s2: ['Mensagem para 20 pessoas por dia', 'Perfil do Instagram e WhatsApp Business', 'Visitar os comércios da região e me apresentar', 'Listar os imóveis à venda na região (inclusive pelo proprietário)', 'Mapear a região com as fichas de pesquisa', 'Acompanhar um colega em uma V1'], s3: ['Lista FROG cadastrada no CRM', 'Mensagem para 20 pessoas por dia', 'Carta aos vizinhos na minha região', 'Montar o meu dossiê do corretor', 'Direct para 10 pessoas do Instagram por dia', '3 contatos “à venda pelo proprietário” por dia', 'Definir com o broker a minha região'], s4: ['Agendar e realizar a minha primeira V1', 'Montar a primeira ACM e validar com o broker', 'Treinar a V2 em role-play com o broker', 'Revisar as 4 semanas com o parceiro de cobrança'] };
+      var nomes = { s1: 'Semana 1 — Me preparar', s2: 'Semana 2 — Conhecer a minha região', s3: 'Semana 3 — Ativar a minha rede', s4: 'Semana 4 — Ir a mercado' };
+      return '<h1>Trilha Ativação</h1><p class="sub">Para quem está começando. A meta de 2027 é uma só: <b>a primeira venda</b>. Primeira CRE até o dia 45, três CREs até o dia 90.</p>' + (ehNovo() ? '' : '<div class="ok">Você já tem histórico — esta trilha é opcional para você.</div>') +
+        '<div class="card">' + linha('Data-alvo da primeira CRE', '<input type="date" data-c="trilha.dataCRE" value="' + esc(S.D.trilha.dataCRE || '') + '"' + trava() + '>') + linha('Data-alvo da primeira venda', '<input type="date" data-c="trilha.dataVenda" value="' + esc(S.D.trilha.dataVenda || '') + '"' + trava() + '>') + linha('Meu parceiro de cobrança', inp('trilha.parceiro', 'colega ou broker')) + '<b>O que eu preciso aprender nos próximos 30 dias</b>' + txa('trilha.aprender') + '</div>' +
+        Object.keys(sem).map(function (k) { return '<div class="card"><b>' + nomes[k] + '</b><div class="check">' + sem[k].map(function (t, i) { var id = k + '_' + i; return '<label><input type="checkbox" data-c="trilha.checks.' + id + '"' + (S.D.trilha.checks[id] ? ' checked' : '') + trava() + '> ' + t + '</label>'; }).join('') + '</div></div>'; }).join('');
+    },
+    cockpit: function () { return '<h1>Meu cockpit</h1><p class="sub">Meu plano em uma página. Se um número daqui mudar, muda no plano também. Revise a cada 90 dias.</p><div data-r="cock"></div><div class="btns"><button class="btn sec" onclick="window.print()">Salvar em PDF</button></div>'; },
+    aceite: function () {
+      if (S.status === 'aceito') return '<h1>Aceite</h1><div class="ok">Plano aceito em ' + esc(S.aceiteEm) + '. O PDF foi enviado para o seu e-mail.</div>';
+      var faltam = []; var r = calc(); if (!S.D.p1.frase) faltam.push('Passo 1 · a frase do seu porquê'); if (!r.passo2.estiloVidaAno) faltam.push('Passo 2 · o número do estilo de vida'); if (!r.passo3.transacoes) faltam.push('Passo 3 · transações'); if (!S.D.diag.conferido) faltam.push('Diagnóstico · marcar “Conferi os meus números”');
+      return '<h1>Aceite do plano</h1><p class="sub">Confira o Cockpit. Ao dar o aceite, você recebe um código no e-mail; digitar o código vale como a sua assinatura. Depois disso o plano fica travado (o Brenno ou a Andréia podem reabrir).</p>' +
+        (faltam.length ? '<div class="aviso">Antes do aceite, preencha:<br>• ' + faltam.join('<br>• ') + '</div>' : '<div class="ok">Tudo pronto para o aceite.</div>') +
+        '<div class="card"><div class="btns"><button class="btn" id="bPedeAceite"' + (faltam.length ? ' disabled' : '') + '>Receber código de aceite</button></div><div id="boxAceite" class="hide" style="margin-top:12px"><input id="codAceite" class="codigo" inputmode="numeric" maxlength="7" placeholder="000000"><div class="btns"><button class="btn" id="bConfAceite">Confirmar aceite</button></div></div></div>';
+    },
+    claude: function () {
+      return '<h1>Levar para o meu Claude</h1><p class="sub">Se você usa o Claude, copie o texto abaixo e cole numa conversa nova (ou num Projeto). Ele vai entender o seu plano, o método do book e pode acompanhar o seu ano, montar painéis e cobrar a sua semana.</p><div class="card"><textarea id="txClaude" style="min-height:320px" readonly></textarea><div class="btns"><button class="btn" id="bCopiar">Copiar texto</button><button class="btn sec" id="bBaixar">Baixar arquivo .md</button></div></div>';
+    }
+  };
+  function k_ph(k) { return { comissao: 'R$', ticket: 'R$', conversao: '%', revisado: '%' }[k] || ''; }
+  function origensHtml() {
+    return '<h2>De onde vieram meus negócios (p.15)</h2><p class="sub">Nos últimos 12 meses, de onde vieram os negócios que você fechou?</p><div class="card"><div class="row" style="font-weight:700"><span>Origem</span><span class="grid2"><small>Capt. vendidas</small><small>Compradores</small></span></div>' +
+      ORIGENS.map(function (o) { return '<div class="row"><label>' + o[1] + '</label><span class="grid2">' + inp('diag.origens.' + o[0] + '.cap', '', 'n') + inp('diag.origens.' + o[0] + '.comp', '', 'n') + '</span></div>'; }).join('') +
+      (S.diag && S.diag['Origem dos compradores'] ? '<p class="sub">No iList, a origem dos seus compradores foi: <b>' + esc(S.diag['Origem dos compradores']) + '</b>.</p>' : '') + '</div>';
+  }
+  function tabelaMetas() {
+    var L = [['novas', 'Meta de novas CREs'], ['perdidas', 'Meta de CREs canceladas/expiradas'], ['vendidas', 'Meta de CREs vendidas'], ['transCaptacao', 'Transações de captação'], ['transVenda', 'Transações de venda'], ['comissaoMedia', 'Comissão média por transação (R$)']];
+    return '<div class="tab12"><table><tr><th>Linha</th>' + MESES.map(function (m) { return '<th>' + m + '</th>'; }).join('') + '</tr>' + L.map(function (l) { return '<tr><th style="text-align:left">' + l[1] + '</th>' + MESES.map(function (m, i) { return '<td>' + inp('metas.' + l[0] + '.' + i, '', 'n') + '</td>'; }).join('') + '</tr>'; }).join('') + '</table></div>';
+  }
+  function distribui(total, n) { total = Math.round(total); var b = Math.floor(total / n), r = total - b * n, o = []; for (var i = 0; i < n; i++) o.push(b + (i < r ? 1 : 0)); return o; }
+  var EXTRA = {
+    inicio: function () { $$('[data-ir]').forEach(function (a) { a.onclick = function (e) { e.preventDefault(); irPara(a.getAttribute('data-ir')); }; }); var b = $('#bSair'); if (b) b.onclick = function () { if (confirm('Sair deste aparelho? Seu plano continua salvo.')) sair(); }; },
+    p3: function () {
+      var b = $('#bDistr'); if (!b) return;
+      b.onclick = function () {
+        var r = calc().passo3; if (!r.transacoes || !r.captacoes) return toast('Preencha primeiro o Passo 3 até ter transações e captações.');
+        var tem = (S.D.metas.novas || []).some(function (x) { return String(x || '') !== ''; });
+        if (tem && !confirm('Isso substitui os valores mês a mês que você já colocou. Continuar?')) return;
+        var tc = Math.ceil(r.transacoes / 2), tv = r.transacoes - tc, conv = M.pct(S.D.passo3.conversao) || 0;
+        var ini = M.num(S.D.metas.cresIniciais) || 0, vend = Math.round(r.captacoes * conv), cart = calc().carteira;
+        var alvo = cart ? Math.round(cart.cresAtivas) : ini;                       // p.30: carteira alvo; sem ela, mantém o estoque de hoje
+        var perd = Math.max(0, ini + r.captacoes - vend - alvo);                    // o que não vende sai por cancelamento/expiração
+        S.D.metas.novas = distribui(r.captacoes, 12); S.D.metas.vendidas = distribui(vend, 12); S.D.metas.perdidas = distribui(perd, 12);
+        S.D.metas.transCaptacao = distribui(tc, 12); S.D.metas.transVenda = distribui(tv, 12);
+        S.D.metas.comissaoMedia = Array(12).fill(r.comissaoMedia ? String(r.comissaoMedia).replace('.', ',') : '');
+        marcarSujo(); render(); toast('Metas distribuídas. Ajuste os meses que quiser.');
+      };
+    },
+    p5: function () { $$('[data-canal]').forEach(function (c) { c.onchange = function () { var a = S.D.p5.canais = S.D.p5.canais || [], v = c.getAttribute('data-canal'); if (c.checked) { if (a.length >= 3) { c.checked = false; return toast('Escolha no máximo 3 canais.'); } a.push(v); } else a.splice(a.indexOf(v), 1); marcarSujo(); }; }); },
+    aceite: function () {
+      var b = $('#bPedeAceite'); if (!b) return;
+      b.onclick = function () { b.disabled = true; salvarJa().then(function () { return chamar('pedirAceite', [S.token]); }).then(function (r) { $('#boxAceite').classList.remove('hide'); toast(r.enviado ? 'Código enviado para o seu e-mail.' : 'Peça o código ao Brenno ou à Andréia.', 6000); }).catch(function (e) { toast(e.message, 5000); b.disabled = false; }); };
+      $('#bConfAceite').onclick = function () { chamar('confirmarAceite', [S.token, $('#codAceite').value]).then(function (r) { S.status = 'aceito'; S.aceiteEm = r.aceitoEm; toast('Plano aceito! Parabéns.', 5000); corretor(); }).catch(function (e) { toast(e.message, 5000); }); };
+    },
+    claude: function () {
+      var t = textoClaude(); $('#txClaude').value = t;
+      $('#bCopiar').onclick = function () { (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { toast('Copiado!'); }).catch(function () { $('#txClaude').select(); document.execCommand('copy'); toast('Copiado!'); }); };
+      $('#bBaixar').onclick = function () { var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/markdown' })); a.download = 'Meu Plano 2027 - ' + S.eu.nome + '.md'; a.click(); };
+    }
+  };
+  function salvarJa() { clearTimeout(S.fila); if (!S.sujo) return Promise.resolve(); S.sujo = true; return new Promise(function (ok) { salvar(); var t = setInterval(function () { if (!S.salvando && !S.sujo) { clearInterval(t); ok(); } }, 300); setTimeout(function () { clearInterval(t); ok(); }, 15000); }); }
+
+  // ================= cockpit e texto para o Claude =================
+  function cockpit(r) {
+    var D = S.D, k = function (rot, v, pg) { return '<div class="k"><small>' + rot + (pg ? ' · ' + pg : '') + '</small><b>' + v + '</b></div>'; };
+    var h = D.p5.horas || {};
+    return '<div class="card"><h3 style="margin-top:0">Meu porquê e meu número</h3><p>' + esc(D.p1.frase || '—') + '</p><div class="cock">' + k('Estilo de vida por ano', brl(r.passo2.estiloVidaAno, 0), 'p.24') + k('Estilo de vida por mês', brl(r.passo2.estiloVidaMes, 0), 'p.24') + '</div></div>' +
+      '<div class="card"><h3 style="margin-top:0">Minha meta 2027</h3><div class="cock">' + k('Transações no ano', nfmt(r.passo3.transacoes), 'p.26') + k('Captações no ano · por mês', nfmt(r.passo3.captacoes) + ' · ' + nfmt(r.passo3.captacoesMes), 'p.29') + k('CREs ativas no fim de 2027', nfmt(r.metas.estoqueFinal || (r.carteira && r.carteira.cresAtivas)), 'p.31') + k('VGC 2027 · clube', vgcHtml(r.vgcMeta, 0) + ' · ' + esc(r.clubeMeta || '—'), 'p.31') + '</div>' + avisoClube(r.vgcMeta) + '</div>' +
+      '<div class="card"><h3 style="margin-top:0">Minha rotina</h3><div class="cock">' + k('Horas/semana: captação · atendimento · desenvolvimento', nfmt((M.num(h.prosp) || 0) + (M.num(h.visProp) || 0)) + ' · ' + nfmt(M.num(h.atend) || 0) + ' · ' + nfmt(M.num(D.p5.horasEstudo) || 0), 'p.35') + k('Dia fixo da revisão de preço', esc(D.p5.diaRevisao || '—'), 'p.35') + k('Funil do mês: contatos/sem · V1 · V2 · captações', nfmt(r.funil.contatosSemana) + ' · ' + nfmt(r.funil.v1Mes) + ' · ' + nfmt(r.funil.v2Mes) + ' · ' + nfmt(r.passo3.captacoesMes), 'p.36') + k('3 canais · investimento/mês', esc((D.p5.canais || []).join(', ') || '—') + ' · ' + brl(D.p5.investMes, 0), 'p.38') + k('Habilidade nº 1', esc((D.p5.hab[0] || {}).hab || '—'), 'p.39') + '</div></div>' +
+      '<div class="card"><h3 style="margin-top:0">Onde eu jogo · Como eu executo</h3><div class="cock">' + k('Minha região', esc(D.p4.regiao || '—'), 'p.33') + k('Tipo e faixa de preço', esc(D.p4.tipo || '—') + ' · ' + brl(D.p4.faixaDe, 0) + ' a ' + brl(D.p4.faixaAte, 0), 'p.33') + k('Acompanhamento com o broker', esc((D.p6.cadencia || '—') + ' · ' + (D.p6.diaHora || '')), 'p.44') + k('Compromisso nº 1 do pacto', esc(D.p6.comp[0] || '—'), 'p.44') + '</div></div>';
+  }
+  function textoClaude() {
+    var r = calc(), D = S.D, L = [];
+    L.push('# Meu Plano 2027 — ' + S.eu.nome + ' (RE/MAX Inovelar)', '', 'Você é o meu parceiro de execução em 2027. Este é o meu plano, feito no Agent Summit 2027 com o método do book "Planejamento 2027 do Corretor Empreendedor REMAX" (Diagnóstico, Passos 1 a 6, Trilha Ativação e Cockpit). Use estes números como a minha meta oficial, acompanhe o meu ano comigo, me cobre a semana (regra dos 4 pontos: contato com agendamento 0,5 · V1 1 · CRE 2 · venda 4; meta 20 por semana), a régua de revisão de preço (dias 30/60/90) e me ajude a montar um painel mensal com: novas CREs, CREs ativas, CREs revisadas, transações e comissão. Não invente números: pergunte quando faltar.', '');
+    L.push('## Meu porquê', D.p1.frase || '(não preenchido)', '');
+    L.push('## Meus números dos últimos 12 meses (iList)'); Object.keys(DK).forEach(function (k) { L.push('- ' + DK[k] + ': ' + (D.diag.num[k] || '—')); }); L.push('');
+    L.push('## Estilo de vida', '- Por ano: ' + brl(r.passo2.estiloVidaAno) + ' · por mês: ' + brl(r.passo2.estiloVidaMes), '- Alíquota de imposto: ' + pfmt(D.passo2.aliquota), '');
+    L.push('## Metas 2027', '- Faixa de comissionamento: ' + pfmt(D.passo3.faixa) + ' (quero chegar a ' + pfmt(D.passo3.faixaAlvo) + ')', '- Comissão bruta necessária: ' + brl(r.passo3.comissaoBruta), '- Ticket médio: ' + brl(D.passo3.ticket) + ' · comissão por transação: ' + pfmt(D.passo3.percTransacao) + ' = ' + brl(r.passo3.comissaoMedia), '- Transações no ano: ' + nfmt(r.passo3.transacoes), '- Conversão das captações: ' + pfmt(D.passo3.conversao) + ' · captações no ano: ' + nfmt(r.passo3.captacoes) + ' (' + nfmt(r.passo3.captacoesMes) + ' por mês)', '- CREs ativas no fim de 2027: ' + nfmt(r.metas.estoqueFinal || (r.carteira && r.carteira.cresAtivas)), '- VGC 2027: ' + brl(r.vgcMeta) + ' · clube: ' + (r.clubeMeta || '—') + ' (alvo: ' + (D.passo3.clubeAlvo || '—') + ')', '');
+    L.push('## Metas mês a mês', '| Mês | Novas CREs | Vendidas | Transações | VGC |', '|---|---|---|---|---|'); MESES.forEach(function (m, i) { L.push('| ' + m + ' | ' + (D.metas.novas[i] || '') + ' | ' + (D.metas.vendidas[i] || '') + ' | ' + r.metas.transacoes[i] + ' | ' + nfmt(r.metas.vgc[i], 0) + ' |'); }); L.push('');
+    L.push('## Onde eu jogo', '- Região: ' + (D.p4.regiao || '—'), '- Tipo de imóvel: ' + (D.p4.tipo || '—') + ' · faixa: ' + brl(D.p4.faixaDe, 0) + ' a ' + brl(D.p4.faixaAte, 0), '');
+    var h = D.p5.horas || {};
+    L.push('## Como eu executo', '- Semana padrão (h): prospecção ' + (h.prosp || 0) + ' · visitas ao proprietário ' + (h.visProp || 0) + ' · comprador ' + (h.atend || 0) + ' · acompanhamento ' + (h.acomp || 0), '- Dia de revisão de estoque: ' + (D.p5.diaRevisao || '—'), '- Funil: ' + nfmt(r.funil.contatosSemana) + ' contatos com agendamento/semana → ' + nfmt(r.funil.v1Mes) + ' V1/mês → ' + nfmt(r.funil.v2Mes) + ' V2/mês → ' + nfmt(r.passo3.captacoesMes) + ' CREs/mês', '- Revisão de preço: ' + (D.p5.regua.qtdMes || '—') + ' imóveis/mês; nenhum passa de ' + (D.p5.regua.maxDias || '—') + ' dias sem revisão; ritual: ' + (D.p5.regua.ritual || '—'), '- Canais de marketing: ' + ((D.p5.canais || []).join(', ') || '—') + ' · ' + brl(D.p5.investMes, 0) + '/mês', '- Desenvolvimento: ' + D.p5.hab.map(function (x) { return x && x.hab; }).filter(Boolean).join('; '), '');
+    L.push('## Pacto com o broker', '- Eu me comprometo: ' + D.p6.comp.filter(Boolean).join('; '), '- O broker se compromete: ' + D.p6.broker.filter(Boolean).join('; '), '- Cadência: ' + (D.p6.cadencia || '—') + ' · ' + (D.p6.diaHora || ''), '');
+    L.push('## Agenda 2027 da rede', '- 28/01 Kick Off · 03/02, 15/04, 15/07 e 21/10 Agent Summit Review · 14/04, 14/07, 20/10 Max Evolution · 19 a 21/05 C7 · 18 e 19/11 Agent Summit 2028', '');
+    L.push('## Como me ajudar', '1. Toda segunda: pergunte meus pontos da semana anterior e o plano da semana.', '2. Todo mês: monte o painel mensal (5 números) e compare com as metas acima; se fechei um mês sem comissão, me lembre da "regra do primeiro mês".', '3. A cada 90 dias: revise o cockpit comigo.', '4. Quando eu quiser desistir, me lembre do meu porquê.');
+    return L.join('\n');
+  }
+  function mentorBox() { return ''; } // o mentor IA entra quando a chave estiver ligada no servidor
+
+  // ================= TELÃO — espelho do Summit =================
+  var ETAPAS = [['auto', 'Automático (gira)'], ['abertura', 'Abertura'], ['diag', 'Diagnóstico'], ['p1', 'Passo 1 · Porquê'], ['p2', 'Passo 2 · Estilo de vida'], ['p3', 'Passo 3 · Metas'], ['p4', 'Passo 4 · Onde jogo'], ['p5', 'Passo 5 · Execução'], ['p6', 'Passo 6 · Acompanho'], ['trilha', 'Trilha Ativação'], ['fechamento', 'Fechamento']];
+  function barras(obj, total, fmt) {
+    var k = Object.keys(obj || {}).filter(function (x) { return x && x !== 'undefined'; }).sort(function (a, b) { return obj[b] - obj[a]; });
+    if (!k.length) return '<p class="sub">Aguardando as respostas da equipe…</p>';
+    var mx = Math.max.apply(null, k.map(function (x) { return obj[x]; }));
+    return k.slice(0, 8).map(function (x) { return '<div style="display:grid;grid-template-columns:44% 1fr 56px;gap:12px;align-items:center;font-size:19px;padding:4px 0"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(fmt ? fmt(x) : x) + '</span><span class="bar" style="height:14px;margin:0"><i style="height:14px;width:' + Math.round(obj[x] / mx * 100) + '%"></i></span><b style="text-align:right;color:var(--ac)">' + nfmt(obj[x]) + '</b></div>'; }).join('');
+  }
+  function bloco(t, html, span) { return '<div class="kpi" style="' + (span ? 'grid-column:span ' + span : '') + '"><small style="font-size:16px">' + t + '</small><div style="margin-top:8px">' + html + '</div></div>'; }
+  function grande(v, sub) { return '<b style="font-size:44px">' + v + '</b>' + (sub ? '<small style="display:block;font-size:15px">' + sub + '</small>' : ''); }
+  var PAINEIS = {
+    abertura: function (t) { var a = t.ag, L = a.loja || {}; return bloco('A loja nos últimos 12 meses (relatórios do iList)', grande(brl(t.totais.vgc12m, 0), nfmt(t.totais.trans12m) + ' transações · ' + nfmt(L.cres, 0) + ' captações exclusivas · ticket médio ' + brl(L.ticket, 0)), 2) + bloco('Hoje na carteira', grande(nfmt(L.ativos, 0) + ' imóveis', brl(L.estoque, 0) + ' em estoque')) + bloco('A equipe no Meu Plano 2027', grande(t.contagem.aceitos + t.contagem.preenchendo + ' / ' + t.contagem.total, t.contagem.aceitos + ' com plano aceito')); },
+    diag: function (t) { var a = t.ag, L = a.loja || {}; var af = ['Metas irreais', 'Sem disciplina na rotina', 'Estoque sem revisão de preço', 'Esforço espalhado', 'Sem medir os números', 'Abandonou o plano']; var notas = {}; (a.notas || []).forEach(function (n, i) { notas[af[i] + ' (' + nfmt(n) + ')'] = n; });
+      return bloco('Conversão da loja (CREs vendidas ÷ captadas)', grande(L.conversao === null || L.conversao === undefined ? '—' : nfmt(L.conversao) + '%', nfmt(L.vendidas, 0) + ' de ' + nfmt(L.cres, 0) + ' captações')) + bloco('Ticket médio da loja', grande(brl(L.ticket, 0))) + bloco('Conferiram os próprios números', grande(a.conferidos + ' / ' + t.contagem.total)) +
+        bloco('De onde vieram os nossos compradores (iList, 12 meses)', barras(a.origens), 2) + bloco('As armadilhas que mais pegaram a equipe (média de 1 a 5)', a.notas ? barras(notas) : '<p class="sub">Aguardando as notas…</p>', 1) + bloco('As 3 maiores origens escolhidas', barras(a.top3), 3); },
+    p1: function (t) { var f = t.ag.frases || []; var i = Math.floor(Date.now() / 20000) % Math.max(f.length, 1); return bloco('O porquê da equipe (anônimo)', f.length ? '<div style="font-size:42px;line-height:1.25;font-weight:700;padding:30px 10px;text-align:center">“' + esc(f[i]) + '”</div><p class="sub" style="text-align:center">' + f.length + ' porquês escritos</p>' : '<p class="sub">Aguardando as frases…</p>', 3); },
+    p2: function (t) { var a = t.ag; return bloco('Estilo de vida que a loja vai financiar em 2027', grande(brl(t.totais.estiloVida, 0), 'soma da equipe — ninguém vê o de ninguém'), 2) + bloco('Sonhos com valor escrito', grande(a.sonhos, 'sonho com valor escrito é meta')) + bloco('Alíquota média de imposto', grande(a.aliqMedia === null ? '—' : nfmt(a.aliqMedia) + '%')); },
+    p3: function (t) { var a = t.ag, cresc = t.totais.vgc12m ? Math.round((t.totais.vgcMeta / t.totais.vgc12m - 1) * 100) : null; return bloco('VGC 2027 se todos baterem', grande(brl(t.totais.vgcMeta, 0), cresc !== null && t.totais.vgcMeta ? (cresc >= 0 ? '+' : '') + cresc + '% sobre os últimos 12 meses' : ''), 2) + bloco('Transações · captações', grande(nfmt(t.totais.transacoes, 0) + ' · ' + nfmt(t.totais.captacoes, 0))) + bloco('Clubes que a equipe quer conquistar', barras(a.clubeAlvo)) + bloco('Teste de realidade das metas', barras(a.nivel)) + bloco('Faixa de comissionamento hoje → alvo', barras(a.faixa, 0, function (x) { return 'hoje ' + x + '%'; }) + barras(a.faixaAlvo, 0, function (x) { return 'alvo ' + x + '%'; })); },
+    p4: function (t) { var r = t.ag.regioes || []; return bloco('Onde cada um vai jogar em 2027', r.length ? '<div class="cards">' + r.map(function (x) { return '<div class="cr"><h4>' + esc(x.nome) + '</h4><div style="font-size:18px">' + esc(x.regiao || '—') + '</div><small class="sub">' + esc(x.tipo || '') + '</small></div>'; }).join('') + '</div>' : '<p class="sub">Aguardando…</p>', 3); },
+    p5: function (t) { var a = t.ag, h = a.horas || {}; return bloco('Semana padrão média da equipe (horas)', barras({ 'Prospecção': h.prosp || 0, 'Visitas ao proprietário': h.visProp || 0, 'Comprador': h.atend || 0, 'Acompanhamento': h.acomp || 0 })) + bloco('Canais de marketing escolhidos', barras(a.canais)) + bloco('Dia da revisão de estoque', barras(a.diaRev)) + bloco('Pessoas no CRM da equipe', grande(nfmt(a.crmHoje, 0) + ' → ' + nfmt(a.crmMeta, 0), 'hoje → meta para o fim de 2027'), 3); },
+    p6: function (t) { var a = t.ag; return bloco('Cadência com o broker', barras(a.cadencia)) + bloco('Planos aceitos', grande(t.contagem.aceitos + ' / ' + t.contagem.total), 2); },
+    trilha: function (t) { var n = t.ag.novos || []; return bloco('Primeiros 90 dias: datas-alvo', n.length ? n.map(function (x) { return '<div class="l" style="font-size:22px"><span>' + esc(x.nome) + '</span><b>1ª CRE ' + esc(dataBR(x.dataCRE)) + ' · 1ª venda ' + esc(dataBR(x.dataVenda)) + '</b></div>'; }).join('') : '<p class="sub">Aguardando…</p>', 3); },
+    fechamento: function (t) { return PAINEIS.p3(t); }
+  };
+  function dataBR(s) { return s && /^\d{4}-\d{2}-\d{2}$/.test(s) ? s.slice(8, 10) + '/' + s.slice(5, 7) : '—'; }
+  function telao() {
+    app.innerHTML = '<div class="tv" id="tv"><p class="sub">Carregando o telão…</p></div>';
+    var giro = ['abertura', 'diag', 'p3', 'p2', 'p1', 'p5', 'p4'], gi = 0, ultimo = null;
+    var desenha = function (t) {
+      var et = t.etapa === 'auto' ? giro[gi++ % giro.length] : t.etapa;
+      var nomeEt = (ETAPAS.filter(function (x) { return x[0] === et; })[0] || [])[1] || '';
+      var c = t.corretores.slice().sort(function (a, b) { return (b.vgcMeta || 0) - (a.vgcMeta || 0); });
+      var maxV = Math.max.apply(null, c.map(function (x) { return x.vgcMeta || 0; }).concat([1]));
+      $('#tv').innerHTML = '<div style="display:flex;align-items:center;gap:14px"><span class="logo" style="font-size:28px">RE/<span>MAX</span> Inovelar</span><h1 style="margin:0">Agent Summit · ' + esc(nomeEt) + '</h1><span class="salvo">ao vivo · ' + esc(String(t.atualizado).slice(11, 16)) + '</span></div>' +
+        '<div class="kpis" style="grid-template-columns:repeat(3,1fr)">' + (PAINEIS[et] || PAINEIS.abertura)(t) + '</div>' +
+        '<div class="cards">' + c.map(function (x) { var st = x.status === 'aceito' ? '<span class="chip aceito">✓ aceito</span>' : x.status === 'rascunho' ? '<span class="chip rascunho">preenchendo · ' + (x.pct || 0) + '%</span>' : '<span class="chip nao">ainda não começou</span>'; return '<div class="cr ' + x.status + '"><h4>' + esc(x.nome) + '</h4>' + st + '<div class="bar"><i style="width:' + Math.round((x.vgcMeta || 0) / maxV * 100) + '%"></i></div><div class="l"><span>VGC 2027</span><b style="' + corVGC(x.vgcMeta) + '">' + (x.vgcMeta ? brl(x.vgcMeta, 0) : '—') + '</b></div>' + (x.vgcMeta && x.vgcMeta < EXEC_MIN ? '<div class="l" style="color:var(--er);font-size:13px">abaixo de qualquer clube</div>' : '') + '<div class="l"><span>Transações · captações</span><b>' + (x.transacoes || '—') + ' · ' + (x.captacoes || '—') + '</b></div><div class="l"><span>Clube</span><b>' + esc(x.clube || '—') + '</b></div></div>'; }).join('') + '</div>';
+    };
+    var pinta = function () { chamar('telao', [S.token]).then(function (t) { aplicaConfig(t.config); ultimo = t; desenha(t); }).catch(function (e) { if (/Sessão|acesso/.test(e.message)) { ls('mp27_token', null); ls('mp27_gestor', null); return telaLogin('Entre para abrir o telão.'); } toast(e.message); }); };
+    pinta(); setInterval(pinta, 15000); setInterval(function () { if (ultimo && ultimo.etapa === 'auto') desenha(ultimo); }, 20000);
+  }
+
+  // ================= ADMIN (planos, etapa do telão, mensagens) =================
+  function topoGestor(titulo) {
+    return '<div class="top"><div class="in"><span class="logo">RE/<span>MAX</span></span><b>' + titulo + '</b><span class="salvo"><a href="?v=admin">Administração</a> · <a href="?v=telao" target="_blank">Telão ›</a> · <a href="?v=acessos">Acessos</a> · <a href="#" id="sair">Sair</a></span></div></div>';
+  }
+  function admin() {
+    app.innerHTML = topoGestor('Meu Plano 2027 · Administração') + '<div class="wrap adm" id="adm"><p class="sub">Carregando…</p></div>';
+    $('#sair').onclick = function (e) { e.preventDefault(); sair(); };
+    var pinta = function () {
+      chamar('admin', [S.token]).then(function (a) {
+        aplicaConfig(a.config); var t = a.telao;
+        $('#adm').innerHTML = '<h1>Visão geral</h1><div class="cock">' + '<div class="k"><small>Aceitos · preenchendo</small><b>' + t.contagem.aceitos + ' · ' + t.contagem.preenchendo + ' de ' + t.contagem.total + '</b></div><div class="k"><small>VGC 2027 (soma das metas)</small><b>' + brl(t.totais.vgcMeta, 0) + '</b></div><div class="k"><small>Últimos 12 meses (iList)</small><b>' + brl(t.totais.vgc12m, 0) + '</b></div><div class="k"><small>Estilo de vida (soma)</small><b>' + brl(t.totais.estiloVida, 0) + '</b></div></div>' +
+          '<h2>O telão está mostrando</h2><div class="card"><div class="pill">' + ETAPAS.map(function (e) { return '<label><input type="radio" name="et" value="' + e[0] + '"' + (t.etapa === e[0] ? ' checked' : '') + '><span>' + e[1] + '</span></label>'; }).join('') + '</div><p class="sub">Troque conforme a sala avança no book. Em “Automático” o telão gira sozinho a cada 20 segundos.</p></div>' +
+          '<h2>Planos dos corretores</h2><table><tr><th>Corretor</th><th>Situação</th><th>Metas</th><th></th></tr>' + a.corretores.filter(function (c) { return c.ativo; }).map(function (c) {
+            var p = c.plano, r = p && p.dados && p.dados.__resumo || {};
+            var st = !p ? '<span class="chip nao">não começou</span>' : p.status === 'aceito' ? '<span class="chip aceito">aceito ' + esc(String(p.aceiteEm).slice(0, 10)) + '</span>' : '<span class="chip rascunho">' + esc(p.passo || '') + ' · ' + (p.pct || 0) + '%</span>';
+            return '<tr><td><b>' + esc(c.nome) + '</b></td><td>' + st + (p ? '<br><small class="sub">' + esc(p.atualizado) + '</small>' : '') + '</td><td>' + (r.vgcMeta ? 'VGC <b style="' + corVGC(r.vgcMeta) + '">' + brl(r.vgcMeta, 0) + '</b>' + (r.vgcMeta < EXEC_MIN ? ' <small style="color:var(--er)">sem clube</small>' : '') + '<br>' + r.transacoes + ' trans. · ' + r.captacoes + ' capt.' + (r.nivel ? '<br><small class="sub">' + esc(r.nivel) + '</small>' : '') : '—') + '</td><td><select data-ac="' + esc(c.email) + '"><option value="">Ações…</option>' + (p ? '<option value="ver">Ver plano completo</option>' : '') + '<option value="msg">Mensagem pronta</option>' + (p && p.status === 'aceito' ? '<option value="reabrir">Reabrir plano</option>' : '') + '</select></td></tr>';
+          }).join('') + '</table><div id="det"></div>';
+        S.adm = a;
+        $$('input[name=et]').forEach(function (r) { r.onchange = function () { chamar('adminEtapa', [S.token, r.value]).then(function () { toast('Telão: ' + r.parentNode.textContent); }).catch(function (e) { toast(e.message); }); }; });
+        $$('[data-ac]').forEach(function (s) { s.onchange = function () { var v = s.value, em = s.getAttribute('data-ac'); s.value = ''; acaoAdmin(v, em, pinta); }; });
+      }).catch(function (e) { if (/Sessão|acesso|administrador/.test(e.message)) { ls('mp27_token', null); ls('mp27_gestor', null); return telaLogin(e.message); } toast(e.message); });
+    };
+    pinta();
+  }
+
+  // ================= ACESSOS (ativar/desativar, códigos, links) =================
+  function acessos() {
+    app.innerHTML = topoGestor('Meu Plano 2027 · Acessos') + '<div class="wrap adm" id="ac"><p class="sub">Carregando…</p></div>';
+    $('#sair').onclick = function (e) { e.preventDefault(); sair(); };
+    var pinta = function () {
+      Promise.all([chamar('admin', [S.token]), chamar('adminCodigo', [S.token])]).then(function (x) {
+        var a = x[0], cods = x[1], ks = Object.keys(cods);
+        S.adm = a;
+        $('#ac').innerHTML = '<h1>Acessos</h1><div class="cock"><div class="k"><small>E-mails que ainda posso enviar hoje</small><b>' + a.cotaEmail + '</b></div><div class="k"><small>Corretores ativos</small><b>' + a.corretores.filter(function (c) { return c.ativo; }).length + '</b></div></div>' +
+          '<h2>Códigos pedidos nos últimos 15 minutos</h2><div class="card">' + (ks.length ? ks.map(function (e) { return '<div class="row"><span>' + esc(e) + '<small>' + esc(cods[e].h) + '</small></span><b class="codigo" style="font-size:22px">' + esc(cods[e].c) + '</b></div>'; }).join('') : '<p class="sub" style="margin:0">Nenhum código pendente. A lista atualiza sozinha.</p>') + '</div>' +
+          '<h2>Corretores</h2><table><tr><th>Corretor</th><th>Acesso</th><th></th></tr>' + a.corretores.map(function (c) {
+            return '<tr><td><b>' + esc(c.nome) + '</b><br><small class="sub">' + esc(c.email || 'sem e-mail') + '</small>' + (c.obs ? '<br><small class="sub">' + esc(c.obs) + '</small>' : '') + '</td><td>' + (c.ativo ? '<span class="chip aceito">ativo</span>' : '<span class="chip nao">desativado</span>') + '</td><td>' + (c.email ? '<div class="btns" style="margin:0"><button class="btn sec" data-tg="' + esc(c.email) + '" data-at="' + (c.ativo ? 1 : 0) + '">' + (c.ativo ? 'Desativar' : 'Ativar') + '</button>' + (c.ativo ? '<button class="btn sec" data-lk="' + esc(c.email) + '">Link de entrada</button>' : '') + '</div>' : '') + '</td></tr>';
+          }).join('') + '</table><div id="det"></div>' +
+          '<h2>Incluir corretor</h2><div class="card"><div class="grid2"><input id="nNome" placeholder="Nome (igual ao do iList, para puxar o diagnóstico)"><input id="nEmail" type="email" placeholder="E-mail"></div><div class="btns"><button class="btn" id="bInc">Incluir</button></div></div>';
+        $$('[data-tg]').forEach(function (b) { b.onclick = function () { var em = b.getAttribute('data-tg'), at = b.getAttribute('data-at') === '1'; if (at && !confirm('Desativar o acesso de ' + em + '? Ele sai do app e do telão na hora.')) return; chamar('adminCorretor', [S.token, at ? 'desativar' : 'reativar', { email: em }]).then(function () { toast('Feito.'); pinta(); }).catch(function (e) { toast(e.message); }); }; });
+        $$('[data-lk]').forEach(function (b) { b.onclick = function () { acaoAdmin('link', b.getAttribute('data-lk'), pinta); }; });
+        $('#bInc').onclick = function () { chamar('adminCorretor', [S.token, 'incluir', { nome: $('#nNome').value, email: $('#nEmail').value }]).then(function (r) { toast('Corretor ' + r.ok + '.'); pinta(); }).catch(function (e) { toast(e.message); }); };
+      }).catch(function (e) { if (/Sessão|acesso|administrador/.test(e.message)) { ls('mp27_token', null); ls('mp27_gestor', null); return telaLogin(e.message); } toast(e.message); });
+    };
+    pinta(); setInterval(function () { if (!document.activeElement || document.activeElement.tagName !== 'INPUT') pinta(); }, 15000);
+  }
+  function msgPronta(c) {
+    var p = c.plano, n = c.nome.split(' ')[0];
+    if (!p) return 'Oi, ' + n + '! O Meu Plano 2027 do Agent Summit já está no ar. Entre com o seu e-mail em ' + location.origin + location.pathname + ' — leva uns 50 minutos e salva sozinho. Conto com você!';
+    if (p.status !== 'aceito') return 'Oi, ' + n + '! Vi que você já está em ' + (p.passo || 'andamento') + ' (' + (p.pct || 0) + '%) no Meu Plano 2027. Bora terminar e dar o aceite? Qualquer dúvida, chama.';
+    var r = p.dados.__resumo || {}; return 'Parabéns, ' + n + '! Seu plano 2027 está aceito: ' + (r.transacoes || '') + ' transações e VGC de ' + brl(r.vgcMeta, 0) + (r.clube ? ' (' + r.clube + ')' : '') + '. Agora é execução — vamos juntos!';
+  }
+  function acaoAdmin(v, email, pinta) {
+    var c = S.adm.corretores.filter(function (x) { return x.email === email; })[0]; if (!v || !c) return;
+    if (v === 'msg') { var m = msgPronta(c); $('#det').innerHTML = '<div class="card"><b>Mensagem para ' + esc(c.nome) + '</b><textarea id="tmsg">' + esc(m) + '</textarea><div class="btns"><button class="btn" id="bcp">Copiar</button><a class="btn sec" target="_blank" href="https://wa.me/?text=' + encodeURIComponent(m) + '">Abrir no WhatsApp</a></div></div>'; $('#bcp').onclick = function () { $('#tmsg').select(); document.execCommand('copy'); toast('Copiado!'); }; $('#det').scrollIntoView(); return; }
+    if (v === 'link') { chamar('adminLink', [S.token, email]).then(function (r) { var u = location.origin + location.pathname + '?t=' + encodeURIComponent(r.token); $('#det').innerHTML = '<div class="card"><b>Link de entrada de ' + esc(c.nome) + '</b><p class="sub">Entra direto, sem código. Mande só para ele.</p><textarea>' + esc(u) + '</textarea></div>'; $('#det').scrollIntoView(); }).catch(function (e) { toast(e.message); }); return; }
+    if (v === 'ver') { var D = c.plano.dados; S.D = D; S.eu = { nome: c.nome }; var r = calc(); $('#det').innerHTML = '<h2>Plano de ' + esc(c.nome) + '</h2>' + cockpit(r) + '<div class="card"><h3 style="margin-top:0">Estilo de vida (só administradores)</h3>' + RES.p2(r) + '<h3>Sonhos</h3>' + (D.passo2.sonhos || []).filter(function (s) { return s && s.nome; }).map(function (s) { return '<p>' + esc(s.nome) + ' · ' + brl(s.valor, 0) + '</p>'; }).join('') + '</div><div class="card"><h3 style="margin-top:0">Teste de realidade</h3>' + RES.real(r) + '</div>'; $('#det').scrollIntoView(); return; }
+    if ((v === 'desativar' || v === 'reabrir') && !confirm((v === 'desativar' ? 'Desativar ' : 'Reabrir o plano de ') + c.nome + '?')) return;
+    chamar('adminCorretor', [S.token, v, { email: email }]).then(function () { toast('Feito.'); pinta(); }).catch(function (e) { toast(e.message); });
+  }
+
+  window.addEventListener('error', function (e) { try { console.error(e); } catch (x) {} });
+  window.__mp27 = { S: S, calc: calc, textoClaude: textoClaude, VERSAO_TELA: VERSAO_TELA };
+  iniciar();
+})();
+</script>
+</body></html>
