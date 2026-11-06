@@ -96,6 +96,10 @@ body.emleitor{overflow:hidden}
 /* telão: palco que encaixa a tela inteira na TV */
 .tvstage{position:fixed;inset:0;overflow:hidden;background:var(--bg)}
 .tvstage .tv{width:1920px;min-height:0;transform-origin:top left}
+
+.tv .cr.novo{border-color:var(--ok);box-shadow:0 0 0 2px var(--ok),0 0 28px rgba(62,224,143,.55);animation:crnovo 1.6s ease-in-out infinite}
+@keyframes crnovo{50%{box-shadow:0 0 0 2px var(--ok),0 0 44px rgba(62,224,143,.85)}}
+.chip.novo{background:#0f2a1d;border-color:var(--ok);color:var(--ok);font-size:11px;vertical-align:middle}
 </style></head>
 <body><div id="app"></div>
 <script>window.SUMMIT_API="https://script.google.com/macros/s/AKfycbzuymYfKYw90PZCY3AB6FHqTc7OmkxA5lEmw_s8eTJRW-NsKRYki9W26Q22E5ZFQ3Be/exec";</script>
@@ -865,19 +869,22 @@ body.emleitor{overflow:hidden}
     // tela inteira sempre: o conteúdo é montado em 1920 px e encolhe até caber na TV (nada corta)
     var encaixa = function () { var tv = $('#tv'); if (!tv) return; tv.style.transform = 'none'; var h = tv.scrollHeight, w = 1920; var k = Math.min(window.innerWidth / w, window.innerHeight / h); tv.style.transform = 'scale(' + k + ')'; var st = $('#tvstage'); st.style.height = window.innerHeight + 'px'; tv.style.marginLeft = Math.max(0, (window.innerWidth - w * k) / 2) + 'px'; };
     window.addEventListener('resize', encaixa);
-    var giro = ['abertura', 'diag', 'p3', 'p2', 'p1', 'p5', 'p4'], gi = 0, ultimo = null;
-    var desenha = function (t) {
-      var et = t.etapa === 'auto' ? giro[gi++ % giro.length] : t.etapa;
+    var giro = ['abertura', 'diag', 'p3', 'p2', 'p1', 'p5', 'p4'], gi = 0, ultimo = null, ass = {}, novoEm = {}, primeira = true;
+    // corretor que mexeu no plano fica verde no telão por 2 minutos
+    var marca = function (t) { var ag = Date.now(); t.corretores.forEach(function (x) { var k = [x.status, x.pct, x.vgcMeta, x.transacoes, x.captacoes, x.clube].join('|'); if (!primeira && ass[x.nome] !== undefined && ass[x.nome] !== k) novoEm[x.nome] = ag; ass[x.nome] = k; }); primeira = false; };
+    var desenha = function (t, avanca) {
+      if (avanca) gi++;
+      var et = t.etapa === 'auto' ? giro[gi % giro.length] : t.etapa;
       var nomeEt = (ETAPAS.filter(function (x) { return x[0] === et; })[0] || [])[1] || '';
       var c = t.corretores.slice().sort(function (a, b) { return (b.vgcMeta || 0) - (a.vgcMeta || 0); });
       var maxV = Math.max.apply(null, c.map(function (x) { return x.vgcMeta || 0; }).concat([1]));
       $('#tv').innerHTML = '<div style="display:flex;align-items:center;gap:14px"><span class="logo" style="font-size:28px">RE/<span>MAX</span> Inovelar</span><h1 style="margin:0">Agent Summit · ' + esc(nomeEt) + '</h1>' + (t.pagina ? '<span class="chip" style="font-size:16px">📖 book ' + rotPag(t.pagina) + '</span>' : '') + '<span class="salvo">ao vivo · ' + esc(String(t.atualizado).slice(11, 16)) + '</span></div>' +
         '<div class="kpis" style="grid-template-columns:repeat(3,1fr)">' + (PAINEIS[et] || PAINEIS.abertura)(t) + '</div>' +
-        '<div class="cards">' + c.map(function (x) { var st = x.status === 'aceito' ? '<span class="chip aceito">✓ aceito</span>' : x.status === 'rascunho' ? '<span class="chip rascunho">preenchendo · ' + (x.pct || 0) + '%</span>' : '<span class="chip nao">ainda não começou</span>'; return '<div class="cr ' + x.status + '"><h4>' + esc(x.nome) + '</h4>' + st + '<div class="bar"><i style="width:' + Math.round((x.vgcMeta || 0) / maxV * 100) + '%"></i></div><div class="l"><span>VGC 2027</span><b style="' + corVGC(x.vgcMeta) + '">' + (x.vgcMeta ? brl(x.vgcMeta, 0) : '—') + '</b></div>' + (x.vgcMeta && x.vgcMeta < EXEC_MIN ? '<div class="l" style="color:var(--er);font-size:13px">abaixo de qualquer clube</div>' : '') + '<div class="l"><span>Transações · captações</span><b>' + (x.transacoes || '—') + ' · ' + (x.captacoes || '—') + '</b></div><div class="l"><span>Clube</span><b>' + esc(x.clube || '—') + '</b></div></div>'; }).join('') + '</div>';
+        '<div class="cards">' + c.map(function (x) { var st = x.status === 'aceito' ? '<span class="chip aceito">✓ aceito</span>' : x.status === 'rascunho' ? '<span class="chip rascunho">preenchendo · ' + (x.pct || 0) + '%</span>' : '<span class="chip nao">ainda não começou</span>'; var nv = novoEm[x.nome] && Date.now() - novoEm[x.nome] < 120000; return '<div class="cr ' + x.status + (nv ? ' novo' : '') + '"><h4>' + esc(x.nome) + (nv ? ' <span class="chip novo">✓ atualizou ' + new Date(novoEm[x.nome]).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + '</span>' : '') + '</h4>' + st + '<div class="bar"><i style="width:' + Math.round((x.vgcMeta || 0) / maxV * 100) + '%"></i></div><div class="l"><span>VGC 2027</span><b style="' + corVGC(x.vgcMeta) + '">' + (x.vgcMeta ? brl(x.vgcMeta, 0) : '—') + '</b></div>' + (x.vgcMeta && x.vgcMeta < EXEC_MIN ? '<div class="l" style="color:var(--er);font-size:13px">abaixo de qualquer clube</div>' : '') + '<div class="l"><span>Transações · captações</span><b>' + (x.transacoes || '—') + ' · ' + (x.captacoes || '—') + '</b></div><div class="l"><span>Clube</span><b>' + esc(x.clube || '—') + '</b></div></div>'; }).join('') + '</div>';
       encaixa(); setTimeout(encaixa, 300);
     };
-    var pinta = function () { chamar('telao', [S.token]).then(function (t) { aplicaConfig(t.config); ultimo = t; desenha(t); }).catch(function (e) { if (/Sessão|acesso/.test(e.message)) { ls('mp27_token', null); ls('mp27_gestor', null); return telaLogin('Entre para abrir o telão.'); } toast(e.message); }); };
-    pinta(); setInterval(pinta, 15000); setInterval(function () { if (ultimo && ultimo.etapa === 'auto') desenha(ultimo); }, 20000);
+    var pinta = function () { chamar('telao', [S.token]).then(function (t) { aplicaConfig(t.config); marca(t); ultimo = t; desenha(t, false); }).catch(function (e) { if (/Sessão|acesso/.test(e.message)) { ls('mp27_token', null); ls('mp27_gestor', null); return telaLogin('Entre para abrir o telão.'); } toast(e.message); }); };
+    pinta(); setInterval(pinta, 10000); setInterval(function () { if (ultimo) desenha(ultimo, ultimo.etapa === 'auto'); }, 5000);   // troca de tela a cada 5 s; verde some sozinho
   }
 
   // ================= ADMIN (planos, etapa do telão, mensagens) =================
