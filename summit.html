@@ -895,7 +895,7 @@ body.combv{overflow:hidden}
     // tela inteira sempre: o conteúdo é montado em 1920 px e encolhe até caber na TV (nada corta)
     var encaixa = function () { var tv = $('#tv'); if (!tv) return; tv.style.transform = 'none'; var h = tv.scrollHeight, w = 1920; var k = Math.min(window.innerWidth / w, window.innerHeight / h); tv.style.transform = 'scale(' + k + ')'; var st = $('#tvstage'); st.style.height = window.innerHeight + 'px'; tv.style.marginLeft = Math.max(0, (window.innerWidth - w * k) / 2) + 'px'; };
     window.addEventListener('resize', encaixa);
-    var giro = ['abertura', 'diag', 'p3', 'p2', 'p1', 'p5', 'p4'], gi = 0, ultimo = null, ass = {}, novoEm = {}, primeira = true;
+    var giro = ['abertura', 'diag', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'trilha'] /* na ordem do book */, gi = 0, ultimo = null, ass = {}, novoEm = {}, primeira = true;
     // corretor que mexeu no plano fica verde no telão por 2 minutos
     var marca = function (t) { var ag = Date.now(); t.corretores.forEach(function (x) { var k = [x.status, x.pct, x.vgcMeta, x.transacoes, x.captacoes, x.clube].join('|'); if (!primeira && ass[x.nome] !== undefined && ass[x.nome] !== k) novoEm[x.nome] = ag; ass[x.nome] = k; }); primeira = false; };
     var desenha = function (t, avanca) {
