@@ -75,6 +75,23 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
   body.combook .bookov .fechar{display:none}
   body.combook .bookfab{display:none}
 }
+/* modo book: tela principal */
+.leitor{position:fixed;inset:0;z-index:15;background:var(--bg);display:flex;flex-direction:column}
+.lxtop{display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--ln);background:rgba(7,11,22,.96)}
+.lxtop .salvo{margin-left:auto}.lxtop .btn{min-height:40px;padding:8px 12px}
+.lximg{flex:1;min-height:0;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:10px;touch-action:pan-y pinch-zoom}
+.lximg img{max-width:100%;max-height:100%;height:auto;object-fit:contain;background:#fff;border-radius:6px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.lxbar{border-top:1px solid var(--ln);padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(7,11,22,.96);display:flex;flex-direction:column;gap:8px;align-items:center}
+.lxpre{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%}
+.lxfill{font-size:17px;padding:14px 22px;box-shadow:0 0 18px rgba(47,228,255,.35);animation:lxpulse 2.4s ease-in-out infinite}
+@keyframes lxpulse{50%{box-shadow:0 0 28px rgba(47,228,255,.65)}}
+.lxnav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}.lxnav .btn{min-height:42px;padding:8px 16px}
+.lxpg{min-width:52px;text-align:center;color:var(--mu);font-weight:700}
+body.emleitor .bookfab,body.emleitor .bookov{display:none!important}
+body.emleitor{overflow:hidden}
+.vbook{margin-left:8px;min-height:36px!important;padding:6px 10px!important;font-size:13px}
+@media(max-width:560px){.vbook{font-size:12px;padding:6px 8px!important}.lxtop b{display:none}}
+@media print{.leitor{display:none!important}}
 </style></head>
 <body><div id="app"></div>
 <script>window.SUMMIT_API="https://script.google.com/macros/s/AKfycbzuymYfKYw90PZCY3AB6FHqTc7OmkxA5lEmw_s8eTJRW-NsKRYki9W26Q22E5ZFQ3Be/exec";</script>
@@ -483,6 +500,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
       '<div class="bookimg"><img alt="Página ' + rotPag(B.pg) + ' do book" src="' + arqPag(B.pg) + '"></div>';
   }
   function bookRender() {
+    leitorRender();
     var ov = $('#bookov');
     if (!ov) return;
     ov.innerHTML = bookHtml(); ov.classList.toggle('hide', !B.aberto && !telaLarga());
@@ -502,18 +520,53 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
     var ov = document.createElement('div'); ov.id = 'bookov'; ov.className = 'bookov hide'; document.body.appendChild(ov);
     var f = document.createElement('button'); f.id = 'bookfab'; f.className = 'bookfab'; f.onclick = function () { bookAbrir(); }; document.body.appendChild(f);
     window.addEventListener('resize', bookRender);
-    document.addEventListener('keydown', function (e) { if (!B.aberto && !telaLarga()) return; if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if (e.key === 'ArrowRight') bookIr(B.pg + 1, true); if (e.key === 'ArrowLeft') bookIr(B.pg - 1, true); if (e.key === 'Escape') { B.aberto = false; bookRender(); } });
+    document.addEventListener('keydown', function (e) { if (!B.aberto && !telaLarga() && S.modo !== 'book') return; if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if (e.key === 'ArrowRight') bookIr(B.pg + 1, true); if (e.key === 'ArrowLeft') bookIr(B.pg - 1, true); if (e.key === 'Escape') { B.aberto = false; bookRender(); } });
     B.pg = PAG_ABA[S.aba] || 11; bookRender();
     var acompanha = function () {
       chamar('ritmo', [S.token]).then(function (r) {
         var p = r.pagina > 0 ? r.pagina : (PAG_ETAPA[r.etapa] || null);
         if (p === null) { B.turma = null; bookRender(); return; }
         var mudou = B.turma !== p; B.turma = p;
-        if (B.seguir && mudou) { B.pg = p; if (!telaLarga()) toast('A turma está na ' + rotPag(p) + ' do book. Toque em 📖 para ver.'); }
+        if (B.seguir && mudou) { B.pg = p; if (!telaLarga() && S.modo !== 'book') toast('A turma está na ' + rotPag(p) + ' do book. Toque em 📖 para ver.'); }
         bookRender();
       }).catch(function () {});
     };
     acompanha(); setInterval(function () { if (document.visibilityState !== 'hidden') acompanha(); }, 15000);
+  }
+  // ================= MODO BOOK (tela principal do corretor) =================
+  // Faixa de páginas de cada passo: nessas páginas aparece "Preencher" e abre o plano daquele passo.
+  var FAIXA = [['diag', 13, 16], ['p1', 17, 19], ['p2', 20, 24], ['p3', 25, 31], ['p4', 32, 33], ['p5', 34, 40], ['p6', 41, 44], ['trilha', 45, 48], ['cockpit', 49, 49], ['aceite', 49, 49], ['claude', 50, 50]];
+  function abasDaPag(p) { return FAIXA.filter(function (f) { return p >= f[1] && p <= f[2]; }).map(function (f) { return f[0]; }); }
+  function nomeAba(id) { return (ABAS.filter(function (a) { return a.id === id; })[0] || {}).t || id; }
+  function leitorHtml() {
+    var abas = abasDaPag(B.pg);
+    var turma = B.turma !== null && (!B.seguir || B.turma !== B.pg) ? '<button class="btn" id="lxTurma">Ir para a página da turma (' + rotPag(B.turma) + ')</button>' : (B.turma !== null ? '<span class="turma-aviso">● seguindo a turma</span>' : '');
+    return '<div class="lxtop"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo">' + (S.status === 'aceito' ? '✓ Aceito' : '') + '</span><button class="btn sec" id="lxPlano">✍️ Meu plano</button></div>' +
+      '<div class="lximg" id="lximg"><img alt="Página ' + rotPag(B.pg) + ' do book" src="' + arqPag(B.pg) + '"></div>' +
+      '<div class="lxbar">' +
+        (abas.length ? '<div class="lxpre">' + abas.map(function (a) { return '<button class="btn lxfill" data-fill="' + a + '">✍️ Preencher · ' + esc(nomeAba(a)) + '</button>'; }).join('') + '</div>' : '') +
+        '<div class="lxnav"><button class="btn sec" id="lxAnt" aria-label="Página anterior">‹</button><span class="lxpg">' + rotPag(B.pg) + '</span><button class="btn sec" id="lxProx" aria-label="Próxima página">›</button>' + turma + '</div>' +
+      '</div>';
+  }
+  function leitorRender() {
+    var lx = $('#leitor'); if (!lx) return;
+    lx.classList.toggle('hide', S.modo !== 'book');
+    document.body.classList.toggle('emleitor', S.modo === 'book');
+    if (S.modo !== 'book') return;
+    lx.innerHTML = leitorHtml();
+    $('#lxAnt').onclick = function () { bookIr(B.pg - 1, true); }; $('#lxProx').onclick = function () { bookIr(B.pg + 1, true); };
+    var t = $('#lxTurma'); if (t) t.onclick = function () { B.seguir = true; bookIr(B.turma, false); };
+    $('#lxPlano').onclick = function () { abrirPlano(abasDaPag(B.pg)[0] || S.aba); };
+    $$('[data-fill]', lx).forEach(function (b) { b.onclick = function () { abrirPlano(b.getAttribute('data-fill')); }; });
+  }
+  function abrirPlano(aba) { S.modo = 'form'; ls('mp27_modo', 'form'); leitorRender(); if (aba) irPara(aba); else render(); bookRender(); }
+  function voltarBook() { if (S.sujo) salvar(); S.modo = 'book'; ls('mp27_modo', 'book'); if (B.seguir && B.turma !== null) B.pg = B.turma; leitorRender(); window.scrollTo(0, 0); }
+  function leitorMontar() {
+    if ($('#leitor')) return;
+    var lx = document.createElement('div'); lx.id = 'leitor'; lx.className = 'leitor hide'; document.body.appendChild(lx);
+    var x0 = null, y0 = null;   // folhear com o dedo
+    lx.addEventListener('touchstart', function (e) { if (e.touches.length !== 1) { x0 = null; return; } x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    lx.addEventListener('touchend', function (e) { if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null; if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5 && (!window.visualViewport || window.visualViewport.scale <= 1.05)) bookIr(B.pg + (dx < 0 ? 1 : -1), true); }, { passive: true });
   }
   function verNoBook(p) { return '<a href="#" class="vernobook" data-book="' + p + '">📖 ver no book (' + rotPag(p) + ')</a>'; }
 
@@ -524,10 +577,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
     { id: 'trilha', t: 'Trilha Ativação' }, { id: 'cockpit', t: 'Cockpit' }, { id: 'aceite', t: 'Aceite' }, { id: 'claude', t: 'Levar p/ meu Claude' }
   ];
   function corretor() {
-    app.innerHTML = '<div class="top"><div class="in"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo" id="salvo">' + (S.status === 'aceito' ? '✓ Aceito' : 'Tudo salvo') + '</span></div><div class="prog"><i id="pg" style="width:0"></i></div><div class="nav" id="nav"></div></div><div class="wrap" id="corpo"></div>' +
+    app.innerHTML = '<div class="top"><div class="in"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo" id="salvo">' + (S.status === 'aceito' ? '✓ Aceito' : 'Tudo salvo') + '</span><button class="btn sec vbook" id="vbook">📖 Voltar ao book</button></div><div class="prog"><i id="pg" style="width:0"></i></div><div class="nav" id="nav"></div></div><div class="wrap" id="corpo"></div>' +
       '<div class="foot"><button class="btn sec" id="ant">‹ Voltar</button><button class="btn" id="prox">Avançar ›</button></div>';
     $('#ant').onclick = function () { mover(-1); }; $('#prox').onclick = function () { mover(1); };
-    render(); bookMontar();
+    $('#vbook').onclick = voltarBook;
+    if (!S.modo) S.modo = ls('mp27_modo') || 'book';
+    leitorMontar(); render(); bookMontar(); leitorRender();
   }
   function mover(d) { var i = ABAS.map(function (a) { return a.id; }).indexOf(S.aba); i = Math.max(0, Math.min(ABAS.length - 1, i + d)); irPara(ABAS[i].id); }
   function irPara(id) { if (S.sujo) salvar(); S.aba = id; ls('mp27_aba', id); render(); window.scrollTo(0, 0); }
