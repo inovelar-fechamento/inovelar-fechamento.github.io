@@ -56,6 +56,25 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
 .adm table{width:100%;border-collapse:collapse;font-size:14px}.adm th,.adm td{border-bottom:1px solid var(--ln);padding:8px 6px;text-align:left;vertical-align:top}
 @media(max-width:560px){.row{grid-template-columns:1fr 120px}.grid2,.cock{grid-template-columns:1fr}.tv .kpis{grid-template-columns:1fr 1fr}}
 @media print{.top,.nav,.foot,.btns,.btn{display:none!important}body{background:#fff;color:#000}.card{border-color:#999;background:#fff}}
+/* book ao lado */
+.bookfab{position:fixed;right:14px;bottom:78px;z-index:6;background:var(--pn2);border:1px solid var(--ac);color:var(--tx);border-radius:999px;padding:10px 14px;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.4);cursor:pointer}
+.bookfab.turma{border-color:var(--ok)}
+.bookov{position:fixed;inset:0;z-index:30;background:var(--bg);display:flex;flex-direction:column}
+.bookbar{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--ln);flex-wrap:wrap}
+.bookbar .t{font-weight:700;margin-right:auto}.bookbar button{min-height:40px;padding:8px 12px}
+.bookimg{flex:1;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:10px;touch-action:pan-y pinch-zoom}
+.bookimg img{max-width:100%;height:auto;background:#fff;border-radius:6px;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+.turma-aviso{font-size:13px;color:var(--ok)}
+.vernobook{font-size:13px;margin-left:6px}
+@media(min-width:1180px){
+  body.combook .wrap{max-width:none;margin:0;width:calc(100% - 560px);padding-left:28px}
+  body.combook .top{margin-right:560px}
+  body.combook .top .in,body.combook .nav{max-width:none;margin:0}
+  body.combook .foot{right:560px}
+  body.combook .bookov{position:fixed;inset:auto 0 0 auto;top:0;width:560px;border-left:1px solid var(--ln);background:var(--bg);z-index:7}
+  body.combook .bookov .fechar{display:none}
+  body.combook .bookfab{display:none}
+}
 </style></head>
 <body><div id="app"></div>
 <script>window.SUMMIT_API="https://script.google.com/macros/s/AKfycbzuymYfKYw90PZCY3AB6FHqTc7OmkxA5lEmw_s8eTJRW-NsKRYki9W26Q22E5ZFQ3Be/exec";</script>
@@ -448,6 +467,56 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
     });
   }
 
+  // ================= BOOK AO LADO =================
+  // arquivo book/pNN.jpg = página NN do PDF; página impressa = NN − 1 (capa = 0)
+  var BOOK_TOTAL = 56;
+  var PAG_ABA = { inicio: 11, diag: 14, p1: 19, p2: 21, p3: 26, p4: 33, p5: 35, p6: 42, trilha: 46, cockpit: 49, aceite: 49, claude: 50 };
+  var PAG_ETAPA = { abertura: 3, diag: 13, p1: 17, p2: 20, p3: 25, p4: 32, p5: 34, p6: 41, trilha: 45, fechamento: 49 };
+  function arqPag(p) { var n = Math.max(1, Math.min(BOOK_TOTAL, p + 1)); return 'book/p' + (n < 10 ? '0' : '') + n + '.jpg'; }
+  function rotPag(p) { return p <= 0 ? 'Capa' : 'p.' + p; }
+  var B = { pg: 11, turma: null, seguir: true, aberto: false };
+  function bookHtml() {
+    return '<div class="bookbar"><span class="t">📖 Book · ' + rotPag(B.pg) + '</span>' +
+      '<button class="btn sec" id="bkAnt">‹</button><button class="btn sec" id="bkProx">›</button>' +
+      (B.turma !== null && (!B.seguir || B.turma !== B.pg) ? '<button class="btn" id="bkTurma">Ir para a página da turma (' + rotPag(B.turma) + ')</button>' : (B.turma !== null ? '<span class="turma-aviso">● seguindo a turma</span>' : '')) +
+      '<button class="btn sec fechar" id="bkFechar">Fechar</button></div>' +
+      '<div class="bookimg"><img alt="Página ' + rotPag(B.pg) + ' do book" src="' + arqPag(B.pg) + '"></div>';
+  }
+  function bookRender() {
+    var ov = $('#bookov');
+    if (!ov) return;
+    ov.innerHTML = bookHtml(); ov.classList.toggle('hide', !B.aberto && !telaLarga());
+    $('#bkAnt').onclick = function () { bookIr(B.pg - 1, true); }; $('#bkProx').onclick = function () { bookIr(B.pg + 1, true); };
+    var bt = $('#bkTurma'); if (bt) bt.onclick = function () { B.seguir = true; bookIr(B.turma, false); };
+    $('#bkFechar').onclick = function () { B.aberto = false; bookRender(); };
+    var f = $('#bookfab'); if (f) { f.textContent = '📖 Book ' + rotPag(B.pg); f.classList.toggle('turma', B.seguir && B.turma !== null); }
+    // pré-carrega as vizinhas
+    [B.pg - 1, B.pg + 1].forEach(function (p) { if (p >= 0 && p < BOOK_TOTAL) { var i = new Image(); i.src = arqPag(p); } });
+  }
+  function telaLarga() { return window.matchMedia && window.matchMedia('(min-width:1180px)').matches; }
+  function bookIr(p, manual) { p = Math.max(0, Math.min(BOOK_TOTAL - 1, p)); if (manual) B.seguir = false; B.pg = p; bookRender(); }
+  function bookAbrir(p) { if (p !== undefined) bookIr(p, true); B.aberto = true; bookRender(); }
+  function bookMontar() {
+    if ($('#bookov')) return;
+    document.body.classList.add('combook');
+    var ov = document.createElement('div'); ov.id = 'bookov'; ov.className = 'bookov hide'; document.body.appendChild(ov);
+    var f = document.createElement('button'); f.id = 'bookfab'; f.className = 'bookfab'; f.onclick = function () { bookAbrir(); }; document.body.appendChild(f);
+    window.addEventListener('resize', bookRender);
+    document.addEventListener('keydown', function (e) { if (!B.aberto && !telaLarga()) return; if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if (e.key === 'ArrowRight') bookIr(B.pg + 1, true); if (e.key === 'ArrowLeft') bookIr(B.pg - 1, true); if (e.key === 'Escape') { B.aberto = false; bookRender(); } });
+    B.pg = PAG_ABA[S.aba] || 11; bookRender();
+    var acompanha = function () {
+      chamar('ritmo', [S.token]).then(function (r) {
+        var p = r.pagina > 0 ? r.pagina : (PAG_ETAPA[r.etapa] || null);
+        if (p === null) { B.turma = null; bookRender(); return; }
+        var mudou = B.turma !== p; B.turma = p;
+        if (B.seguir && mudou) { B.pg = p; if (!telaLarga()) toast('A turma está na ' + rotPag(p) + ' do book. Toque em 📖 para ver.'); }
+        bookRender();
+      }).catch(function () {});
+    };
+    acompanha(); setInterval(function () { if (document.visibilityState !== 'hidden') acompanha(); }, 15000);
+  }
+  function verNoBook(p) { return '<a href="#" class="vernobook" data-book="' + p + '">📖 ver no book (' + rotPag(p) + ')</a>'; }
+
   // ================= ABAS =================
   var ABAS = [
     { id: 'inicio', t: 'Início' }, { id: 'diag', t: 'Diagnóstico' }, { id: 'p1', t: '1 · Porquê' }, { id: 'p2', t: '2 · Estilo de vida' },
@@ -458,7 +527,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
     app.innerHTML = '<div class="top"><div class="in"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo" id="salvo">' + (S.status === 'aceito' ? '✓ Aceito' : 'Tudo salvo') + '</span></div><div class="prog"><i id="pg" style="width:0"></i></div><div class="nav" id="nav"></div></div><div class="wrap" id="corpo"></div>' +
       '<div class="foot"><button class="btn sec" id="ant">‹ Voltar</button><button class="btn" id="prox">Avançar ›</button></div>';
     $('#ant').onclick = function () { mover(-1); }; $('#prox').onclick = function () { mover(1); };
-    render();
+    render(); bookMontar();
   }
   function mover(d) { var i = ABAS.map(function (a) { return a.id; }).indexOf(S.aba); i = Math.max(0, Math.min(ABAS.length - 1, i + d)); irPara(ABAS[i].id); }
   function irPara(id) { if (S.sujo) salvar(); S.aba = id; ls('mp27_aba', id); render(); window.scrollTo(0, 0); }
@@ -467,6 +536,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
     $$('#nav button').forEach(function (b) { b.onclick = function () { irPara(b.getAttribute('data-a')); }; });
     var on = $('#nav .on'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' });
     $('#corpo').innerHTML = (TELAS[S.aba] || TELAS.inicio)();
+    var h1 = $('#corpo h1'); if (h1 && PAG_ABA[S.aba]) h1.insertAdjacentHTML('beforeend', verNoBook(PAG_ABA[S.aba]));
+    if (B.turma === null && PAG_ABA[S.aba] && $('#bookov')) { B.pg = PAG_ABA[S.aba]; bookRender(); }   // sem sessão ao vivo: o book acompanha o passo
+    $$('[data-book]', $('#corpo')).forEach(function (a) { a.onclick = function (e) { e.preventDefault(); bookAbrir(Number(a.getAttribute('data-book'))); }; });
     ligaCampos($('#corpo')); if (EXTRA[S.aba]) EXTRA[S.aba](); recalc();
   }
   function recalc() {
@@ -698,7 +770,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
       var nomeEt = (ETAPAS.filter(function (x) { return x[0] === et; })[0] || [])[1] || '';
       var c = t.corretores.slice().sort(function (a, b) { return (b.vgcMeta || 0) - (a.vgcMeta || 0); });
       var maxV = Math.max.apply(null, c.map(function (x) { return x.vgcMeta || 0; }).concat([1]));
-      $('#tv').innerHTML = '<div style="display:flex;align-items:center;gap:14px"><span class="logo" style="font-size:28px">RE/<span>MAX</span> Inovelar</span><h1 style="margin:0">Agent Summit · ' + esc(nomeEt) + '</h1><span class="salvo">ao vivo · ' + esc(String(t.atualizado).slice(11, 16)) + '</span></div>' +
+      $('#tv').innerHTML = '<div style="display:flex;align-items:center;gap:14px"><span class="logo" style="font-size:28px">RE/<span>MAX</span> Inovelar</span><h1 style="margin:0">Agent Summit · ' + esc(nomeEt) + '</h1>' + (t.pagina ? '<span class="chip" style="font-size:16px">📖 book ' + rotPag(t.pagina) + '</span>' : '') + '<span class="salvo">ao vivo · ' + esc(String(t.atualizado).slice(11, 16)) + '</span></div>' +
         '<div class="kpis" style="grid-template-columns:repeat(3,1fr)">' + (PAINEIS[et] || PAINEIS.abertura)(t) + '</div>' +
         '<div class="cards">' + c.map(function (x) { var st = x.status === 'aceito' ? '<span class="chip aceito">✓ aceito</span>' : x.status === 'rascunho' ? '<span class="chip rascunho">preenchendo · ' + (x.pct || 0) + '%</span>' : '<span class="chip nao">ainda não começou</span>'; return '<div class="cr ' + x.status + '"><h4>' + esc(x.nome) + '</h4>' + st + '<div class="bar"><i style="width:' + Math.round((x.vgcMeta || 0) / maxV * 100) + '%"></i></div><div class="l"><span>VGC 2027</span><b style="' + corVGC(x.vgcMeta) + '">' + (x.vgcMeta ? brl(x.vgcMeta, 0) : '—') + '</b></div>' + (x.vgcMeta && x.vgcMeta < EXEC_MIN ? '<div class="l" style="color:var(--er);font-size:13px">abaixo de qualquer clube</div>' : '') + '<div class="l"><span>Transações · captações</span><b>' + (x.transacoes || '—') + ' · ' + (x.captacoes || '—') + '</b></div><div class="l"><span>Clube</span><b>' + esc(x.clube || '—') + '</b></div></div>'; }).join('') + '</div>';
     };
@@ -717,6 +789,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
       chamar('admin', [S.token]).then(function (a) {
         aplicaConfig(a.config); var t = a.telao;
         $('#adm').innerHTML = '<h1>Visão geral</h1><div class="cock">' + '<div class="k"><small>Aceitos · preenchendo</small><b>' + t.contagem.aceitos + ' · ' + t.contagem.preenchendo + ' de ' + t.contagem.total + '</b></div><div class="k"><small>VGC 2027 (soma das metas)</small><b>' + brl(t.totais.vgcMeta, 0) + '</b></div><div class="k"><small>Últimos 12 meses (iList)</small><b>' + brl(t.totais.vgc12m, 0) + '</b></div><div class="k"><small>Estilo de vida (soma)</small><b>' + brl(t.totais.estiloVida, 0) + '</b></div></div>' +
+          '<h2>A sala está no book em</h2><div class="card"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn sec" id="pgMenos">‹</button><b style="font-size:28px;color:var(--ac)" id="pgAtual">' + rotPag(t.pagina || 0) + '</b><button class="btn sec" id="pgMais">›</button><input id="pgNum" type="text" inputmode="numeric" placeholder="nº da página" style="width:140px"><button class="btn" id="pgIr">Levar a turma</button></div><p class="sub">Todo corretor com o app aberto vai para esta página (quem estiver folheando vê o botão “Ir para a página da turma”). Mudar a etapa abaixo também leva o book para o início da etapa.</p></div>' +
           '<h2>O telão está mostrando</h2><div class="card"><div class="pill">' + ETAPAS.map(function (e) { return '<label><input type="radio" name="et" value="' + e[0] + '"' + (t.etapa === e[0] ? ' checked' : '') + '><span>' + e[1] + '</span></label>'; }).join('') + '</div><p class="sub">Troque conforme a sala avança no book. Em “Automático” o telão gira sozinho a cada 20 segundos.</p></div>' +
           '<h2>Planos dos corretores</h2><table><tr><th>Corretor</th><th>Situação</th><th>Metas</th><th></th></tr>' + a.corretores.filter(function (c) { return c.ativo; }).map(function (c) {
             var p = c.plano, r = p && p.dados && p.dados.__resumo || {};
@@ -724,7 +797,10 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
             return '<tr><td><b>' + esc(c.nome) + '</b></td><td>' + st + (p ? '<br><small class="sub">' + esc(p.atualizado) + '</small>' : '') + '</td><td>' + (r.vgcMeta ? 'VGC <b style="' + corVGC(r.vgcMeta) + '">' + brl(r.vgcMeta, 0) + '</b>' + (r.vgcMeta < EXEC_MIN ? ' <small style="color:var(--er)">sem clube</small>' : '') + '<br>' + r.transacoes + ' trans. · ' + r.captacoes + ' capt.' + (r.nivel ? '<br><small class="sub">' + esc(r.nivel) + '</small>' : '') : '—') + '</td><td><select data-ac="' + esc(c.email) + '"><option value="">Ações…</option>' + (p ? '<option value="ver">Ver plano completo</option>' : '') + '<option value="msg">Mensagem pronta</option>' + (p && p.status === 'aceito' ? '<option value="reabrir">Reabrir plano</option>' : '') + '</select></td></tr>';
           }).join('') + '</table><div id="det"></div>';
         S.adm = a;
-        $$('input[name=et]').forEach(function (r) { r.onchange = function () { chamar('adminEtapa', [S.token, r.value]).then(function () { toast('Telão: ' + r.parentNode.textContent); }).catch(function (e) { toast(e.message); }); }; });
+        $$('input[name=et]').forEach(function (r) { r.onchange = function () { var pg = PAG_ETAPA[r.value]; chamar('adminEtapa', [S.token, r.value, pg === undefined ? null : pg]).then(function (x) { $('#pgAtual').textContent = rotPag(x.pagina); toast('Telão: ' + r.parentNode.textContent + (pg !== undefined ? ' · book ' + rotPag(pg) : '')); }).catch(function (e) { toast(e.message); }); }; });
+        var pgSet = function (p) { p = Math.max(0, Math.min(BOOK_TOTAL - 1, p)); chamar('adminEtapa', [S.token, null, p]).then(function (x) { t.pagina = x.pagina; $('#pgAtual').textContent = rotPag(x.pagina); toast('Turma levada para a ' + rotPag(x.pagina)); }).catch(function (e) { toast(e.message); }); };
+        $('#pgMenos').onclick = function () { pgSet((t.pagina || 0) - 1); }; $('#pgMais').onclick = function () { pgSet((t.pagina || 0) + 1); };
+        $('#pgIr').onclick = function () { var n = parseInt($('#pgNum').value, 10); if (isNaN(n)) return toast('Digite o número da página impressa no book.'); pgSet(n); };
         $$('[data-ac]').forEach(function (s) { s.onchange = function () { var v = s.value, em = s.getAttribute('data-ac'); s.value = ''; acaoAdmin(v, em, pinta); }; });
       }).catch(function (e) { if (/Sessão|acesso|administrador/.test(e.message)) { ls('mp27_token', null); ls('mp27_gestor', null); return telaLogin(e.message); } toast(e.message); });
     };
@@ -768,7 +844,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
   }
 
   window.addEventListener('error', function (e) { try { console.error(e); } catch (x) {} });
-  window.__mp27 = { S: S, calc: calc, textoClaude: textoClaude, VERSAO_TELA: VERSAO_TELA };
+  window.__mp27 = { S: S, B: B, calc: calc, textoClaude: textoClaude, VERSAO_TELA: VERSAO_TELA };
   iniciar();
 })();
 </script>
