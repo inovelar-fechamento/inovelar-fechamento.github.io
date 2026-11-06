@@ -884,7 +884,7 @@ body.emleitor{overflow:hidden}
       encaixa(); setTimeout(encaixa, 300);
     };
     var pinta = function () { chamar('telao', [S.token]).then(function (t) { aplicaConfig(t.config); marca(t); ultimo = t; desenha(t, false); }).catch(function (e) { if (/Sessão|acesso/.test(e.message)) { ls('mp27_token', null); ls('mp27_gestor', null); return telaLogin('Entre para abrir o telão.'); } toast(e.message); }); };
-    pinta(); setInterval(pinta, 10000); setInterval(function () { if (ultimo) desenha(ultimo, ultimo.etapa === 'auto'); }, 5000);   // troca de tela a cada 5 s; verde some sozinho
+    pinta(); setInterval(pinta, 10000); setInterval(function () { if (ultimo) desenha(ultimo, ultimo.etapa === 'auto'); }, 10000);   // troca de tela a cada 10 s; verde some sozinho
   }
 
   // ================= ADMIN (planos, etapa do telão, mensagens) =================
