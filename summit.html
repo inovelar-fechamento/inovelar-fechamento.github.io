@@ -368,6 +368,7 @@ body.combv{overflow:hidden}
   var MODO = q.get('v') || (q.has('telao') ? 'telao' : q.has('acessos') ? 'acessos' : q.has('admin') ? 'admin' : 'corretor');
   if (['corretor', 'admin', 'telao', 'acessos', 'como'].indexOf(MODO) < 0) MODO = 'corretor';
   var CHAVE_GESTOR = q.get('g');
+  var GESTAO = MODO !== 'corretor';   // Administração, Telão, Acessos e Ver como: e-mail de gestor separado do de corretor
   if (q.get('t')) { ls('mp27_token', q.get('t')); history.replaceState(null, '', location.pathname + (MODO !== 'corretor' ? '?v=' + MODO : '')); }
 
   // ================= LOGIN =================
@@ -376,13 +377,13 @@ body.combv{overflow:hidden}
       '<div class="logo" style="font-size:26px">RE/<span>MAX</span> Inovelar</div><h1>Meu Plano 2027</h1><p class="sub">Agent Summit · 18 e 19/11/2026</p>' +
       (msg ? '<div class="aviso">' + esc(msg) + '</div>' : '') +
       (location.hostname !== 'inovelar-fechamento.github.io' && location.protocol !== 'file:' ? '<div class="aviso">Você abriu uma cópia do arquivo. O app só se conecta pelo link oficial: <b>inovelar-fechamento.github.io/summit.html</b></div>' : '') +
-      '<div class="card" id="passoEmail"><label>Seu e-mail</label><input id="em" type="email" autocomplete="email" placeholder="seuemail@remax.com.br" value="' + esc(ls('mp27_email') || '') + '"><div class="btns"><button class="btn" id="bEm" style="width:100%">Receber código</button></div></div>' +
+      '<div class="card" id="passoEmail"><label>Seu e-mail</label><input id="em" type="email" autocomplete="email" placeholder="seuemail@remax.com.br" value="' + esc(ls(GESTAO ? 'mp27_email_gestor' : 'mp27_email') || '') + '"><div class="btns"><button class="btn" id="bEm" style="width:100%">Receber código</button></div></div>' +
       '<div class="card hide" id="passoCod"><label>Digite o código de 6 números que chegou no seu e-mail</label><input id="cod" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="7" class="codigo"><div class="btns"><button class="btn" id="bCod" style="width:100%">Entrar</button></div><p class="sub" style="margin-top:10px">Não chegou? Olhe o spam ou <a href="#" id="trocar">pedir de novo</a>. O Brenno e a Andréia também conseguem ver o seu código.</p></div>' +
       '</div></div>';
     var em = $('#em'), bEm = $('#bEm');
     bEm.onclick = function () {
       var e = em.value.trim(); if (!e) return em.focus(); bEm.disabled = true; bEm.textContent = 'Enviando…';
-      chamar('pedirCodigo', [e]).then(function (r) { ls('mp27_email', e); $('#passoEmail').classList.add('hide'); $('#passoCod').classList.remove('hide'); $('#cod').focus(); if (r.aviso) toast(r.aviso, 7000); })
+      chamar('pedirCodigo', [e]).then(function (r) { ls(GESTAO ? 'mp27_email_gestor' : 'mp27_email', e); $('#passoEmail').classList.add('hide'); $('#passoCod').classList.remove('hide'); $('#cod').focus(); if (r.aviso) toast(r.aviso, 7000); })
         .catch(function (x) { toast(x.message, 5000); }).then(function () { bEm.disabled = false; bEm.textContent = 'Receber código'; });
     };
     em.onkeydown = function (ev) { if (ev.key === 'Enter') bEm.click(); };
@@ -413,7 +414,7 @@ body.combv{overflow:hidden}
     (COMO !== null ? chamar('carregarComo', [S.token, COMO]) : chamar('carregar', [S.token])).then(function (r) {
       if (r.como) S.como = r.nome;
       S.eu = r; aplicaConfig(r.config);
-      if (MODO === 'admin' || MODO === 'acessos' || (MODO === 'como' && !r.como)) { if (!r.admin) return telaLogin('Este acesso é só do Brenno e da Andréia.'); return MODO === 'admin' ? admin() : acessos(); }
+      if (MODO === 'admin' || MODO === 'acessos' || (MODO === 'como' && !r.como)) { if (!r.admin) { S.token = null; return telaLogin('Você está entrando com um e-mail de corretor' + (r.nome ? ' (' + r.nome + ')' : '') + '. Esta parte é só do Brenno e da Andréia: digite abaixo o seu e-mail de gestor.'); } return MODO === 'admin' ? admin() : acessos(); }
       if (r.admin) { location.href = location.pathname + '?v=admin'; return; }
       S.diag = r.diagnostico || {}; S.ano = r.ano || null; S.equipe = r.equipe || [];
       if (r.plano) { S.D = r.plano.dados || {}; S.versao = r.plano.versao; S.status = r.plano.status; S.aceiteEm = r.plano.aceiteEm; }
