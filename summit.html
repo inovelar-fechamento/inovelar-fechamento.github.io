@@ -92,6 +92,10 @@ body.emleitor{overflow:hidden}
 .vbook{margin-left:8px;min-height:36px!important;padding:6px 10px!important;font-size:13px}
 @media(max-width:560px){.vbook{font-size:12px;padding:6px 8px!important}.lxtop b{display:none}}
 @media print{.leitor{display:none!important}}
+
+/* telão: palco que encaixa a tela inteira na TV */
+.tvstage{position:fixed;inset:0;overflow:hidden;background:var(--bg)}
+.tvstage .tv{width:1920px;min-height:0;transform-origin:top left}
 </style></head>
 <body><div id="app"></div>
 <script>window.SUMMIT_API="https://script.google.com/macros/s/AKfycbzuymYfKYw90PZCY3AB6FHqTc7OmkxA5lEmw_s8eTJRW-NsKRYki9W26Q22E5ZFQ3Be/exec";</script>
@@ -350,7 +354,7 @@ body.emleitor{overflow:hidden}
   // ---------------- caminho por endereço ----------------
   var q = new URLSearchParams(location.search);
   var MODO = q.get('v') || (q.has('telao') ? 'telao' : q.has('acessos') ? 'acessos' : q.has('admin') ? 'admin' : 'corretor');
-  if (['corretor', 'admin', 'telao', 'acessos'].indexOf(MODO) < 0) MODO = 'corretor';
+  if (['corretor', 'admin', 'telao', 'acessos', 'como'].indexOf(MODO) < 0) MODO = 'corretor';
   var CHAVE_GESTOR = q.get('g');
   if (q.get('t')) { ls('mp27_token', q.get('t')); history.replaceState(null, '', location.pathname + (MODO !== 'corretor' ? '?v=' + MODO : '')); }
 
@@ -393,11 +397,13 @@ body.emleitor{overflow:hidden}
     if (!S.token) return telaLogin();
     app.innerHTML = '<div class="center"><p class="sub">Carregando…</p></div>';
     if (MODO === 'telao') return telao();
-    chamar('carregar', [S.token]).then(function (r) {
+    var COMO = MODO === 'como' ? q.get('c') : null;
+    (COMO !== null ? chamar('carregarComo', [S.token, COMO]) : chamar('carregar', [S.token])).then(function (r) {
+      if (r.como) S.como = r.nome;
       S.eu = r; aplicaConfig(r.config);
-      if (MODO === 'admin' || MODO === 'acessos') { if (!r.admin) return telaLogin('Este acesso é só do Brenno e da Andréia.'); return MODO === 'admin' ? admin() : acessos(); }
+      if (MODO === 'admin' || MODO === 'acessos' || (MODO === 'como' && !r.como)) { if (!r.admin) return telaLogin('Este acesso é só do Brenno e da Andréia.'); return MODO === 'admin' ? admin() : acessos(); }
       if (r.admin) { location.href = location.pathname + '?v=admin'; return; }
-      S.diag = r.diagnostico || {};
+      S.diag = r.diagnostico || {}; S.ano = r.ano || null; S.equipe = r.equipe || [];
       if (r.plano) { S.D = r.plano.dados || {}; S.versao = r.plano.versao; S.status = r.plano.status; S.aceiteEm = r.plano.aceiteEm; }
       else { S.D = novoPlano(S.diag); S.versao = 0; S.status = 'rascunho'; }
       S.aba = ls('mp27_aba') || 'inicio';
@@ -447,9 +453,10 @@ body.emleitor{overflow:hidden}
   }
 
   // ================= SALVAR (automático) =================
-  function marcarSujo() { S.sujo = true; atualizaSalvo('Salvando…'); clearTimeout(S.fila); S.fila = setTimeout(salvar, 1800); }
+  function marcarSujo() { if (S.como) { atualizaSalvo('👁 Vendo como ' + S.como + ' — nada é salvo'); return; } S.sujo = true; atualizaSalvo('Salvando…'); clearTimeout(S.fila); S.fila = setTimeout(salvar, 1800); }
   function atualizaSalvo(t) { var e = $('#salvo'); if (e) e.textContent = t; }
   function salvar() {
+    if (S.como) return;
     if (S.salvando) { clearTimeout(S.fila); S.fila = setTimeout(salvar, 800); return; }
     if (!S.sujo || S.status === 'aceito') return;
     S.salvando = true; S.sujo = false;
@@ -570,6 +577,41 @@ body.emleitor{overflow:hidden}
   }
   function verNoBook(p) { return '<a href="#" class="vernobook" data-book="' + p + '">📖 ver no book (' + rotPag(p) + ')</a>'; }
 
+
+  // ================= 2026 x 2025 e a equipe (inovação Inovelar, além do book) =================
+  function var_(a, b) { if (!b) return null; return Math.round((a - b) / b * 100); }
+  function seta(p) { return p === null ? '' : ' <b style="color:' + (p >= 0 ? 'var(--ok)' : 'var(--er)') + '">' + (p >= 0 ? '▲ +' : '▼ ') + p + '%</b>'; }
+  function anoHtml() {
+    var a = S.ano; if (!a) return '';
+    var g = function (re) { var k = Object.keys(a).filter(function (x) { return re.test(x); })[0]; return k ? (M.num(a[k]) || 0) : 0; };
+    var hoje = g(/^Comissão 2026 até hoje/), hojeT = g(/^Transações 2026 até hoje/), c26 = g(/^Comissão jan.out 2026/), c25 = g(/^Comissão jan.out 2025/), t26 = g(/^Transações jan.out 2026/), t25 = g(/^Transações jan.out 2025/), n26 = g(/^Novas propriedades jan.out 2026/), n25 = g(/^Novas propriedades jan.out 2025/), ano25 = g(/^Comissão ano 2025/);
+    var pv = var_(c26, c25), msg;
+    if (!c25 && !t25) msg = c26 ? '2026 é o seu primeiro ano com resultado no iList — ele vira a sua base para 2027.' : 'Ainda não há resultado seu no iList. Seu 2027 começa pela captação: é ela que traz a primeira venda.';
+    else if (pv >= 0) msg = 'Você está <b>' + pv + '% acima</b> de 2025 no mesmo período. Repita o que funcionou e use o plano para ir além.';
+    else msg = 'Você está <b>' + Math.abs(pv) + '% abaixo</b> de 2025 no mesmo período. A virada começa pela captação — mas captação com preço certo (veja a equipe logo abaixo).';
+    return '<h2>Meu 2026 x 2025</h2><div class="card">' +
+      '<div class="ok" style="margin-top:0">Na tela inicial do iList (“Comissões do Ano”, 2026 até hoje) aparece <b>' + brl(hoje, 2) + '</b> e ' + nfmt(hojeT) + ' transações. Os números acima são dos <b>últimos 12 meses</b>, como o book pede — por isso são diferentes.</div>' +
+      '<div class="tab12"><table style="min-width:0;width:100%"><tr><th></th><th>jan–out 2025</th><th>jan–out 2026</th></tr>' +
+      '<tr><td>Comissão recebida</td><td class="c">' + brl(c25, 0) + '</td><td class="c">' + brl(c26, 0) + seta(pv) + '</td></tr>' +
+      '<tr><td>Transações</td><td class="c">' + nfmt(t25) + '</td><td class="c">' + nfmt(t26) + seta(var_(t26, t25)) + '</td></tr>' +
+      '<tr><td>Novas propriedades (captações)</td><td class="c">' + nfmt(n25) + '</td><td class="c">' + nfmt(n26) + seta(var_(n26, n25)) + '</td></tr></table></div>' +
+      '<p style="margin:10px 0 0">' + msg + '</p>' + (ano25 ? '<p class="sub" style="margin:6px 0 0">2025 inteiro: ' + brl(ano25, 0) + '. Fonte: Relatório de Desempenho dos Corretores do iList.</p>' : '') + '</div>';
+  }
+  function equipeHtml() {
+    var E = (S.equipe || []).slice(); if (!E.length) return '';
+    E.forEach(function (x) { x.conv = x.cap ? x.vend / x.cap * 100 : 0; });
+    E.sort(function (a, b) { return b.vend - a.vend || b.conv - a.conv; });
+    var alta = E.filter(function (x) { return x.conv >= 30; }), baixa = E.filter(function (x) { return x.conv < 20 && x.cap >= 10; });
+    var med = function (L, k) { return L.length ? Math.round(L.reduce(function (s, x) { return s + x[k]; }, 0) / L.length) : 0; };
+    var medD = function (L) { var v = L.filter(function (x) { return x.desconto != null; }); return v.length ? (v.reduce(function (s, x) { return s + x.desconto; }, 0) / v.length) : null; };
+    var dA = medD(alta), dB = medD(baixa);
+    var insight = alta.length && baixa.length ? 'Na nossa equipe, quem captou com preço certo vendeu em média <b>' + med(alta, 'conv') + '%</b> do que captou' + (dA != null ? ', com desconto de só ' + nfmt(dA) + '% sobre o anúncio' : '') + '. Quem captou muito sem acertar o preço vendeu <b>' + med(baixa, 'conv') + '%</b>' + (dB != null ? ' e precisou de ' + nfmt(dB) + '% de desconto' : '') + ': o imóvel fica parado e a captação não vira comissão. <b>Captação é o caminho — bem precificada.</b>' : 'Captação é o caminho — bem precificada.';
+    var eu = norm(S.eu && S.eu.nome);
+    return '<h2>O que a equipe mostra</h2><div class="card"><p style="margin-top:0">' + insight + '</p><div class="tab12"><table style="min-width:520px;width:100%"><tr><th>Corretor</th><th>Captou</th><th>Vendeu</th><th>Conversão</th><th>Dias para vender</th><th>Desconto na venda</th></tr>' +
+      E.map(function (x) { var meu = norm(x.nome) === eu; return '<tr' + (meu ? ' style="outline:2px solid var(--ac)"' : '') + '><td>' + esc(x.nome) + (meu ? ' (você)' : '') + '</td><td class="c">' + nfmt(x.cap) + '</td><td class="c">' + nfmt(x.vend) + '</td><td class="c" style="color:' + (x.conv >= 30 ? 'var(--ok)' : x.conv < 20 ? 'var(--er)' : 'var(--wa)') + '">' + Math.round(x.conv) + '%</td><td class="c">' + (x.dias == null ? '—' : nfmt(x.dias, 0)) + '</td><td class="c">' + (x.desconto == null ? '—' : nfmt(x.desconto) + '%') + '</td></tr>'; }).join('') +
+      '</table></div><p class="sub" style="margin:8px 0 0">Últimos 12 meses (01/11/2025 a 31/10/2026), relatórios do iList. Conversão = captações exclusivas vendidas ÷ captadas. Desconto = quanto a venda ficou abaixo do anúncio. Preço certo na captação vende mais rápido e com pouco desconto.</p></div>';
+  }
+  function norm(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase(); }
   // ================= ABAS =================
   var ABAS = [
     { id: 'inicio', t: 'Início' }, { id: 'diag', t: 'Diagnóstico' }, { id: 'p1', t: '1 · Porquê' }, { id: 'p2', t: '2 · Estilo de vida' },
@@ -577,7 +619,7 @@ body.emleitor{overflow:hidden}
     { id: 'trilha', t: 'Trilha Ativação' }, { id: 'cockpit', t: 'Cockpit' }, { id: 'aceite', t: 'Aceite' }, { id: 'claude', t: 'Levar p/ meu Claude' }
   ];
   function corretor() {
-    app.innerHTML = '<div class="top"><div class="in"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo" id="salvo">' + (S.status === 'aceito' ? '✓ Aceito' : 'Tudo salvo') + '</span><button class="btn sec vbook" id="vbook">📖 Voltar ao book</button></div><div class="prog"><i id="pg" style="width:0"></i></div><div class="nav" id="nav"></div></div><div class="wrap" id="corpo"></div>' +
+    app.innerHTML = '<div class="top"><div class="in"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo" id="salvo">' + (S.como ? '👁 Vendo como ' + esc(S.como) + ' — nada é salvo' : S.status === 'aceito' ? '✓ Aceito' : 'Tudo salvo') + '</span><button class="btn sec vbook" id="vbook">📖 Voltar ao book</button></div><div class="prog"><i id="pg" style="width:0"></i></div><div class="nav" id="nav"></div></div><div class="wrap" id="corpo"></div>' +
       '<div class="foot"><button class="btn sec" id="ant">‹ Voltar</button><button class="btn" id="prox">Avançar ›</button></div>';
     $('#ant').onclick = function () { mover(-1); }; $('#prox').onclick = function () { mover(1); };
     $('#vbook').onclick = voltarBook;
@@ -654,6 +696,7 @@ body.emleitor{overflow:hidden}
         '<h2>Meu ano em números</h2>' + (temDado ? '<div class="aviso">Trouxemos estes números dos relatórios do iList. <b>Confira: se algum não bater com o que você tem, pode alterar.</b> Os campos com borda azul vieram do iList.</div>' : '<div class="aviso">Não encontramos histórico seu no iList. Preencha com os seus números ou deixe em branco e confirme com o seu broker.</div>') +
         '<div class="card">' + nums.map(function (x) { return linha(x[1], inp('diag.num.' + x[0], k_ph(x[0]), 'n', dval(x[0]) !== '' ? 'pre' : ''), x[0] === 'revisado' ? 'Este não vem do iList — estime.' : (x[0] === 'transacoes' ? 'Cada lado do negócio conta 1; parceria conta 0,5.' : '')); }).join('') +
         '<div class="check"><label><input type="checkbox" data-c="diag.conferido"' + (S.D.diag.conferido ? ' checked' : '') + trava() + '> Conferi os meus números</label></div></div>' +
+        anoHtml() + equipeHtml() +
         origensHtml() +
         '<h2>Minhas 3 maiores origens do ano</h2><div class="card">' + [0, 1, 2].map(function (i) { return linha('0' + (i + 1), sel('diag.top3.' + i, ORIGENS.map(function (o) { return o[1]; }))); }).join('') + '<p class="sub">Essas três recebem o seu investimento em 2027.</p></div>' +
         '<h2>Onde eu estou hoje</h2><p class="sub">Nota de 1 (discordo totalmente) a 5 (concordo totalmente).</p><div class="card">' + AFIRM.map(function (a, i) { return linha((i + 1) + '. ' + a, sel('diag.notas.' + i, ['1', '2', '3', '4', '5'])); }).join('') + '<div data-r="auto"></div></div>';
@@ -754,8 +797,8 @@ body.emleitor{overflow:hidden}
     p5: function () { $$('[data-canal]').forEach(function (c) { c.onchange = function () { var a = S.D.p5.canais = S.D.p5.canais || [], v = c.getAttribute('data-canal'); if (c.checked) { if (a.length >= 3) { c.checked = false; return toast('Escolha no máximo 3 canais.'); } a.push(v); } else a.splice(a.indexOf(v), 1); marcarSujo(); }; }); },
     aceite: function () {
       var b = $('#bPedeAceite'); if (!b) return;
-      b.onclick = function () { b.disabled = true; salvarJa().then(function () { return chamar('pedirAceite', [S.token]); }).then(function (r) { $('#boxAceite').classList.remove('hide'); toast(r.enviado ? 'Código enviado para o seu e-mail.' : 'Peça o código ao Brenno ou à Andréia.', 6000); }).catch(function (e) { toast(e.message, 5000); b.disabled = false; }); };
-      $('#bConfAceite').onclick = function () { chamar('confirmarAceite', [S.token, $('#codAceite').value]).then(function (r) { S.status = 'aceito'; S.aceiteEm = r.aceitoEm; toast('Plano aceito! Parabéns.', 5000); corretor(); }).catch(function (e) { toast(e.message, 5000); }); };
+      b.onclick = function () { if (S.como) return toast('Modo "ver como corretor": o aceite não é enviado.', 4000); b.disabled = true; salvarJa().then(function () { return chamar('pedirAceite', [S.token]); }).then(function (r) { $('#boxAceite').classList.remove('hide'); toast(r.enviado ? 'Código enviado para o seu e-mail.' : 'Peça o código ao Brenno ou à Andréia.', 6000); }).catch(function (e) { toast(e.message, 5000); b.disabled = false; }); };
+      $('#bConfAceite').onclick = function () { if (S.como) return; chamar('confirmarAceite', [S.token, $('#codAceite').value]).then(function (r) { S.status = 'aceito'; S.aceiteEm = r.aceitoEm; toast('Plano aceito! Parabéns.', 5000); corretor(); }).catch(function (e) { toast(e.message, 5000); }); };
     },
     claude: function () {
       var t = textoClaude(); $('#txClaude').value = t;
@@ -818,7 +861,10 @@ body.emleitor{overflow:hidden}
   };
   function dataBR(s) { return s && /^\d{4}-\d{2}-\d{2}$/.test(s) ? s.slice(8, 10) + '/' + s.slice(5, 7) : '—'; }
   function telao() {
-    app.innerHTML = '<div class="tv" id="tv"><p class="sub">Carregando o telão…</p></div>';
+    app.innerHTML = '<div class="tvstage" id="tvstage"><div class="tv" id="tv"><p class="sub">Carregando o telão…</p></div></div>';
+    // tela inteira sempre: o conteúdo é montado em 1920 px e encolhe até caber na TV (nada corta)
+    var encaixa = function () { var tv = $('#tv'); if (!tv) return; tv.style.transform = 'none'; var h = tv.scrollHeight, w = 1920; var k = Math.min(window.innerWidth / w, window.innerHeight / h); tv.style.transform = 'scale(' + k + ')'; var st = $('#tvstage'); st.style.height = window.innerHeight + 'px'; tv.style.marginLeft = Math.max(0, (window.innerWidth - w * k) / 2) + 'px'; };
+    window.addEventListener('resize', encaixa);
     var giro = ['abertura', 'diag', 'p3', 'p2', 'p1', 'p5', 'p4'], gi = 0, ultimo = null;
     var desenha = function (t) {
       var et = t.etapa === 'auto' ? giro[gi++ % giro.length] : t.etapa;
@@ -828,6 +874,7 @@ body.emleitor{overflow:hidden}
       $('#tv').innerHTML = '<div style="display:flex;align-items:center;gap:14px"><span class="logo" style="font-size:28px">RE/<span>MAX</span> Inovelar</span><h1 style="margin:0">Agent Summit · ' + esc(nomeEt) + '</h1>' + (t.pagina ? '<span class="chip" style="font-size:16px">📖 book ' + rotPag(t.pagina) + '</span>' : '') + '<span class="salvo">ao vivo · ' + esc(String(t.atualizado).slice(11, 16)) + '</span></div>' +
         '<div class="kpis" style="grid-template-columns:repeat(3,1fr)">' + (PAINEIS[et] || PAINEIS.abertura)(t) + '</div>' +
         '<div class="cards">' + c.map(function (x) { var st = x.status === 'aceito' ? '<span class="chip aceito">✓ aceito</span>' : x.status === 'rascunho' ? '<span class="chip rascunho">preenchendo · ' + (x.pct || 0) + '%</span>' : '<span class="chip nao">ainda não começou</span>'; return '<div class="cr ' + x.status + '"><h4>' + esc(x.nome) + '</h4>' + st + '<div class="bar"><i style="width:' + Math.round((x.vgcMeta || 0) / maxV * 100) + '%"></i></div><div class="l"><span>VGC 2027</span><b style="' + corVGC(x.vgcMeta) + '">' + (x.vgcMeta ? brl(x.vgcMeta, 0) : '—') + '</b></div>' + (x.vgcMeta && x.vgcMeta < EXEC_MIN ? '<div class="l" style="color:var(--er);font-size:13px">abaixo de qualquer clube</div>' : '') + '<div class="l"><span>Transações · captações</span><b>' + (x.transacoes || '—') + ' · ' + (x.captacoes || '—') + '</b></div><div class="l"><span>Clube</span><b>' + esc(x.clube || '—') + '</b></div></div>'; }).join('') + '</div>';
+      encaixa(); setTimeout(encaixa, 300);
     };
     var pinta = function () { chamar('telao', [S.token]).then(function (t) { aplicaConfig(t.config); ultimo = t; desenha(t); }).catch(function (e) { if (/Sessão|acesso/.test(e.message)) { ls('mp27_token', null); ls('mp27_gestor', null); return telaLogin('Entre para abrir o telão.'); } toast(e.message); }); };
     pinta(); setInterval(pinta, 15000); setInterval(function () { if (ultimo && ultimo.etapa === 'auto') desenha(ultimo); }, 20000);
@@ -849,7 +896,7 @@ body.emleitor{overflow:hidden}
           '<h2>Planos dos corretores</h2><table><tr><th>Corretor</th><th>Situação</th><th>Metas</th><th></th></tr>' + a.corretores.filter(function (c) { return c.ativo; }).map(function (c) {
             var p = c.plano, r = p && p.dados && p.dados.__resumo || {};
             var st = !p ? '<span class="chip nao">não começou</span>' : p.status === 'aceito' ? '<span class="chip aceito">aceito ' + esc(String(p.aceiteEm).slice(0, 10)) + '</span>' : '<span class="chip rascunho">' + esc(p.passo || '') + ' · ' + (p.pct || 0) + '%</span>';
-            return '<tr><td><b>' + esc(c.nome) + '</b></td><td>' + st + (p ? '<br><small class="sub">' + esc(p.atualizado) + '</small>' : '') + '</td><td>' + (r.vgcMeta ? 'VGC <b style="' + corVGC(r.vgcMeta) + '">' + brl(r.vgcMeta, 0) + '</b>' + (r.vgcMeta < EXEC_MIN ? ' <small style="color:var(--er)">sem clube</small>' : '') + '<br>' + r.transacoes + ' trans. · ' + r.captacoes + ' capt.' + (r.nivel ? '<br><small class="sub">' + esc(r.nivel) + '</small>' : '') : '—') + '</td><td><select data-ac="' + esc(c.email) + '"><option value="">Ações…</option>' + (p ? '<option value="ver">Ver plano completo</option>' : '') + '<option value="msg">Mensagem pronta</option>' + (p && p.status === 'aceito' ? '<option value="reabrir">Reabrir plano</option>' : '') + '</select></td></tr>';
+            return '<tr><td><b>' + esc(c.nome) + '</b></td><td>' + st + (p ? '<br><small class="sub">' + esc(p.atualizado) + '</small>' : '') + '</td><td>' + (r.vgcMeta ? 'VGC <b style="' + corVGC(r.vgcMeta) + '">' + brl(r.vgcMeta, 0) + '</b>' + (r.vgcMeta < EXEC_MIN ? ' <small style="color:var(--er)">sem clube</small>' : '') + '<br>' + r.transacoes + ' trans. · ' + r.captacoes + ' capt.' + (r.nivel ? '<br><small class="sub">' + esc(r.nivel) + '</small>' : '') : '—') + '</td><td><select data-ac="' + esc(c.email) + '"><option value="">Ações…</option>' + (p ? '<option value="ver">Ver plano completo</option>' : '') + '<option value="como">Ver como ele vê</option><option value="msg">Mensagem pronta</option>' + (p && p.status === 'aceito' ? '<option value="reabrir">Reabrir plano</option>' : '') + '</select></td></tr>';
           }).join('') + '</table><div id="det"></div>';
         S.adm = a;
         $$('input[name=et]').forEach(function (r) { r.onchange = function () { var pg = PAG_ETAPA[r.value]; chamar('adminEtapa', [S.token, r.value, pg === undefined ? null : pg]).then(function (x) { $('#pgAtual').textContent = rotPag(x.pagina); toast('Telão: ' + r.parentNode.textContent + (pg !== undefined ? ' · book ' + rotPag(pg) : '')); }).catch(function (e) { toast(e.message); }); }; });
@@ -893,6 +940,7 @@ body.emleitor{overflow:hidden}
     var c = S.adm.corretores.filter(function (x) { return x.email === email; })[0]; if (!v || !c) return;
     if (v === 'msg') { var m = msgPronta(c); $('#det').innerHTML = '<div class="card"><b>Mensagem para ' + esc(c.nome) + '</b><textarea id="tmsg">' + esc(m) + '</textarea><div class="btns"><button class="btn" id="bcp">Copiar</button><a class="btn sec" target="_blank" href="https://wa.me/?text=' + encodeURIComponent(m) + '">Abrir no WhatsApp</a></div></div>'; $('#bcp').onclick = function () { $('#tmsg').select(); document.execCommand('copy'); toast('Copiado!'); }; $('#det').scrollIntoView(); return; }
     if (v === 'link') { chamar('adminLink', [S.token, email]).then(function (r) { var u = location.origin + location.pathname + '?t=' + encodeURIComponent(r.token); $('#det').innerHTML = '<div class="card"><b>Link de entrada de ' + esc(c.nome) + '</b><p class="sub">Entra direto, sem código. Mande só para ele.</p><textarea>' + esc(u) + '</textarea></div>'; $('#det').scrollIntoView(); }).catch(function (e) { toast(e.message); }); return; }
+    if (v === 'como') { window.open(location.pathname + '?v=como&c=' + encodeURIComponent(c.nome), '_blank'); return; }
     if (v === 'ver') { var D = c.plano.dados; S.D = D; S.eu = { nome: c.nome }; var r = calc(); $('#det').innerHTML = '<h2>Plano de ' + esc(c.nome) + '</h2>' + cockpit(r) + '<div class="card"><h3 style="margin-top:0">Estilo de vida (só administradores)</h3>' + RES.p2(r) + '<h3>Sonhos</h3>' + (D.passo2.sonhos || []).filter(function (s) { return s && s.nome; }).map(function (s) { return '<p>' + esc(s.nome) + ' · ' + brl(s.valor, 0) + '</p>'; }).join('') + '</div><div class="card"><h3 style="margin-top:0">Teste de realidade</h3>' + RES.real(r) + '</div>'; $('#det').scrollIntoView(); return; }
     if ((v === 'desativar' || v === 'reabrir') && !confirm((v === 'desativar' ? 'Desativar ' : 'Reabrir o plano de ') + c.nome + '?')) return;
     chamar('adminCorretor', [S.token, v, { email: email }]).then(function () { toast('Feito.'); pinta(); }).catch(function (e) { toast(e.message); });
