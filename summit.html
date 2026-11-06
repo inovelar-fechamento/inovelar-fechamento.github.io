@@ -433,12 +433,13 @@ body.combv{overflow:hidden}
       diag: { num: n, conferido: false, origens: {}, top3: ['', '', ''], notas: ['', '', '', '', '', ''] },
       p1: { q: ['', '', '', '', '', '', ''], frase: '' },
       passo2: { pessoal: {}, negocio: {}, sonhos: [{}, {}, {}], aliquota: '' },
-      passo3: { faixa: '', ticket: n.ticket, percTransacao: String(S.percPadrao || 3), conversao: n.conversao, mesesCarteira: '', faixaAlvo: '', clubeAlvo: '' },
+      passo3: { faixa: '', ticket: n.ticket, percTransacao: percReal() || String(S.percPadrao || 3), conversao: n.conversao, mesesCarteira: '', faixaAlvo: '', clubeAlvo: '' },
       metas: { cresIniciais: n.ativos, novas: [], perdidas: [], vendidas: [], transCaptacao: [], transVenda: [], comissaoMedia: [] },
       p4: {}, p5: { horas: {}, funil: {}, regua: {}, canais: [], hab: [{}, {}, {}] }, p6: { comp: ['', '', ''], broker: ['', '', ''] },
       trilha: { checks: {} }
     };
   }
+  function percReal() { var n = M.num(S.diag && S.diag['% comissão por transação (iList)']); return n ? String(n).replace('.', ',') : ''; }   // % real do iList (comissão ÷ transações × ticket), editável
   function ehNovo() { var d = S.diag || {}; return String(d['Novo? (aviso)'] || '').toUpperCase() === 'SIM'; }
 
   // ================= CONTAS =================
@@ -748,7 +749,7 @@ body.combv{overflow:hidden}
         '<h2>Da comissão à transação (p.26)</h2><div class="card">' + linha('1 · O número do meu estilo de vida', '<b class="num" style="display:block">' + brl(calc().passo2.estiloVidaAno) + '</b>', 'Vem do Passo 2') +
         linha('2 · Minha faixa de comissionamento hoje (%)', sel('passo3.faixa', M.FAIXAS.map(function (f) { return [String(f), f + '%']; })), '40% início · 45% crescimento · 60% performance sólida · 70% máxima comissão') +
         linha('4 · Meu ticket médio (R$)', inp('passo3.ticket', '', 'n', d.ticket ? 'pre' : ''), 'Do Diagnóstico' + (d.ticket ? ': ' + brl(d.ticket, 0) : '')) +
-        linha('5 · Percentual de comissão por transação (%)', inp('passo3.percTransacao', '3', 'n'), 'O book usa 3%') + '<div data-r="p3a"></div></div><div data-r="real"></div>' +
+        linha('5 · Percentual de comissão por transação (%)', inp('passo3.percTransacao', '3', 'n'), (percReal() ? 'Veio do seu iList: ' + percReal() + '% nos últimos 12 meses (comissão ÷ transações ÷ ticket). Venda sozinho = 6% (3% captação + 3% venda); em parceria, 3% para cada; exceções a 5% = 2,5% cada. Pode corrigir.' : 'O book usa 3%')) + '<div data-r="p3a"></div></div><div data-r="real"></div>' +
         '<div class="card"><h3 style="margin-top:0">Minha próxima faixa</h3>' + linha('Faixa que quero alcançar (%)', sel('passo3.faixaAlvo', M.FAIXAS.map(function (f) { return [String(f), f + '%']; }))) + linha('Clube que quero conquistar em 2027', sel('passo3.clubeAlvo', M.CLUBES.slice().reverse().map(function (c) { return c.nome; }))) + '</div>' +
         '<h2>Da transação à captação (p.29)</h2><div class="card">' + linha('2 · Minha conversão da captação (%)', inp('passo3.conversao', 'ex.: 22', 'n', d.conversao ? 'pre' : ''), 'Do Diagnóstico' + (d.conversao ? ': ' + d.conversao + '%' : '') + ' · sem histórico, combine com o broker') + '<div data-r="p3b"></div><div data-r="sim"></div><p class="sub">Carteira só é real com preço correto. Não aceite captação só para aumentar a carteira.</p></div>' +
         '<h2>Minha carteira alvo (p.30)</h2><div class="card">' + linha('Quantos meses, em média, cada imóvel fica na sua carteira', inp('passo3.mesesCarteira', 'ex.: 3', 'n')) + '<div data-r="cart"></div><p class="sub">Régua: 0–4 não tem negócio · 5–10 lento · 11–15 saudável · 16–18 negócio feliz · 19–23 alta performance com apoio · mais de 23 perda de eficácia.</p></div>' +
