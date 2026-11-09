@@ -108,6 +108,15 @@ body.combv{overflow:hidden}
 .bvlead{color:var(--mu);margin:0 0 4px;font-size:17px}
 .bvc{background:var(--pn);border:1px solid var(--ln);border-radius:var(--r);padding:14px 16px}.bvc h3{margin:0 0 6px;color:var(--ac)}.bvc p{margin:0}
 .bvgo{font-size:19px;padding:16px 26px;margin:8px auto 0;min-width:220px;box-shadow:0 0 22px rgba(47,228,255,.45)}
+/* v09/11: preenchimento página a página */
+body.pgmode .nav{display:none}
+.pgbar{display:flex;gap:12px;align-items:center;background:var(--pn);border:1px solid var(--ac);border-radius:14px;padding:10px 12px;margin:0 0 14px}
+.pgbar b{display:block}.pgbar .sub{display:block;margin:2px 0 0}
+.pgmini{flex:0 0 auto;width:74px;height:96px;border-radius:8px;overflow:hidden;border:1px solid var(--ln);cursor:zoom-in;background:#fff}
+.pgmini img{width:100%;height:100%;object-fit:cover;object-position:top}
+.pgout{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:13px}
+.pgout .btn{padding:6px 10px;font-size:13px}
+@media (min-width:1180px){.pgmini{display:none}}
 </style></head>
 <body><div id="app"></div>
 <script>window.SUMMIT_API="https://script.google.com/macros/s/AKfycbzuymYfKYw90PZCY3AB6FHqTc7OmkxA5lEmw_s8eTJRW-NsKRYki9W26Q22E5ZFQ3Be/exec";</script>
@@ -337,7 +346,7 @@ body.combv{overflow:hidden}
 (function () {
   'use strict';
   var API = window.SUMMIT_API || '__API__';
-  var VERSAO_TELA = '1.0.0';
+  var VERSAO_TELA = '1.1.0';   // 09/11/2026: preenchimento página a página
   var M = window.Motor, $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var app = $('#app');
   var S = { token: null, eu: null, D: null, versao: 0, status: 'rascunho', diag: null, aba: 'inicio', sujo: false, salvando: false, fila: null };
@@ -508,10 +517,10 @@ body.combv{overflow:hidden}
   // ================= BOOK AO LADO =================
   // arquivo book/pNN.jpg = página NN do PDF; página impressa = NN − 1 (capa = 0)
   var BOOK_TOTAL = 56;
-  var PAG_ABA = { inicio: 11, diag: 14, p1: 19, p2: 21, p3: 26, p4: 33, p5: 35, p6: 42, trilha: 46, cockpit: 49, aceite: 49, claude: 50 };
-  var PAG_ETAPA = { abertura: 3, diag: 13, p1: 17, p2: 20, p3: 25, p4: 32, p5: 34, p6: 41, trilha: 45, fechamento: 49 };
+  var PAG_ABA = { inicio: 11, diag: 14, p1: 19, p2: 21, p3: 26, p4: 33, p5: 35, p6: 44, trilha: 48, cockpit: 51, aceite: 51, claude: 51 };   // índice da imagem (book/pNN.jpg = índice + 1)
+  var PAG_ETAPA = { abertura: 3, diag: 13, p1: 17, p2: 20, p3: 25, p4: 32, p5: 34, p6: 41, trilha: 47, fechamento: 51 };
   function arqPag(p) { var n = Math.max(1, Math.min(BOOK_TOTAL, p + 1)); return 'book/p' + (n < 10 ? '0' : '') + n + '.jpg'; }
-  function rotPag(p) { return p <= 0 ? 'Capa' : 'p.' + p; }
+  function rotPag(p) { return p <= 0 ? 'Capa' : p === 45 || p === 46 ? 'Anotações' : 'p.' + (p > 46 ? p - 2 : p); }   // número impresso no rodapé do book
   var B = { pg: 11, turma: null, seguir: true, aberto: false };
   function bookHtml() {
     return '<div class="bookbar"><span class="t">📖 Book · ' + rotPag(B.pg) + '</span>' +
@@ -548,7 +557,7 @@ body.combv{overflow:hidden}
         var p = r.pagina > 0 ? r.pagina : (PAG_ETAPA[r.etapa] || null);
         if (p === null) { B.turma = null; bookRender(); return; }
         var mudou = B.turma !== p; B.turma = p;
-        if (B.seguir && mudou) { B.pg = p; if (!telaLarga() && S.modo !== 'book') toast('A turma está na ' + rotPag(p) + ' do book. Toque em 📖 para ver.'); }
+        if (B.seguir && mudou && (S.pgFill === null || S.pgFill === undefined)) { B.pg = p; if (!telaLarga() && S.modo !== 'book') toast('A turma está na ' + rotPag(p) + ' do book. Toque em 📖 para ver.'); }
         bookRender();
       }).catch(function () {});
     };
@@ -556,8 +565,50 @@ body.combv{overflow:hidden}
   }
   // ================= MODO BOOK (tela principal do corretor) =================
   // Faixa de páginas de cada passo: nessas páginas aparece "Preencher" e abre o plano daquele passo.
-  var FAIXA = [['diag', 13, 16], ['p1', 17, 19], ['p2', 20, 24], ['p3', 25, 31], ['p4', 32, 33], ['p5', 34, 40], ['p6', 41, 44], ['trilha', 45, 48], ['cockpit', 49, 49], ['aceite', 49, 49], ['claude', 50, 50]];
-  function abasDaPag(p) { return FAIXA.filter(function (f) { return p >= f[1] && p <= f[2]; }).map(function (f) { return f[0]; }); }
+  // v09/11: preenchimento PÁGINA A PÁGINA (pedido do Brenno). Chave = índice da página; valor = passo -> blocos (início do título do bloco; '*' = tudo).
+  var PAGMAP = {
+    14: { diag: ['Meu ano em números', 'Meu 2026 x 2025', 'O que a equipe mostra'] }, 15: { diag: ['De onde vieram', 'Minhas 3 maiores'] }, 16: { diag: ['Onde eu estou hoje'] },
+    19: { p1: ['*'] },
+    21: { p2: ['Meu orçamento pessoal'] }, 22: { p2: ['Meu orçamento do negócio'] }, 23: { p2: ['Meus sonhos'] }, 24: { p2: ['O número do meu estilo'] },
+    26: { p3: ['Da comissão à transação'] }, 29: { p3: ['Da transação à captação'] }, 30: { p3: ['Minha carteira alvo'] }, 31: { p3: ['Minhas metas'] },
+    33: { p4: ['*'] },
+    35: { p5: ['Minha semana'] }, 36: { p5: ['Meu funil'] }, 37: { p5: ['Minha régua'] }, 38: { p5: ['Onde vou investir'] }, 39: { p5: ['Minha agenda'] },
+    44: { p6: ['*'] },
+    48: { trilha: ['Data-alvo'] }, 49: { trilha: ['Semana'] },
+    51: { cockpit: ['*'], aceite: ['*'], claude: ['*'] }
+  };
+  function abasDaPag(p) { return Object.keys(PAGMAP[p] || {}); }
+  function proxPagComCampos(p, d) { for (var q = p + d; q >= 0 && q < BOOK_TOTAL; q += d) if (PAGMAP[q]) return q; return null; }
+  // separa a tela do passo em blocos: 'intro' (título e aviso) + um bloco por subtítulo (h2) ou, na trilha, por cartão
+  function blocosDaTela() {
+    var G = [{ k: 'intro', els: [] }], filhos = [].slice.call($('#corpo').children);
+    filhos.forEach(function (c) {
+      var novo = c.tagName === 'H2' ? c.textContent : (S.aba === 'trilha' && /\bcard\b/.test(c.className) ? (c.querySelector('b') || c).textContent : null);
+      if (novo !== null) G.push({ k: novo.trim(), els: [c] }); else G[G.length - 1].els.push(c);
+    });
+    return G;
+  }
+  function aplicaPagina() {
+    document.body.classList.toggle('pgmode', S.pgFill !== null && S.pgFill !== undefined);
+    var bar = $('#pgbar'); if (bar) bar.remove();
+    if (S.pgFill === null || S.pgFill === undefined) return;
+    var p = S.pgFill, L = (PAGMAP[p] || {})[S.aba] || ['*'];
+    if (L.indexOf('*') < 0) blocosDaTela().forEach(function (g) { var ok = g.k === 'intro' || L.some(function (x) { return g.k.indexOf(x) === 0; }); g.els.forEach(function (e) { e.style.display = ok ? '' : 'none'; }); });
+    var outras = abasDaPag(p).filter(function (a) { return a !== S.aba; });
+    var prox = proxPagComCampos(p, 1), seg = p + 1 < BOOK_TOTAL ? p + 1 : null;
+    $('#corpo').insertAdjacentHTML('afterbegin', '<div class="pgbar" id="pgbar"><div class="pgmini" id="pgMini" title="Ampliar a página"><img alt="Página ' + rotPag(p) + ' do book" src="' + arqPag(p) + '"></div><div><b>✍️ Preenchendo a ' + rotPag(p) + ' do book</b><span class="sub">' + (telaLarga() ? 'A página está ao lado. ' : 'Toque na miniatura para ampliar a página. ') + 'Tudo salva sozinho.</span>' +
+      (outras.length ? '<div class="pgout">Também nesta página: ' + outras.map(function (a) { return '<button class="btn sec" data-pgaba="' + a + '">' + esc(nomeAba(a)) + '</button>'; }).join(' ') + '</div>' : '') + '</div></div>');
+    $('#pgMini').onclick = function () { bookAbrir(p); };
+    $$('[data-pgaba]').forEach(function (b) { b.onclick = function () { preencherPagina(p, b.getAttribute('data-pgaba')); }; });
+    $('#ant').textContent = '📖 Voltar ao book'; $('#prox').textContent = seg === null ? 'Concluir ✓' : (PAGMAP[seg] ? 'Próxima página (' + rotPag(seg) + ') ›' : 'Próxima página ›');
+  }
+  function preencherPagina(p, aba) { if (S.sujo) salvar(); S.pgFill = p; B.seguir = false; B.pg = p; ls('mp27_pg', String(p)); S.modo = 'form'; ls('mp27_modo', 'form'); S.aba = aba || abasDaPag(p)[0]; ls('mp27_aba', S.aba); leitorRender(); render(); bookRender(); window.scrollTo(0, 0); }
+  function proximaPagina() {
+    if (S.sujo) salvar(); var q = S.pgFill + 1;
+    if (q >= BOOK_TOTAL) { S.pgFill = null; voltarBook(); return; }
+    if (PAGMAP[q]) { preencherPagina(q); toast('Agora a ' + rotPag(q) + ' do book'); return; }
+    S.pgFill = null; B.seguir = false; B.pg = q; ls('mp27_pg', String(q)); voltarBook();   // página sem campos: mostra a página inteira
+  }
   function nomeAba(id) { return (ABAS.filter(function (a) { return a.id === id; })[0] || {}).t || id; }
   function leitorHtml() {
     var abas = abasDaPag(B.pg);
@@ -565,7 +616,7 @@ body.combv{overflow:hidden}
     return '<div class="lxtop"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo">' + (S.status === 'aceito' ? '✓ Aceito' : '') + '</span><button class="btn sec" id="lxPlano">✍️ Meu plano</button></div>' +
       '<div class="lximg" id="lximg"><img alt="Página ' + rotPag(B.pg) + ' do book" src="' + arqPag(B.pg) + '"></div>' +
       '<div class="lxbar">' +
-        (abas.length ? '<div class="lxpre">' + abas.map(function (a) { return '<button class="btn lxfill" data-fill="' + a + '">✍️ Preencher · ' + esc(nomeAba(a)) + '</button>'; }).join('') + '</div>' : '') +
+        (abas.length ? '<div class="lxpre">' + abas.map(function (a, i) { return '<button class="btn lxfill' + (i ? ' sec' : '') + '" data-fill="' + a + '">✍️ ' + (abas.length > 1 ? esc(nomeAba(a)) : 'Preencher esta página') + '</button>'; }).join('') + '</div>' : '') +
         '<div class="lxnav"><button class="btn sec" id="lxAnt" aria-label="Página anterior">‹</button><span class="lxpg">' + rotPag(B.pg) + '</span><button class="btn sec" id="lxProx" aria-label="Próxima página">›</button>' + turma + '</div>' +
       '</div>';
   }
@@ -578,10 +629,10 @@ body.combv{overflow:hidden}
     $('#lxAnt').onclick = function () { bookIr(B.pg - 1, true); }; $('#lxProx').onclick = function () { bookIr(B.pg + 1, true); };
     var t = $('#lxTurma'); if (t) t.onclick = function () { B.seguir = true; bookIr(B.turma, false); };
     $('#lxPlano').onclick = function () { abrirPlano(abasDaPag(B.pg)[0] || S.aba); };
-    $$('[data-fill]', lx).forEach(function (b) { b.onclick = function () { abrirPlano(b.getAttribute('data-fill')); }; });
+    $$('[data-fill]', lx).forEach(function (b) { b.onclick = function () { preencherPagina(B.pg, b.getAttribute('data-fill')); }; });
   }
-  function abrirPlano(aba) { S.modo = 'form'; ls('mp27_modo', 'form'); leitorRender(); if (aba) irPara(aba); else render(); bookRender(); }
-  function voltarBook() { if (S.sujo) salvar(); S.modo = 'book'; ls('mp27_modo', 'book'); if (B.seguir && B.turma !== null) B.pg = B.turma; leitorRender(); window.scrollTo(0, 0); }
+  function abrirPlano(aba) { S.pgFill = null; S.modo = 'form'; ls('mp27_modo', 'form'); leitorRender(); if (aba) irPara(aba); else render(); bookRender(); }
+  function voltarBook() { if (S.sujo) salvar(); var vinha = S.pgFill; S.pgFill = null; document.body.classList.remove('pgmode'); S.modo = 'book'; if (vinha !== null && vinha !== undefined) B.seguir = false; ls('mp27_modo', 'book'); if (B.seguir && B.turma !== null) B.pg = B.turma; $('#ant').textContent = '‹ Voltar'; $('#prox').textContent = 'Avançar ›'; leitorRender(); window.scrollTo(0, 0); }
   function leitorMontar() {
     if ($('#leitor')) return;
     var lx = document.createElement('div'); lx.id = 'leitor'; lx.className = 'leitor hide'; document.body.appendChild(lx);
@@ -635,7 +686,7 @@ body.combv{overflow:hidden}
   function corretor() {
     app.innerHTML = '<div class="top"><div class="in"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo" id="salvo">' + (S.como ? '👁 Vendo como ' + esc(S.como) + ' — nada é salvo' : S.status === 'aceito' ? '✓ Aceito' : 'Tudo salvo') + '</span><button class="btn sec vbook" id="vbook">📖 Voltar ao book</button></div><div class="prog"><i id="pg" style="width:0"></i></div><div class="nav" id="nav"></div></div><div class="wrap" id="corpo"></div>' +
       '<div class="foot"><button class="btn sec" id="ant">‹ Voltar</button><button class="btn" id="prox">Avançar ›</button></div>';
-    $('#ant').onclick = function () { mover(-1); }; $('#prox').onclick = function () { mover(1); };
+    $('#ant').onclick = function () { if (S.pgFill !== null && S.pgFill !== undefined) voltarBook(); else mover(-1); }; $('#prox').onclick = function () { if (S.pgFill !== null && S.pgFill !== undefined) proximaPagina(); else mover(1); };
     $('#vbook').onclick = voltarBook;
     if (!S.modo) S.modo = ls('mp27_modo') || 'book';
     leitorMontar(); render(); bookMontar(); leitorRender();
@@ -660,13 +711,13 @@ body.combv{overflow:hidden}
   function irPara(id) { if (S.sujo) salvar(); S.aba = id; ls('mp27_aba', id); render(); window.scrollTo(0, 0); }
   function render() {
     $('#nav').innerHTML = ABAS.map(function (a) { return '<button data-a="' + a.id + '" class="' + (a.id === S.aba ? 'on' : '') + '">' + a.t + '</button>'; }).join('');
-    $$('#nav button').forEach(function (b) { b.onclick = function () { irPara(b.getAttribute('data-a')); }; });
+    $$('#nav button').forEach(function (b) { b.onclick = function () { S.pgFill = null; irPara(b.getAttribute('data-a')); }; });
     var on = $('#nav .on'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' });
     $('#corpo').innerHTML = (TELAS[S.aba] || TELAS.inicio)();
     var h1 = $('#corpo h1'); if (h1 && PAG_ABA[S.aba]) h1.insertAdjacentHTML('beforeend', verNoBook(PAG_ABA[S.aba]));
-    if (B.turma === null && PAG_ABA[S.aba] && $('#bookov')) { B.pg = PAG_ABA[S.aba]; bookRender(); }   // sem sessão ao vivo: o book acompanha o passo
+    if (S.pgFill !== null && S.pgFill !== undefined) { B.pg = S.pgFill; if ($('#bookov')) bookRender(); } else if (B.turma === null && PAG_ABA[S.aba] && $('#bookov')) { B.pg = PAG_ABA[S.aba]; bookRender(); }   // sem sessão ao vivo: o book acompanha o passo
     $$('[data-book]', $('#corpo')).forEach(function (a) { a.onclick = function (e) { e.preventDefault(); bookAbrir(Number(a.getAttribute('data-book'))); }; });
-    ligaCampos($('#corpo')); if (EXTRA[S.aba]) EXTRA[S.aba](); recalc();
+    ligaCampos($('#corpo')); if (EXTRA[S.aba]) EXTRA[S.aba](); recalc(); aplicaPagina();
   }
   function recalc() {
     var r = calc(); $('#pg') && ($('#pg').style.width = pctPreenchido() + '%');
@@ -980,7 +1031,7 @@ body.combv{overflow:hidden}
   }
 
   window.addEventListener('error', function (e) { try { console.error(e); } catch (x) {} });
-  window.__mp27 = { S: S, B: B, calc: calc, textoClaude: textoClaude, VERSAO_TELA: VERSAO_TELA };
+  window.__mp27 = { S: S, B: B, rotPag: rotPag, calc: calc, textoClaude: textoClaude, VERSAO_TELA: VERSAO_TELA };
   iniciar();
 })();
 </script>
