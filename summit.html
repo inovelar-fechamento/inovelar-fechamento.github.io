@@ -117,6 +117,11 @@ body.pgmode .nav{display:none}
 .pgout{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:13px}
 .pgout .btn{padding:6px 10px;font-size:13px}
 @media (min-width:1180px){.pgmini{display:none}}
+/* v1.1.1: campos em R$ mais largos para caber "R$ 265.297,24" */
+.row:has(input.moeda){grid-template-columns:1fr 175px}
+input.moeda{font-variant-numeric:tabular-nums}
+.tab12 input.moeda{min-width:118px}
+@media(max-width:560px){.row:has(input.moeda){grid-template-columns:1fr 158px}input.moeda{font-size:15px;padding-left:8px;padding-right:8px}}
 </style></head>
 <body><div id="app"></div>
 <script>window.SUMMIT_API="https://script.google.com/macros/s/AKfycbzuymYfKYw90PZCY3AB6FHqTc7OmkxA5lEmw_s8eTJRW-NsKRYki9W26Q22E5ZFQ3Be/exec";</script>
@@ -346,7 +351,7 @@ body.pgmode .nav{display:none}
 (function () {
   'use strict';
   var API = window.SUMMIT_API || '__API__';
-  var VERSAO_TELA = '1.1.0';   // 09/11/2026: preenchimento página a página
+  var VERSAO_TELA = '1.1.1';   // 09/11/2026: preenchimento página a página + valores em R$ formatados
   var M = window.Motor, $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var app = $('#app');
   var S = { token: null, eu: null, D: null, versao: 0, status: 'rascunho', diag: null, aba: 'inicio', sujo: false, salvando: false, fila: null };
@@ -497,7 +502,11 @@ body.pgmode .nav{display:none}
   // ================= campos =================
   function setCam(cam, v) { var ks = cam.split('.'), o = S.D; for (var i = 0; i < ks.length - 1; i++) { if (o[ks[i]] == null) o[ks[i]] = /^\d+$/.test(ks[i + 1]) ? [] : {}; o = o[ks[i]]; } o[ks[ks.length - 1]] = v; }
   function trava() { return S.status === 'aceito' ? ' disabled' : ''; }
-  function inp(cam, ph, tipo, cls) { var v = pega(S.D, cam); return '<input type="text" ' + (tipo === 'n' ? 'inputmode="decimal" ' : '') + 'class="' + (tipo === 'n' ? 'num ' : '') + (cls || '') + '" data-c="' + cam + '" value="' + esc(v == null ? '' : v) + '" placeholder="' + esc(ph || '') + '"' + trava() + '>'; }
+  // v1.1.1 (09/11, pedido do Brenno): campos em R$ aparecem no formato brasileiro — R$ 265.297,24 / R$ 410.383
+  var RE_MOEDA = /^diag\.num\.(comissao|ticket)$|^passo2\.(pessoal|negocio)\.|^passo2\.sonhos\.\d+\.valor$|^passo3\.ticket$|^p4\.faixa(De|Ate)$|^p5\.investMes$|^metas\.comissaoMedia\./;
+  function ehMoeda(cam) { return RE_MOEDA.test(cam); }
+  function fmtMoeda(v) { var n = M.num(v); if (n === null) return v == null ? '' : String(v); n = Math.round(n * 100) / 100; return 'R$ ' + n.toLocaleString('pt-BR', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }); }
+  function inp(cam, ph, tipo, cls) { var v = pega(S.D, cam), mo = tipo === 'n' && ehMoeda(cam); if (mo) { v = v == null || v === '' ? '' : fmtMoeda(v); if (!ph || ph === 'R$') ph = 'R$ 0,00'; } return '<input type="text" ' + (tipo === 'n' ? 'inputmode="decimal" ' : '') + 'class="' + (tipo === 'n' ? 'num ' : '') + (mo ? 'moeda ' : '') + (cls || '') + '" data-c="' + cam + '" value="' + esc(v == null ? '' : v) + '" placeholder="' + esc(ph || '') + '"' + trava() + '>'; }
   function txa(cam, ph) { return '<textarea data-c="' + cam + '" placeholder="' + esc(ph || '') + '"' + trava() + '>' + esc(pega(S.D, cam) || '') + '</textarea>'; }
   function sel(cam, ops) { var v = String(pega(S.D, cam) || ''); return '<select data-c="' + cam + '"' + trava() + '><option value="">—</option>' + ops.map(function (o) { var val = o[0] !== undefined && Array.isArray(o) ? o[0] : o, t = Array.isArray(o) ? o[1] : o; return '<option value="' + esc(val) + '"' + (String(val) === v ? ' selected' : '') + '>' + esc(t) + '</option>'; }).join('') + '</select>'; }
   function linha(rot, campo, dica) { return '<div class="row"><label>' + rot + (dica ? '<small>' + dica + '</small>' : '') + '</label>' + campo + '</div>'; }
@@ -511,6 +520,7 @@ body.pgmode .nav{display:none}
         if (el.classList.contains('num') && M.num(v) !== null && M.num(v) < 0) { el.style.borderColor = 'var(--er)'; toast('Use só valores positivos.'); return; }
         el.style.borderColor = ''; setCam(el.getAttribute('data-c'), v); marcarSujo(); recalc();
       });
+      if (el.classList.contains('moeda')) el.addEventListener('blur', function () { var n = M.num(el.value); if (n === null || n < 0) return; n = Math.round(n * 100) / 100; el.value = fmtMoeda(n); setCam(el.getAttribute('data-c'), String(n).replace('.', ',')); });
     });
   }
 
@@ -671,10 +681,15 @@ body.pgmode .nav{display:none}
     var medD = function (L) { var v = L.filter(function (x) { return x.desconto != null; }); return v.length ? (v.reduce(function (s, x) { return s + x.desconto; }, 0) / v.length) : null; };
     var dA = medD(alta), dB = medD(baixa);
     var insight = alta.length && baixa.length ? 'Na nossa equipe, quem captou com preço certo vendeu em média <b>' + med(alta, 'conv') + '%</b> do que captou' + (dA != null ? ', com desconto de só ' + nfmt(dA) + '% sobre o anúncio' : '') + '. Quem captou muito sem acertar o preço vendeu <b>' + med(baixa, 'conv') + '%</b>' + (dB != null ? ' e precisou de ' + nfmt(dB) + '% de desconto' : '') + ': o imóvel fica parado e a captação não vira comissão. <b>Captação é o caminho — bem precificada.</b>' : 'Captação é o caminho — bem precificada.';
-    var eu = norm(S.eu && S.eu.nome);
-    return '<h2>O que a equipe mostra</h2><div class="card"><p style="margin-top:0">' + insight + '</p><div class="tab12"><table style="min-width:520px;width:100%"><tr><th>Corretor</th><th>Captou</th><th>Vendeu</th><th>Conversão</th><th>Dias para vender</th><th>Desconto na venda</th></tr>' +
-      E.map(function (x) { var meu = norm(x.nome) === eu; return '<tr' + (meu ? ' style="outline:2px solid var(--ac)"' : '') + '><td>' + esc(x.nome) + (meu ? ' (você)' : '') + '</td><td class="c">' + nfmt(x.cap) + '</td><td class="c">' + nfmt(x.vend) + '</td><td class="c" style="color:' + (x.conv >= 30 ? 'var(--ok)' : x.conv < 20 ? 'var(--er)' : 'var(--wa)') + '">' + Math.round(x.conv) + '%</td><td class="c">' + (x.dias == null ? '—' : nfmt(x.dias, 0)) + '</td><td class="c">' + (x.desconto == null ? '—' : nfmt(x.desconto) + '%') + '</td></tr>'; }).join('') +
-      '</table></div><p class="sub" style="margin:8px 0 0">Últimos 12 meses (01/11/2025 a 31/10/2026), relatórios do iList. Conversão = captações exclusivas vendidas ÷ captadas. Desconto = quanto a venda ficou abaixo do anúncio. Preço certo na captação vende mais rápido e com pouco desconto.</p></div>';
+    // v1.1.1 (09/11, pedido do Brenno): o corretor vê só a linha dele + médias da equipe (sem o nome nem os números de cada colega)
+    var eu = norm(S.eu && S.eu.nome), meu = E.filter(function (x) { return x.eu || (x.nome && norm(x.nome) === eu); })[0];
+    var grupo = function (L) { if (!L.length) return null; var dv = L.filter(function (x) { return x.dias != null; }); return { cap: L.reduce(function (a, x) { return a + x.cap; }, 0) / L.length, vend: L.reduce(function (a, x) { return a + x.vend; }, 0) / L.length, conv: med(L, 'conv'), dias: dv.length ? dv.reduce(function (a, x) { return a + x.dias; }, 0) / dv.length : null, desconto: medD(L), n: L.length }; };
+    var cor = function (c) { return c >= 30 ? 'var(--ok)' : c < 20 ? 'var(--er)' : 'var(--wa)'; };
+    var lin = function (rot, x, dest) { if (!x) return ''; return '<tr' + (dest ? ' style="outline:2px solid var(--ac)"' : '') + '><td>' + rot + '</td><td class="c">' + nfmt(x.cap, 0) + '</td><td class="c">' + nfmt(x.vend, 0) + '</td><td class="c" style="color:' + cor(x.conv) + '">' + Math.round(x.conv) + '%</td><td class="c">' + (x.dias == null ? '—' : nfmt(x.dias, 0)) + '</td><td class="c">' + (x.desconto == null ? '—' : nfmt(x.desconto) + '%') + '</td></tr>'; };
+    var gA = grupo(alta), gB = grupo(baixa), gT = grupo(E);
+    return '<h2>O que a equipe mostra</h2><div class="card"><p style="margin-top:0">' + insight + '</p><div class="tab12"><table style="min-width:520px;width:100%"><tr><th></th><th>Captou</th><th>Vendeu</th><th>Conversão</th><th>Dias para vender</th><th>Desconto na venda</th></tr>' +
+      lin('<b>Você</b>', meu, true) + lin('Média da equipe (' + gT.n + ' corretores)', gT) + lin('Média de quem captou com preço certo', gA) + lin('Média de quem captou muito sem acertar o preço', gB) +
+      '</table></div><p class="sub" style="margin:8px 0 0">Últimos 12 meses (01/11/2025 a 31/10/2026), relatórios do iList. Os números dos colegas aparecem só em média — ninguém vê os de ninguém. Conversão = captações exclusivas vendidas ÷ captadas. Desconto = quanto a venda ficou abaixo do anúncio. Preço certo na captação vende mais rápido e com pouco desconto.</p></div>';
   }
   function norm(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase(); }
   // ================= ABAS =================
