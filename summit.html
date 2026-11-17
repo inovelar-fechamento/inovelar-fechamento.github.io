@@ -351,7 +351,7 @@ input.moeda{font-variant-numeric:tabular-nums}
 (function () {
   'use strict';
   var API = window.SUMMIT_API || '__API__';
-  var VERSAO_TELA = '1.1.1';   // 09/11/2026: preenchimento página a página + valores em R$ formatados
+  var VERSAO_TELA = '1.1.2';   // 17/11/2026: entra sempre na capa do book + botão "Continuar de onde parei"
   var M = window.Motor, $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var app = $('#app');
   var S = { token: null, eu: null, D: null, versao: 0, status: 'rascunho', diag: null, aba: 'inicio', sujo: false, salvando: false, fila: null };
@@ -561,7 +561,7 @@ input.moeda{font-variant-numeric:tabular-nums}
     var f = document.createElement('button'); f.id = 'bookfab'; f.className = 'bookfab'; f.onclick = function () { bookAbrir(); }; document.body.appendChild(f);
     window.addEventListener('resize', bookRender);
     document.addEventListener('keydown', function (e) { if (!B.aberto && !telaLarga() && S.modo !== 'book') return; if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return; if (e.key === 'ArrowRight') bookIr(B.pg + 1, true); if (e.key === 'ArrowLeft') bookIr(B.pg - 1, true); if (e.key === 'Escape') { B.aberto = false; bookRender(); } });
-    var pgSalva = parseInt(ls('mp27_pg'), 10); B.pg = S.modo === 'book' ? (pgSalva >= 0 && pgSalva < BOOK_TOTAL ? pgSalva : 0) : (PAG_ABA[S.aba] || 11); bookRender();   // book abre na capa (ou onde o corretor parou)
+    var pgSalva = parseInt(ls('mp27_pg'), 10); B.pg = S.modo === 'book' ? 0 : (PAG_ABA[S.aba] || 11); bookRender();   // v1.1.2: book sempre abre na capa (onde parou fica no botão Continuar)
     var acompanha = function () {
       chamar('ritmo', [S.token]).then(function (r) {
         var p = r.pagina > 0 ? r.pagina : (PAG_ETAPA[r.etapa] || null);
@@ -627,6 +627,7 @@ input.moeda{font-variant-numeric:tabular-nums}
       '<div class="lximg" id="lximg"><img alt="Página ' + rotPag(B.pg) + ' do book" src="' + arqPag(B.pg) + '"></div>' +
       '<div class="lxbar">' +
         (abas.length ? '<div class="lxpre">' + abas.map(function (a, i) { return '<button class="btn lxfill' + (i ? ' sec' : '') + '" data-fill="' + a + '">✍️ ' + (abas.length > 1 ? esc(nomeAba(a)) : 'Preencher esta página') + '</button>'; }).join('') + '</div>' : '') +
+        (S.volta && B.pg === 0 ? '<div class="lxpre"><button class="btn" id="lxVolta">▶ Continuar de onde parei (' + (S.volta.modo === 'form' ? esc(nomeAba(S.volta.aba)) : rotPag(S.volta.pg)) + ')</button></div>' : '') +
         '<div class="lxnav"><button class="btn sec" id="lxAnt" aria-label="Página anterior">‹</button><span class="lxpg">' + rotPag(B.pg) + '</span><button class="btn sec" id="lxProx" aria-label="Próxima página">›</button>' + turma + '</div>' +
       '</div>';
   }
@@ -638,6 +639,7 @@ input.moeda{font-variant-numeric:tabular-nums}
     lx.innerHTML = leitorHtml();
     $('#lxAnt').onclick = function () { bookIr(B.pg - 1, true); }; $('#lxProx').onclick = function () { bookIr(B.pg + 1, true); };
     var t = $('#lxTurma'); if (t) t.onclick = function () { B.seguir = true; bookIr(B.turma, false); };
+    var vt = $('#lxVolta'); if (vt) vt.onclick = function () { var x = S.volta; S.volta = null; if (x.modo === 'form') abrirPlano(x.aba); else bookIr(x.pg, true); };
     $('#lxPlano').onclick = function () { abrirPlano(abasDaPag(B.pg)[0] || S.aba); };
     $$('[data-fill]', lx).forEach(function (b) { b.onclick = function () { preencherPagina(B.pg, b.getAttribute('data-fill')); }; });
   }
@@ -703,7 +705,10 @@ input.moeda{font-variant-numeric:tabular-nums}
       '<div class="foot"><button class="btn sec" id="ant">‹ Voltar</button><button class="btn" id="prox">Avançar ›</button></div>';
     $('#ant').onclick = function () { if (S.pgFill !== null && S.pgFill !== undefined) voltarBook(); else mover(-1); }; $('#prox').onclick = function () { if (S.pgFill !== null && S.pgFill !== undefined) proximaPagina(); else mover(1); };
     $('#vbook').onclick = voltarBook;
-    if (!S.modo) S.modo = ls('mp27_modo') || 'book';
+    if (!S.modo) {   // v1.1.2 (17/11, pedido do Brenno): toda entrada abre na CAPA do book; o ponto onde parou vira o botão "Continuar de onde parei"
+      S.volta = (function () { var pg = parseInt(ls('mp27_pg'), 10), mo = ls('mp27_modo'), ab = ls('mp27_aba'); if (mo === 'form' && ab && ab !== 'inicio') return { modo: 'form', aba: ab }; if (pg > 0 && pg < BOOK_TOTAL) return { modo: 'book', pg: pg }; return null; })();
+      S.modo = 'book'; B.seguir = false;
+    }
     leitorMontar(); render(); bookMontar(); leitorRender();
     if (!S.bvOk) boasVindas();
   }
