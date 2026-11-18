@@ -351,7 +351,7 @@ input.moeda{font-variant-numeric:tabular-nums}
 (function () {
   'use strict';
   var API = window.SUMMIT_API || '__API__';
-  var VERSAO_TELA = '1.1.2';   // 17/11/2026: entra sempre na capa do book + botão "Continuar de onde parei"
+  var VERSAO_TELA = '1.1.3';   // 18/11/2026: no preenchimento, ‹ › do book ao lado leva o formulário junto
   var M = window.Motor, $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var app = $('#app');
   var S = { token: null, eu: null, D: null, versao: 0, status: 'rascunho', diag: null, aba: 'inicio', sujo: false, salvando: false, fila: null };
@@ -545,14 +545,14 @@ input.moeda{font-variant-numeric:tabular-nums}
     if (!ov) return;
     ov.innerHTML = bookHtml(); ov.classList.toggle('hide', !B.aberto && !telaLarga());
     $('#bkAnt').onclick = function () { bookIr(B.pg - 1, true); }; $('#bkProx').onclick = function () { bookIr(B.pg + 1, true); };
-    var bt = $('#bkTurma'); if (bt) bt.onclick = function () { B.seguir = true; bookIr(B.turma, false); };
+    var bt = $('#bkTurma'); if (bt) bt.onclick = function () { if (S.modo === 'form' && S.pgFill !== null && S.pgFill !== undefined) return seguirFill(B.turma); B.seguir = true; bookIr(B.turma, false); };
     $('#bkFechar').onclick = function () { B.aberto = false; bookRender(); };
     var f = $('#bookfab'); if (f) { f.textContent = '📖 Book ' + rotPag(B.pg); f.classList.toggle('turma', B.seguir && B.turma !== null); }
     // pré-carrega as vizinhas
     [B.pg - 1, B.pg + 1].forEach(function (p) { if (p >= 0 && p < BOOK_TOTAL) { var i = new Image(); i.src = arqPag(p); } });
   }
   function telaLarga() { return window.matchMedia && window.matchMedia('(min-width:1180px)').matches; }
-  function bookIr(p, manual) { p = Math.max(0, Math.min(BOOK_TOTAL - 1, p)); if (manual) B.seguir = false; B.pg = p; if (S.modo === 'book') ls('mp27_pg', String(p)); bookRender(); }
+  function bookIr(p, manual) { p = Math.max(0, Math.min(BOOK_TOTAL - 1, p)); if (manual && S.modo === 'form' && S.pgFill !== null && S.pgFill !== undefined) return seguirFill(p); if (manual) B.seguir = false; B.pg = p; if (S.modo === 'book') ls('mp27_pg', String(p)); bookRender(); }
   function bookAbrir(p) { if (p !== undefined) bookIr(p, true); B.aberto = true; bookRender(); }
   function bookMontar() {
     if ($('#bookov')) return;
@@ -602,17 +602,20 @@ input.moeda{font-variant-numeric:tabular-nums}
     document.body.classList.toggle('pgmode', S.pgFill !== null && S.pgFill !== undefined);
     var bar = $('#pgbar'); if (bar) bar.remove();
     if (S.pgFill === null || S.pgFill === undefined) return;
-    var p = S.pgFill, L = (PAGMAP[p] || {})[S.aba] || ['*'];
-    if (L.indexOf('*') < 0) blocosDaTela().forEach(function (g) { var ok = g.k === 'intro' || L.some(function (x) { return g.k.indexOf(x) === 0; }); g.els.forEach(function (e) { e.style.display = ok ? '' : 'none'; }); });
+    var p = S.pgFill, semCampos = !PAGMAP[p], L = semCampos ? [] : ((PAGMAP[p] || {})[S.aba] || ['*']);
+    if (semCampos) [].slice.call($('#corpo').children).forEach(function (e) { e.style.display = 'none'; });
+    else if (L.indexOf('*') < 0) blocosDaTela().forEach(function (g) { var ok = g.k === 'intro' || L.some(function (x) { return g.k.indexOf(x) === 0; }); g.els.forEach(function (e) { e.style.display = ok ? '' : 'none'; }); });
     var outras = abasDaPag(p).filter(function (a) { return a !== S.aba; });
     var prox = proxPagComCampos(p, 1), seg = p + 1 < BOOK_TOTAL ? p + 1 : null;
-    $('#corpo').insertAdjacentHTML('afterbegin', '<div class="pgbar" id="pgbar"><div class="pgmini" id="pgMini" title="Ampliar a página"><img alt="Página ' + rotPag(p) + ' do book" src="' + arqPag(p) + '"></div><div><b>✍️ Preenchendo a ' + rotPag(p) + ' do book</b><span class="sub">' + (telaLarga() ? 'A página está ao lado. ' : 'Toque na miniatura para ampliar a página. ') + 'Tudo salva sozinho.</span>' +
+    $('#corpo').insertAdjacentHTML('afterbegin', '<div class="pgbar" id="pgbar"><div class="pgmini" id="pgMini" title="Ampliar a página"><img alt="Página ' + rotPag(p) + ' do book" src="' + arqPag(p) + '"></div><div><b>' + (semCampos ? '📖 ' + rotPag(p) + ' do book — esta página não tem campos para preencher' : '✍️ Preenchendo a ' + rotPag(p) + ' do book') + '</b><span class="sub">' + (semCampos ? 'Leia a página ao lado e siga com › ou com o botão abaixo. ' : '') + (telaLarga() ? 'A página está ao lado. ' : 'Toque na miniatura para ampliar a página. ') + 'Tudo salva sozinho.</span>' +
       (outras.length ? '<div class="pgout">Também nesta página: ' + outras.map(function (a) { return '<button class="btn sec" data-pgaba="' + a + '">' + esc(nomeAba(a)) + '</button>'; }).join(' ') + '</div>' : '') + '</div></div>');
     $('#pgMini').onclick = function () { bookAbrir(p); };
     $$('[data-pgaba]').forEach(function (b) { b.onclick = function () { preencherPagina(p, b.getAttribute('data-pgaba')); }; });
     $('#ant').textContent = '📖 Voltar ao book'; $('#prox').textContent = seg === null ? 'Concluir ✓' : (PAGMAP[seg] ? 'Próxima página (' + rotPag(seg) + ') ›' : 'Próxima página ›');
   }
   function preencherPagina(p, aba) { if (S.sujo) salvar(); S.pgFill = p; B.seguir = false; B.pg = p; ls('mp27_pg', String(p)); S.modo = 'form'; ls('mp27_modo', 'form'); S.aba = aba || abasDaPag(p)[0]; ls('mp27_aba', S.aba); leitorRender(); render(); bookRender(); window.scrollTo(0, 0); }
+  // v1.1.3 (18/11, pedido do Brenno ao vivo): ‹ › do book ao lado (e as setas do teclado) levam o formulário junto
+  function seguirFill(p) { if (S.sujo) salvar(); B.seguir = false; S.pgFill = p; B.pg = p; ls('mp27_pg', String(p)); var ab = abasDaPag(p); if (ab.length) { S.aba = ab.indexOf(S.aba) >= 0 ? S.aba : ab[0]; ls('mp27_aba', S.aba); } render(); bookRender(); window.scrollTo(0, 0); }
   function proximaPagina() {
     if (S.sujo) salvar(); var q = S.pgFill + 1;
     if (q >= BOOK_TOTAL) { S.pgFill = null; voltarBook(); return; }
