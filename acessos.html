@@ -89,8 +89,9 @@ label{display:block;font-size:14px;color:#b9c6ea;margin-bottom:6px}
   window.addEventListener("appinstalled",function(){promptInst=null;var b=$("#inst");if(b)b.style.display="none";});
   try{if("serviceWorker" in navigator)navigator.serviceWorker.register("apps-sw.js",{scope:"./"}).catch(function(){});}catch(e){}
   function dicaInstalar(){var u=navigator.userAgent||"";
-    if(/iPhone|iPad|iPod/i.test(u))return "<b>No iPhone/iPad (Safari):</b> toque em <b>Compartilhar</b> (o quadrado com a seta para cima, embaixo da tela) › <b>Adicionar à Tela de Início</b> › <b>Adicionar</b>.";
-    if(/Android/i.test(u))return "<b>No Android (Chrome):</b> toque nos <b>⋮</b> (canto de cima) › <b>Instalar app</b> (ou <b>Adicionar à tela inicial</b>) › <b>Instalar</b>.";
+    var wz=/WhatsApp|FBAN|FBAV|Instagram|; wv\)/i.test(u);
+    if(/iPhone|iPad|iPod/i.test(u))return "<b>Abriu pelo link do WhatsApp?</b> Primeiro toque no ícone da bússola (ou em <b>Abrir no Safari</b>), no canto de baixo. "+"<br><b>No iPhone/iPad (Safari):</b> toque em <b>Compartilhar</b> (o quadrado com a seta para cima, embaixo da tela) › <b>Adicionar à Tela de Início</b> › <b>Adicionar</b>.";
+    if(/Android/i.test(u))return "<b>Abriu pelo link do WhatsApp?</b> Primeiro toque nos <b>⋮</b> › <b>Abrir no Chrome</b>.<br><b>No Android (Chrome):</b> toque nos <b>⋮</b> (canto de cima) › <b>Instalar app</b> (ou <b>Adicionar à tela inicial</b>) › <b>Instalar</b>.";
     if(/Edg\//.test(u))return "<b>No Edge:</b> clique nos <b>…</b> (canto de cima) › <b>Aplicativos</b> › <b>Instalar este site como um aplicativo</b>.";
     if(/Safari/.test(u)&&!/Chrome/.test(u))return "<b>No Safari do Mac:</b> menu <b>Arquivo</b> › <b>Adicionar ao Dock</b>.";
     return "<b>No Chrome do computador:</b> clique no ícone de instalar no fim da barra de endereço (um monitor com uma seta) ou nos <b>⋮</b> › <b>Transmitir, salvar e compartilhar</b> › <b>Instalar página como app</b>. Se o aplicativo já estiver instalado, ele já aparece na sua área de trabalho.";}
