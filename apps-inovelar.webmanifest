@@ -1,0 +1,16 @@
+{
+  "name": "Apps Inovelar",
+  "short_name": "Apps Inovelar",
+  "description": "Os aplicativos da RE/MAX Inovelar num só lugar.",
+  "id": "/acessos.html",
+  "start_url": "/acessos.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#070b16",
+  "theme_color": "#070b16",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/apps-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/apps-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

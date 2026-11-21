@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Apps Inovelar">
 <title>Apps Inovelar · RE/MAX Inovelar</title>
+<link rel="manifest" href="apps-inovelar.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="apps-favicon-32.png">
+<link rel="apple-touch-icon" href="apps-apple-touch-icon.png">
 <style>
 :root{--bg:#070b16;--pn:#0e1528;--ln:#22305a;--tx:#e6ecff;--mu:#8fa0c8;--ac:#2fe4ff;--ok:#3ee08f;--rx:#e11b22}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -74,11 +77,20 @@ label{display:block;font-size:14px;color:#b9c6ea;margin-bottom:6px}
     W.innerHTML='<div class="logo">RE/<span>MAX</span> Inovelar</div><h1>O que você quer acessar hoje?</h1>'+
       '<p class="sub">Apps Inovelar — você entrou uma vez e todos os sistemas ficam liberados neste aparelho.</p>'+(nome?'<p class="quem">Conectado como <b>'+esc(nome)+'</b></p>':'')+
       (msg?'<div class="aviso">'+esc(msg)+'</div>':'')+'<div class="grid" id="g"></div>'+
+      '<div class="lg" id="inst" style="display:none;max-width:none;margin-top:18px"><b>📌 Ícone no computador ou celular</b><p class="sub" style="margin:6px 0 0">Instale os Apps Inovelar como um aplicativo: fica um ícone na área de trabalho e abre direto aqui.</p><button id="bInst">Instalar o ícone dos Apps Inovelar</button></div>'+
       '<div class="foot"><b>Dica:</b> salve esta página na tela inicial do celular (no iPhone: Compartilhar › Adicionar à Tela de Início; no Android: ⋮ › Adicionar à tela inicial). Ela vira um ícone como um aplicativo.<br><button id="sair">Sair de todos os apps neste aparelho</button></div>';
     $("#g").innerHTML=APPS.map(function(a){var on=a.k&&ls(a.k);
       return '<a class="card'+(on?'':' off')+'" href="'+a.u+'">'+(on?'<span class="st on">● liberado</span>':'<span class="st soon">sem acesso</span>')+'<div class="ic">'+a.ic+'</div><div class="t">'+a.t+'</div><div class="d">'+a.d+'</div></a>';}).join("");
+    mostraInstalar();
     $("#sair").onclick=function(){if(!confirm("Sair de todos os apps neste aparelho? Na próxima vez vai pedir o seu e-mail de novo."))return;sairTudo();location.href=location.pathname;};
   }
+  /* ícone para instalar (Chrome/Edge no computador e Android); no iPhone vale a dica do Compartilhar */
+  var promptInst=null;
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();promptInst=e;mostraInstalar();});
+  window.addEventListener("appinstalled",function(){promptInst=null;var b=$("#inst");if(b)b.style.display="none";});
+  try{if("serviceWorker" in navigator)navigator.serviceWorker.register("apps-sw.js",{scope:"./"}).catch(function(){});}catch(e){}
+  function mostraInstalar(){var b=$("#inst");if(!b||!promptInst)return;if(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)return;b.style.display="block";
+    $("#bInst").onclick=function(){var p=promptInst;promptInst=null;b.style.display="none";p.prompt();};}
   function seguir(msgSemAcesso){
     if(volta){var kk=chaveDe(volta);if(kk&&ls(kk)){location.replace(volta);return;}cards("Seu acesso a este app ainda não está liberado. Fale com o Brenno ou a Andréia.");return;}
     cards(msgSemAcesso);
