@@ -119,8 +119,8 @@ label{display:block;font-size:14px;color:#b9c6ea;margin-bottom:6px}
   function iphone(){
     if(!EH_IOS)return outroAparelho("iPhone");
     if(WEBVIEW||IOS_OUTRO){modal('<h2>Primeiro, abrir no Safari</h2><p class="sub" style="font-size:16px">O iPhone só instala pelo Safari. Toque no botão abaixo:</p><a class="big" href="x-safari-'+URL_APP+'">Abrir no Safari</a>');return;}
-    modal(passos("No iPhone são 2 toques",["Toque no botão <b>Compartilhar</b> ⬆️ (a seta lá embaixo, no meio da tela)","Role e toque em <b>Adicionar à Tela de Início</b> e depois em <b>Adicionar</b>"],'<p class="sub" style="margin-top:14px">A Apple não deixa nenhum site instalar sozinho; é só esse caminho.</p>'));
-    var m=$("#mdl");if(m){m.style.alignItems="center";m.querySelector(".pn").style.borderRadius="20px";}var s=document.createElement("div");s.className="seta";s.textContent="⬇️";document.body.appendChild(s);
+    modal(passos("No iPhone são 3 toques",["Toque nos <b>três tracinhos ☰</b> lá embaixo, à esquerda do endereço (a seta piscando mostra)","Toque em <b>Compartilhar</b>","Toque em <b>Adicionar à Tela de Início</b> (se não aparecer, role ou toque em <b>Ver mais</b>) e depois em <b>Adicionar</b>"],'<p class="sub" style="margin-top:14px">iPhone mais antigo, sem os três tracinhos? Toque direto no botão <b>Compartilhar</b> ⬆️ e siga o passo 3.</p>'));
+    var m=$("#mdl");if(m){m.style.alignItems="center";m.querySelector(".pn").style.borderRadius="20px";}var s=document.createElement("div");s.className="seta";s.style.left="29%";s.textContent="⬇️";document.body.appendChild(s);
   }
   function android(){
     if(!EH_AND)return outroAparelho("celular Android");
