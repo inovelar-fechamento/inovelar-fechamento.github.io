@@ -76,8 +76,7 @@ label{display:block;font-size:14px;color:#b9c6ea;margin-bottom:6px}
     var nome=ls("inovelar_apps_nome")||"";
     W.innerHTML='<div class="logo">RE/<span>MAX</span> Inovelar</div><h1>O que você quer acessar hoje?</h1>'+
       '<p class="sub">Apps Inovelar — você entrou uma vez e todos os sistemas ficam liberados neste aparelho.</p>'+(nome?'<p class="quem">Conectado como <b>'+esc(nome)+'</b></p>':'')+
-      (msg?'<div class="aviso">'+esc(msg)+'</div>':'')+'<div class="grid" id="g"></div>'+
-      '<div class="lg" id="inst" style="display:none;max-width:none;margin-top:18px"><b>📌 Ícone no computador ou celular</b><p class="sub" style="margin:6px 0 0">Instale os Apps Inovelar como um aplicativo: fica um ícone na área de trabalho e abre direto aqui.</p><button id="bInst">Instalar o ícone dos Apps Inovelar</button></div>'+
+      (msg?'<div class="aviso">'+esc(msg)+'</div>':'')+'<div class="lg" id="inst" style="display:none;max-width:none;margin:14px 0 4px;border:2px solid var(--ac)"><b>📲 Instale o aplicativo no seu computador ou celular</b><p class="sub" style="margin:6px 0 0">Fica um ícone na área de trabalho ou na tela inicial e abre direto aqui, sem precisar procurar o link.</p><button id="bInst">Instalar o aplicativo</button><div id="instDica" class="sub" style="display:none;margin-top:10px;line-height:1.5"></div></div>'+'<div class="grid" id="g"></div>'+
       '<div class="foot"><b>Dica:</b> salve esta página na tela inicial do celular (no iPhone: Compartilhar › Adicionar à Tela de Início; no Android: ⋮ › Adicionar à tela inicial). Ela vira um ícone como um aplicativo.<br><button id="sair">Sair de todos os apps neste aparelho</button></div>';
     $("#g").innerHTML=APPS.map(function(a){var on=a.k&&ls(a.k);
       return '<a class="card'+(on?'':' off')+'" href="'+a.u+'">'+(on?'<span class="st on">● liberado</span>':'<span class="st soon">sem acesso</span>')+'<div class="ic">'+a.ic+'</div><div class="t">'+a.t+'</div><div class="d">'+a.d+'</div></a>';}).join("");
@@ -86,11 +85,17 @@ label{display:block;font-size:14px;color:#b9c6ea;margin-bottom:6px}
   }
   /* ícone para instalar (Chrome/Edge no computador e Android); no iPhone vale a dica do Compartilhar */
   var promptInst=null;
-  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();promptInst=e;mostraInstalar();});
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();promptInst=e;});
   window.addEventListener("appinstalled",function(){promptInst=null;var b=$("#inst");if(b)b.style.display="none";});
   try{if("serviceWorker" in navigator)navigator.serviceWorker.register("apps-sw.js",{scope:"./"}).catch(function(){});}catch(e){}
-  function mostraInstalar(){var b=$("#inst");if(!b||!promptInst)return;if(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)return;b.style.display="block";
-    $("#bInst").onclick=function(){var p=promptInst;promptInst=null;b.style.display="none";p.prompt();};}
+  function dicaInstalar(){var u=navigator.userAgent||"";
+    if(/iPhone|iPad|iPod/i.test(u))return "<b>No iPhone/iPad (Safari):</b> toque em <b>Compartilhar</b> (o quadrado com a seta para cima, embaixo da tela) › <b>Adicionar à Tela de Início</b> › <b>Adicionar</b>.";
+    if(/Android/i.test(u))return "<b>No Android (Chrome):</b> toque nos <b>⋮</b> (canto de cima) › <b>Instalar app</b> (ou <b>Adicionar à tela inicial</b>) › <b>Instalar</b>.";
+    if(/Edg\//.test(u))return "<b>No Edge:</b> clique nos <b>…</b> (canto de cima) › <b>Aplicativos</b> › <b>Instalar este site como um aplicativo</b>.";
+    if(/Safari/.test(u)&&!/Chrome/.test(u))return "<b>No Safari do Mac:</b> menu <b>Arquivo</b> › <b>Adicionar ao Dock</b>.";
+    return "<b>No Chrome do computador:</b> clique no ícone de instalar no fim da barra de endereço (um monitor com uma seta) ou nos <b>⋮</b> › <b>Transmitir, salvar e compartilhar</b> › <b>Instalar página como app</b>. Se o aplicativo já estiver instalado, ele já aparece na sua área de trabalho.";}
+  function mostraInstalar(){var b=$("#inst");if(!b)return;if(window.matchMedia&&matchMedia("(display-mode: standalone)").matches){b.style.display="none";return;}b.style.display="block";
+    $("#bInst").onclick=function(){var p=promptInst;if(p){promptInst=null;p.prompt();if(p.userChoice)p.userChoice.then(function(c){if(c&&c.outcome==="accepted")b.style.display="none";});return;}var d=$("#instDica");d.innerHTML=dicaInstalar();d.style.display="block";};}
   function seguir(msgSemAcesso){
     if(volta){var kk=chaveDe(volta);if(kk&&ls(kk)){location.replace(volta);return;}cards("Seu acesso a este app ainda não está liberado. Fale com o Brenno ou a Andréia.");return;}
     cards(msgSemAcesso);
