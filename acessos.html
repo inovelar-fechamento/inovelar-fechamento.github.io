@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#070b16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Inovelar">
+<title>Central de acessos · RE/MAX Inovelar</title>
+<style>
+:root{--bg:#070b16;--pn:#0e1528;--ln:#22305a;--tx:#e6ecff;--mu:#8fa0c8;--ac:#2fe4ff;--ok:#3ee08f;--rx:#e11b22}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:22px 16px 40px}
+.logo{font-weight:800;font-size:22px;letter-spacing:.5px}.logo span{color:var(--rx)}
+h1{font-size:26px;margin:14px 0 4px}.sub{color:var(--mu);font-size:14px;margin:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+a.card{display:block;text-decoration:none;color:var(--tx);background:var(--pn);border:1px solid var(--ln);border-radius:16px;padding:16px;position:relative;transition:border-color .15s}
+a.card:hover{border-color:var(--ac)}a.card.off{opacity:.55;pointer-events:none}
+.ic{font-size:28px}.t{font-weight:700;font-size:17px;margin:8px 0 4px}.d{color:var(--mu);font-size:13.5px;line-height:1.4}
+.st{position:absolute;top:14px;right:14px;font-size:11.5px;padding:3px 8px;border-radius:99px;border:1px solid var(--ln);color:var(--mu)}
+.st.on{border-color:#1c6b47;color:var(--ok)}.st.soon{color:#ffc845;border-color:#5a4a18}
+.foot{margin-top:22px;color:var(--mu);font-size:13px;line-height:1.5}
+.foot button{background:none;border:1px solid var(--ln);color:var(--tx);border-radius:10px;padding:8px 12px;font-size:13px;cursor:pointer;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">RE/<span>MAX</span> Inovelar</div>
+  <h1>O que você quer acessar hoje?</h1>
+  <p class="sub">Todos os sistemas da loja num lugar só. Cada um pede o seu e-mail na primeira vez; depois este aparelho fica conectado.</p>
+  <div class="grid" id="g"></div>
+  <div class="foot">
+    <b>Dica:</b> salve esta página na tela inicial do celular (no iPhone: Compartilhar › Adicionar à Tela de Início; no Android: ⋮ › Adicionar à tela inicial). Ela vira um ícone como um aplicativo.<br>
+    <button id="sair">Sair de todos os sistemas neste aparelho</button>
+  </div>
+</div>
+<script>
+(function(){
+  function ls(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+  function rm(k){try{localStorage.removeItem(k);}catch(e){}}
+  // Sistemas da loja. Para incluir um novo: uma linha aqui (id, ícone, nome, descrição, link, chave que indica "conectado", em breve?)
+  var APPS=[
+    {ic:"🏢",t:"App do SH Paradiso",d:"Mapa das unidades, reservas, vendas e simulação de pagamento.",u:"sh-teste.html",k:"inovelar_sh_k"},
+    {ic:"📝",t:"Gerador de contratos",d:"Preencher os dados do negócio e acompanhar os seus contratos.",u:"#",soon:true},
+    {ic:"🏷️",t:"Avaliação de imóveis",d:"Estudo de preço com amostras de vendidos e ofertas da região.",u:"avaliacao-novo.html",k:"inovelar_av_k"},
+    {ic:"🎯",t:"Meu Plano 2027",d:"O seu plano do Agent Summit: metas, rotina e cockpit.",u:"summit.html",k:"mp27_token"}
+  ];
+  document.getElementById("g").innerHTML=APPS.map(function(a){
+    var st=a.soon?'<span class="st soon">em breve</span>':(a.k&&ls(a.k)?'<span class="st on">● conectado</span>':'');
+    return '<a class="card'+(a.soon?' off':'')+'" href="'+a.u+'">'+st+'<div class="ic">'+a.ic+'</div><div class="t">'+a.t+'</div><div class="d">'+a.d+'</div></a>';
+  }).join("");
+  document.getElementById("sair").onclick=function(){
+    if(!confirm("Sair de todos os sistemas neste aparelho? Na próxima vez cada um vai pedir o seu e-mail de novo."))return;
+    ["inovelar_sh_k","inovelar_av_k","mp27_token","mp27_backup"].forEach(rm); location.reload();
+  };
+})();
+</script>
+</body>
+</html>

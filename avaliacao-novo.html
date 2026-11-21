@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#070b16">
+<title>Avaliação Inovelar</title>
+<style>
+body{margin:0;background:#070b16;color:#e6ecff;font:16px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center;padding:0 18px}
+a{color:#2fe4ff}.box{width:100%;max-width:400px;text-align:left}
+.logo{font-weight:800;font-size:24px;letter-spacing:.5px}.logo span{color:#e11b22}
+h1{font-size:22px;margin:6px 0 2px}.sub{color:#8fa0c8;font-size:14px;margin:0 0 14px}
+.card{background:#0e1528;border:1px solid #22305a;border-radius:14px;padding:16px;margin-top:12px}
+label{display:block;font-size:14px;color:#b9c6ea;margin-bottom:6px}
+input{width:100%;box-sizing:border-box;padding:13px;border-radius:10px;border:1px solid #22305a;background:#070b16;color:#e6ecff;font-size:17px}
+input.cod{font-size:28px;letter-spacing:8px;text-align:center}
+button{width:100%;margin-top:12px;padding:13px;border:0;border-radius:10px;background:#2fe4ff;color:#04121c;font-weight:700;font-size:16px;cursor:pointer}
+button:disabled{opacity:.6}.aviso{background:#2a2410;border:1px solid #5a4a18;color:#ffe4a3;border-radius:10px;padding:10px 12px;font-size:14px;margin-top:12px}
+.hide{display:none}
+</style>
+</head>
+<body>
+<div id="m">Carregando a Avaliação Inovelar…</div>
+<script>
+/* Carregador da Avaliação Inovelar no GitHub Pages (mesmo padrão do app do SH).
+   v67 (21/11/2026): entrada por e-mail + código, igual ao Summit. O código de acesso do corretor fica guardado no aparelho.
+   O link antigo (?k=CODIGO) continua valendo e também fica guardado. ?g= é o link do gestor (inalterado). ?sair limpa o aparelho. */
+(function(){
+  var API="https://script.google.com/macros/s/AKfycbzKz04E4xTJSUYgh7cJoSKHgYD4uynC_-4eTHU7zHvU9dZF0YK6NnUVxdKEi-kA7LY5/exec", LS="inovelar_av_k", LSE="inovelar_sh_email";
+  function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(e){return null;}}
+  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  var q=new URLSearchParams(location.search), M=document.getElementById("m");
+  function post(fn,args,t){t=t||0;return fetch(API,{method:"POST",body:JSON.stringify({fn:fn,args:args||[]}),credentials:"omit",headers:{"Content-Type":"text/plain;charset=utf-8"}})
+    .then(function(r){return r.json();}).then(function(j){if(j&&j.e!==undefined){var e=new Error(j.e);e.srv=1;throw e;}return j?j.r:null;})
+    .catch(function(e){if(e.srv||t>=2)throw e;return new Promise(function(ok){setTimeout(ok,1500);}).then(function(){return post(fn,args,t+1);});});}
+  function abrirOuLogin(k){M.innerHTML="Carregando a Avaliação Inovelar…";post("pagina",[k]).then(function(r){if(typeof r!=="string")throw 0;
+      if(r.length<4000&&/Acesso (não liberado|bloqueado)/i.test(r)){ls(LS,null);telaLogin(/bloqueado/i.test(r)?"Seu acesso está bloqueado. Fale com a gestão.":"Seu acesso mudou. Entre de novo com o seu e-mail.");return;}
+      document.open();document.write(r);document.close();})
+    .catch(function(){M.innerHTML='Não consegui abrir agora.<br><a href="">Tentar de novo</a>';});}
+  function abrir(tipo,chave){M.innerHTML="Carregando a Avaliação Inovelar…";post("pagina",tipo==="gestor"?[chave]:[chave]).then(function(r){if(typeof r!=="string")throw 0;document.open();document.write(r);document.close();})
+    .catch(function(){M.innerHTML='Não consegui abrir agora.<br><a href="">Tentar de novo</a>';});}
+  function telaLogin(msg){
+    M.innerHTML='<div class="box"><div class="logo">RE/<span>MAX</span> Inovelar</div><h1>Avaliação de imóveis</h1><p class="sub">Estudo de preço da RE/MAX Inovelar</p>'+(msg?'<div class="aviso">'+esc(msg)+'</div>':'')+
+      '<div class="card" id="pE"><label>Seu e-mail</label><input id="em" type="email" autocomplete="email" inputmode="email" placeholder="seuemail@remax.com.br" value="'+esc(ls(LSE)||"")+'"><button id="bE">Receber código</button></div>'+
+      '<div class="card hide" id="pC"><label>Digite o código de 6 números que chegou no seu e-mail</label><input id="cod" class="cod" inputmode="numeric" autocomplete="one-time-code" maxlength="7"><button id="bC">Entrar</button><p class="sub" style="margin:10px 0 0">Não chegou? Olhe o spam ou <a href="#" id="tr">pedir de novo</a>. O Brenno e a Andréia também conseguem ver o seu código.</p></div>'+
+      '<p class="sub" style="margin-top:14px">Use o mesmo e-mail cadastrado na Avaliação. Você entra uma vez neste aparelho e ele fica conectado.</p></div>';
+    var em=document.getElementById("em"),bE=document.getElementById("bE"),bC=document.getElementById("bC"),cod=document.getElementById("cod");
+    function aviso(t){var a=document.querySelector(".aviso");if(!a){a=document.createElement("div");a.className="aviso";document.querySelector(".sub").after(a);}a.textContent=t;}
+    bE.onclick=function(){var e=em.value.trim().toLowerCase();if(!e)return em.focus();bE.disabled=true;bE.textContent="Enviando…";
+      post("pedirCodigoEntrada",[e]).then(function(r){if(!r||!r.ok){aviso((r&&r.motivo)||"Não deu certo. Tente de novo.");return;}ls(LSE,e);
+        document.getElementById("pE").classList.add("hide");document.getElementById("pC").classList.remove("hide");cod.focus();if(r.aviso)aviso(r.aviso);})
+      .catch(function(){aviso("Sem conexão com o sistema. Confira a internet e tente de novo.");}).then(function(){bE.disabled=false;bE.textContent="Receber código";});};
+    em.onkeydown=function(ev){if(ev.key==="Enter")bE.click();};
+    document.getElementById("tr").onclick=function(ev){ev.preventDefault();document.getElementById("pC").classList.add("hide");document.getElementById("pE").classList.remove("hide");};
+    bC.onclick=function(){bC.disabled=true;bC.textContent="Entrando…";
+      post("entrarComCodigo",[em.value.trim().toLowerCase(),cod.value]).then(function(r){if(!r||!r.ok){aviso((r&&r.motivo)||"Não deu certo.");bC.disabled=false;bC.textContent="Entrar";return;}
+        ls(LS,String(r.k).toUpperCase());abrirOuLogin(String(r.k).toUpperCase());})
+      .catch(function(){aviso("Sem conexão com o sistema. Confira a internet e tente de novo.");bC.disabled=false;bC.textContent="Entrar";});};
+    cod.oninput=function(){if(cod.value.replace(/\D/g,"").length===6)bC.click();};
+  }
+  if(q.has("sair")){ls(LS,null);history.replaceState(null,"",location.pathname);telaLogin("Você saiu deste aparelho.");return;}
+  var k=q.get("k");
+  if(k){k=k.replace(/[^A-Za-z0-9]/g,"").toUpperCase();
+    if(!/^[A-Z0-9]{8}$/.test(k)){abrir("gestor",k);return;}   // chave da gestão: abre sem guardar no aparelho
+    ls(LS,k);history.replaceState(null,"",location.pathname);}
+  k=ls(LS);
+  if(!k){telaLogin();return;}
+  abrirOuLogin(k);
+})();
+</script>
+</body>
+</html>
