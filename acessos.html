@@ -34,6 +34,16 @@ label{display:block;font-size:14px;color:#b9c6ea;margin-bottom:6px}
 .lg button:disabled{opacity:.6}
 .aviso{background:#2a2410;border:1px solid #5a4a18;color:#ffe4a3;border-radius:10px;padding:10px 12px;font-size:14px;margin-top:12px}
 .hide{display:none!important}.quem{color:var(--mu);font-size:13px;margin-top:6px}
+.mdl{position:fixed;inset:0;background:rgba(3,6,14,.86);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.mdl .pn{background:var(--pn);border:1px solid var(--ln);border-radius:20px 20px 0 0;width:100%;max-width:520px;padding:22px 18px 28px}
+@media(min-width:700px){.mdl{align-items:center}.mdl .pn{border-radius:20px}}
+.mdl h2{margin:0 0 4px;font-size:22px}.op{display:flex;align-items:center;gap:14px;width:100%;margin-top:12px;padding:16px;border-radius:14px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);font-size:18px;font-weight:700;cursor:pointer;text-align:left}
+.op small{display:block;font-weight:400;color:var(--mu);font-size:13px;margin-top:2px}.op.eu{border:2px solid var(--ac)}.op .e{font-size:30px}
+.passo{display:flex;gap:12px;align-items:center;margin-top:14px;font-size:17px;line-height:1.35}.passo .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--rx);color:#fff;font-weight:800;display:grid;place-items:center}
+.big{display:block;width:100%;margin-top:16px;padding:15px;border:0;border-radius:12px;background:var(--ac);color:#04121c;font-weight:800;font-size:17px;cursor:pointer;text-align:center;text-decoration:none}
+.fec{background:none;border:0;color:var(--mu);font-size:15px;margin-top:14px;width:100%;cursor:pointer}
+.seta{position:fixed;left:50%;bottom:6px;transform:translateX(-50%);font-size:46px;animation:pul 1s infinite;z-index:60}
+.seta.cima{bottom:auto;top:4px;left:auto;right:70px;transform:none}@keyframes pul{50%{opacity:.25}}
 </style>
 </head>
 <body>
@@ -76,7 +86,7 @@ label{display:block;font-size:14px;color:#b9c6ea;margin-bottom:6px}
     var nome=ls("inovelar_apps_nome")||"";
     W.innerHTML='<div class="logo">RE/<span>MAX</span> Inovelar</div><h1>O que você quer acessar hoje?</h1>'+
       '<p class="sub">Apps Inovelar — você entrou uma vez e todos os sistemas ficam liberados neste aparelho.</p>'+(nome?'<p class="quem">Conectado como <b>'+esc(nome)+'</b></p>':'')+
-      (msg?'<div class="aviso">'+esc(msg)+'</div>':'')+'<div class="lg" id="inst" style="display:none;max-width:none;margin:14px 0 4px;border:2px solid var(--ac)"><b>📲 Instale o aplicativo no seu computador ou celular</b><p class="sub" style="margin:6px 0 0">Fica um ícone na área de trabalho ou na tela inicial e abre direto aqui, sem precisar procurar o link.</p><button id="bInst">Instalar o aplicativo</button><div id="instDica" class="sub" style="display:none;margin-top:10px;line-height:1.5"></div></div>'+'<div class="grid" id="g"></div>'+
+      (msg?'<div class="aviso">'+esc(msg)+'</div>':'')+'<div class="lg" id="inst" style="display:none;max-width:none;margin:14px 0 4px;border:2px solid var(--ac)"><b>📲 Instale o aplicativo no seu computador ou celular</b><p class="sub" style="margin:6px 0 0">Fica um ícone na área de trabalho ou na tela inicial e abre direto aqui, sem precisar procurar o link.</p><button id="bInst">Instalar o aplicativo</button></div>'+'<div class="grid" id="g"></div>'+
       '<div class="foot"><b>Dica:</b> salve esta página na tela inicial do celular (no iPhone: Compartilhar › Adicionar à Tela de Início; no Android: ⋮ › Adicionar à tela inicial). Ela vira um ícone como um aplicativo.<br><button id="sair">Sair de todos os apps neste aparelho</button></div>';
     $("#g").innerHTML=APPS.map(function(a){var on=a.k&&ls(a.k);
       return '<a class="card'+(on?'':' off')+'" href="'+a.u+'">'+(on?'<span class="st on">● liberado</span>':'<span class="st soon">sem acesso</span>')+'<div class="ic">'+a.ic+'</div><div class="t">'+a.t+'</div><div class="d">'+a.d+'</div></a>';}).join("");
@@ -88,15 +98,47 @@ label{display:block;font-size:14px;color:#b9c6ea;margin-bottom:6px}
   window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();promptInst=e;});
   window.addEventListener("appinstalled",function(){promptInst=null;var b=$("#inst");if(b)b.style.display="none";});
   try{if("serviceWorker" in navigator)navigator.serviceWorker.register("apps-sw.js",{scope:"./"}).catch(function(){});}catch(e){}
-  function dicaInstalar(){var u=navigator.userAgent||"";
-    var wz=/WhatsApp|FBAN|FBAV|Instagram|; wv\)/i.test(u);
-    if(/iPhone|iPad|iPod/i.test(u))return "<b>Abriu pelo link do WhatsApp?</b> Primeiro toque no ícone da bússola (ou em <b>Abrir no Safari</b>), no canto de baixo. "+"<br><b>No iPhone/iPad (Safari):</b> toque em <b>Compartilhar</b> (o quadrado com a seta para cima, embaixo da tela) › <b>Adicionar à Tela de Início</b> › <b>Adicionar</b>.";
-    if(/Android/i.test(u))return "<b>Abriu pelo link do WhatsApp?</b> Primeiro toque nos <b>⋮</b> › <b>Abrir no Chrome</b>.<br><b>No Android (Chrome):</b> toque nos <b>⋮</b> (canto de cima) › <b>Instalar app</b> (ou <b>Adicionar à tela inicial</b>) › <b>Instalar</b>.";
-    if(/Edg\//.test(u))return "<b>No Edge:</b> clique nos <b>…</b> (canto de cima) › <b>Aplicativos</b> › <b>Instalar este site como um aplicativo</b>.";
-    if(/Safari/.test(u)&&!/Chrome/.test(u))return "<b>No Safari do Mac:</b> menu <b>Arquivo</b> › <b>Adicionar ao Dock</b>.";
-    return "<b>No Chrome do computador:</b> clique no ícone de instalar no fim da barra de endereço (um monitor com uma seta) ou nos <b>⋮</b> › <b>Transmitir, salvar e compartilhar</b> › <b>Instalar página como app</b>. Se o aplicativo já estiver instalado, ele já aparece na sua área de trabalho.";}
+  var UA=navigator.userAgent||"", EH_IOS=/iPhone|iPad|iPod/i.test(UA)||(/Macintosh/.test(UA)&&navigator.maxTouchPoints>1),
+      EH_AND=/Android/i.test(UA), WEBVIEW=/WhatsApp|FBAN|FBAV|Instagram|; wv\)/i.test(UA)||(EH_IOS&&!/Safari\//.test(UA)),
+      IOS_OUTRO=EH_IOS&&/CriOS|FxiOS|EdgiOS/.test(UA), SAFARI_MAC=!EH_IOS&&/Macintosh/.test(UA)&&/Safari\//.test(UA)&&!/Chrome|Edg\//.test(UA);
+  var URL_APP="https://inovelar-fechamento.github.io/acessos.html?instalar=1";
+  function fecharM(){var m=$("#mdl");if(m)m.remove();var a=document.querySelectorAll(".seta");for(var k=0;k<a.length;k++)a[k].remove();}
+  function modal(h){fecharM();var d=document.createElement("div");d.className="mdl";d.id="mdl";d.innerHTML='<div class="pn">'+h+'<button class="fec" id="mFec">Fechar</button></div>';document.body.appendChild(d);
+    $("#mFec").onclick=fecharM;d.onclick=function(e){if(e.target===d)fecharM();};}
+  function passos(t,lista,extra){return '<h2>'+t+'</h2>'+lista.map(function(p,n){return '<div class="passo"><span class="n">'+(n+1)+'</span><span>'+p+'</span></div>';}).join("")+(extra||"");}
+  function instalarJa(){var p=promptInst;if(!p)return false;promptInst=null;fecharM();p.prompt();if(p.userChoice)p.userChoice.then(function(c){if(c&&c.outcome==="accepted"){var b=$("#inst");if(b)b.style.display="none";}});return true;}
+  function escolher(){
+    var eu=EH_IOS?"ios":EH_AND?"and":"pc";
+    function op(id,e,t,sub){return '<button class="op'+(id===eu?' eu':'')+'" data-op="'+id+'"><span class="e">'+e+'</span><span>'+t+'<small>'+(id===eu?'é este aparelho · ':'')+sub+'</small></span></button>';}
+    modal('<h2>Onde você quer instalar?</h2><p class="sub">Toque na opção do seu aparelho.</p>'+op("ios","🍎","iPhone ou iPad","celular da Apple")+op("and","🤖","Celular Android","Samsung, Motorola, Xiaomi…")+op("pc","💻","Computador","Windows ou Mac"));
+    var bs=document.querySelectorAll("[data-op]");for(var k=0;k<bs.length;k++)bs[k].onclick=function(){var o=this.getAttribute("data-op");
+      if(o==="ios")return iphone();if(o==="and")return android();return computador();};
+  }
+  function outroAparelho(nome){modal('<h2>Abra este link no '+nome+'</h2><p class="sub" style="font-size:16px;line-height:1.45">A instalação é feita no próprio aparelho. Abra lá o link abaixo, entre com o seu e-mail e toque em <b>Instalar o aplicativo</b>.</p><a class="big" href="#" id="cp">Copiar o link</a>');
+    $("#cp").onclick=function(e){e.preventDefault();try{navigator.clipboard.writeText("https://inovelar-fechamento.github.io/acessos.html");this.textContent="Link copiado ✓";}catch(x){this.textContent="inovelar-fechamento.github.io/acessos.html";}};}
+  function iphone(){
+    if(!EH_IOS)return outroAparelho("iPhone");
+    if(WEBVIEW||IOS_OUTRO){modal('<h2>Primeiro, abrir no Safari</h2><p class="sub" style="font-size:16px">O iPhone só instala pelo Safari. Toque no botão abaixo:</p><a class="big" href="x-safari-'+URL_APP+'">Abrir no Safari</a>');return;}
+    modal(passos("No iPhone são 2 toques",["Toque no botão <b>Compartilhar</b> ⬆️ (a seta lá embaixo, no meio da tela)","Role e toque em <b>Adicionar à Tela de Início</b> e depois em <b>Adicionar</b>"],'<p class="sub" style="margin-top:14px">A Apple não deixa nenhum site instalar sozinho; é só esse caminho.</p>'));
+    var m=$("#mdl");if(m){m.style.alignItems="center";m.querySelector(".pn").style.borderRadius="20px";}var s=document.createElement("div");s.className="seta";s.textContent="⬇️";document.body.appendChild(s);
+  }
+  function android(){
+    if(!EH_AND)return outroAparelho("celular Android");
+    if(instalarJa())return;
+    if(WEBVIEW){location.href="intent://inovelar-fechamento.github.io/acessos.html?instalar=1#Intent;scheme=https;package=com.android.chrome;end";return;}
+    modal(passos("No Android",["Toque nos <b>⋮</b> (três pontinhos, lá em cima)","Toque em <b>Instalar app</b> (ou <b>Adicionar à tela inicial</b>) e confirme"],'<p class="sub" style="margin-top:14px">Se não aparecer "Instalar", o aplicativo já está instalado: procure o ícone <b>Apps Inovelar</b>.</p>'));
+    var s=document.createElement("div");s.className="seta cima";s.style.right="8px";s.textContent="⬆️";document.body.appendChild(s);
+  }
+  function computador(){
+    if(EH_IOS||EH_AND)return outroAparelho("computador");
+    if(instalarJa())return;
+    if(SAFARI_MAC){modal(passos("No Mac (Safari)",["No menu lá em cima, clique em <b>Arquivo</b>","Clique em <b>Adicionar ao Dock</b> e depois em <b>Adicionar</b>"]));return;}
+    modal(passos("No computador",["Clique no ícone de instalar no <b>fim da barra de endereço</b> (um monitor com uma setinha), lá em cima","Clique em <b>Instalar</b>"],'<p class="sub" style="margin-top:14px">Não achou o ícone? Ele não aparece quando o aplicativo já está instalado: procure <b>Apps Inovelar</b> na área de trabalho ou no menu Iniciar.</p>'));
+    var s=document.createElement("div");s.className="seta cima";s.textContent="⬆️";document.body.appendChild(s);
+  }
   function mostraInstalar(){var b=$("#inst");if(!b)return;if(window.matchMedia&&matchMedia("(display-mode: standalone)").matches){b.style.display="none";return;}b.style.display="block";
-    $("#bInst").onclick=function(){var p=promptInst;if(p){promptInst=null;p.prompt();if(p.userChoice)p.userChoice.then(function(c){if(c&&c.outcome==="accepted")b.style.display="none";});return;}var d=$("#instDica");d.innerHTML=dicaInstalar();d.style.display="block";};}
+    $("#bInst").onclick=escolher;
+    if(q.has("instalar")){history.replaceState(null,"",location.pathname);setTimeout(escolher,300);}}
   function seguir(msgSemAcesso){
     if(volta){var kk=chaveDe(volta);if(kk&&ls(kk)){location.replace(volta);return;}cards("Seu acesso a este app ainda não está liberado. Fale com o Brenno ou a Andréia.");return;}
     cards(msgSemAcesso);
