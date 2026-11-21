@@ -353,7 +353,7 @@ input.moeda{font-variant-numeric:tabular-nums}
 (function () {
   'use strict';
   var API = window.SUMMIT_API || '__API__';
-  var VERSAO_TELA = '1.1.5';   // 20/11/2026: páginas de preenchimento iguais ao book (tabelas, linhas automáticas) e gestor ajusta e salva no "ver como"   // 19/11/2026: Administração atualiza sozinha a cada 30 s   // 18/11/2026: no preenchimento, ‹ › do book ao lado leva o formulário junto
+  var VERSAO_TELA = '1.1.6';   // 20/11/2026: páginas de preenchimento iguais ao book (tabelas, linhas automáticas) e gestor ajusta e salva no "ver como"   // 19/11/2026: Administração atualiza sozinha a cada 30 s   // 18/11/2026: no preenchimento, ‹ › do book ao lado leva o formulário junto
   var M = window.Motor, $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var app = $('#app');
   var S = { token: null, eu: null, D: null, versao: 0, status: 'rascunho', diag: null, aba: 'inicio', sujo: false, salvando: false, fila: null };
@@ -389,6 +389,8 @@ input.moeda{font-variant-numeric:tabular-nums}
 
   // ================= LOGIN =================
   function telaLogin(msg) {
+    /* desde 21/11/2026 o corretor entra uma vez nos Apps Inovelar (acessos.html); a gestão (?v=…) continua com o login próprio */
+    if (MODO === 'corretor' && location.protocol !== 'file:') { location.replace('acessos.html?volta=summit.html' + (msg ? '&msg=' + encodeURIComponent(msg) : '')); return; }
     app.innerHTML = '<div class="wrap center"><div style="width:100%;max-width:420px">' +
       '<div class="logo" style="font-size:26px">RE/<span>MAX</span> Inovelar</div><h1>Meu Plano 2027</h1><p class="sub">Agent Summit · 18 e 19/11/2026</p>' +
       (msg ? '<div class="aviso">' + esc(msg) + '</div>' : '') +
@@ -412,7 +414,7 @@ input.moeda{font-variant-numeric:tabular-nums}
     };
     cod.oninput = function () { if (cod.value.replace(/\D/g, '').length === 6) bCod.click(); };
   }
-  function sair() { ls('mp27_token', null); ls('mp27_gestor', null); location.href = location.pathname + (MODO !== 'corretor' ? '?v=' + MODO : ''); }
+  function sair() { ls('mp27_token', null); ls('mp27_gestor', null); if (MODO === 'corretor') { location.href = 'acessos.html?sair'; return; } location.href = location.pathname + '?v=' + MODO; }
 
   // ================= INÍCIO =================
   function iniciar() {

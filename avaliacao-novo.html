@@ -41,6 +41,8 @@ button:disabled{opacity:.6}.aviso{background:#2a2410;border:1px solid #5a4a18;co
   function abrir(tipo,chave){M.innerHTML="Carregando a Avaliação Inovelar…";post("pagina",tipo==="gestor"?[chave]:[chave]).then(function(r){if(typeof r!=="string")throw 0;document.open();document.write(r);document.close();})
     .catch(function(){M.innerHTML='Não consegui abrir agora.<br><a href="">Tentar de novo</a>';});}
   function telaLogin(msg){
+    /* desde 21/11/2026 o login é um só, nos Apps Inovelar (acessos.html) */
+    if(location.protocol!=="file:"){location.replace("acessos.html?volta=avaliacao-novo.html"+(msg?"&msg="+encodeURIComponent(msg):""));return;}
     M.innerHTML='<div class="box"><div class="logo">RE/<span>MAX</span> Inovelar</div><h1>Avaliação de imóveis</h1><p class="sub">Estudo de preço da RE/MAX Inovelar</p>'+(msg?'<div class="aviso">'+esc(msg)+'</div>':'')+
       '<div class="card" id="pE"><label>Seu e-mail</label><input id="em" type="email" autocomplete="email" inputmode="email" placeholder="seuemail@remax.com.br" value="'+esc(ls(LSE)||"")+'"><button id="bE">Receber código</button></div>'+
       '<div class="card hide" id="pC"><label>Digite o código de 6 números que chegou no seu e-mail</label><input id="cod" class="cod" inputmode="numeric" autocomplete="one-time-code" maxlength="7"><button id="bC">Entrar</button><p class="sub" style="margin:10px 0 0">Não chegou? Olhe o spam ou <a href="#" id="tr">pedir de novo</a>. O Brenno e a Andréia também conseguem ver o seu código.</p></div>'+
@@ -59,7 +61,7 @@ button:disabled{opacity:.6}.aviso{background:#2a2410;border:1px solid #5a4a18;co
       .catch(function(){aviso("Sem conexão com o sistema. Confira a internet e tente de novo.");bC.disabled=false;bC.textContent="Entrar";});};
     cod.oninput=function(){if(cod.value.replace(/\D/g,"").length===6)bC.click();};
   }
-  if(q.has("sair")){ls(LS,null);history.replaceState(null,"",location.pathname);telaLogin("Você saiu deste aparelho.");return;}
+  if(q.has("sair")){location.replace("acessos.html?sair");return;}
   var k=q.get("k");
   if(k){k=k.replace(/[^A-Za-z0-9]/g,"").toUpperCase();
     if(!/^[A-Z0-9]{8}$/.test(k)){abrir("gestor",k);return;}   // chave da gestão: abre sem guardar no aparelho

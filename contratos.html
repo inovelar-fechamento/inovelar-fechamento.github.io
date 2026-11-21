@@ -104,6 +104,8 @@ var ORD=["Primeiro","Segundo","Terceiro"], EXT={2:["segundo","Não, só um"],3:[
 
 /* ---------- login (igual à Avaliação) ---------- */
 function telaLogin(msg){
+  /* desde 21/11/2026 o login é um só, nos Apps Inovelar (acessos.html) */
+  if(location.protocol!=="file:"){location.replace("acessos.html?volta=contratos.html"+(msg?"&msg="+encodeURIComponent(msg):""));return;}
   APP.innerHTML='<div class="login"><div class="logo">RE/<span>MAX</span> Inovelar</div><h1>Contratos</h1><p class="sub">Pedido de contrato de compra e venda</p>'+(msg?'<div class="aviso">'+esc(msg)+'</div>':'')+
    '<div class="card" id="pE"><label class="f">Seu e-mail</label><input id="em" type="email" autocomplete="email" inputmode="email" placeholder="seuemail@remax.com.br" value="'+esc(ls(LSE)||"")+'"><div class="row"><button class="btn" id="bE" style="width:100%">Receber código</button></div></div>'+
    '<div class="card hide" id="pC"><label class="f">Digite o código de 6 números que chegou no seu e-mail</label><input id="cod" class="cod" inputmode="numeric" autocomplete="one-time-code" maxlength="7"><div class="row"><button class="btn" id="bC" style="width:100%">Entrar</button></div><p class="sub" style="margin-top:10px">Não chegou? Olhe o spam ou <a href="#" id="tr">pedir de novo</a>. O Brenno e a Andréia também conseguem ver o seu código.</p></div>'+
@@ -132,7 +134,7 @@ function iniciar(k){
 
 /* ---------- casca ---------- */
 function casca(){
-  APP.innerHTML='<div class="top"><div class="logo">RE/<span>MAX</span> Inovelar · Contratos</div><div class="quem">'+esc(EU.nome)+' · <a href="?sair">sair</a></div></div>'+
+  APP.innerHTML='<div class="top"><div class="logo">RE/<span>MAX</span> Inovelar · Contratos</div><div class="quem">'+esc(EU.nome)+' · <a href="acessos.html">Apps Inovelar</a></div></div>'+
    '<div class="tabs"><button data-a="meus">Meus contratos</button><button data-a="novo">+ Novo contrato</button>'+(EU.gestao?'<button data-a="gestao">Gestão</button>':'')+'</div><div id="tela"></div><div class="salvo hide" id="barra"></div>';
   $$(".tabs button").forEach(function(b){b.onclick=function(){if(S.sujo){salvar().then(function(){mostrar(b.dataset.a);});}else mostrar(b.dataset.a);};});
 }
@@ -293,7 +295,7 @@ function telaGestao(){
 
 /* ---------- partida ---------- */
 var q=new URLSearchParams(location.search);
-if(q.has("sair")){ls(LS,null);history.replaceState(null,"",location.pathname);telaLogin("Você saiu deste aparelho.");return;}
+if(q.has("sair")){location.replace("acessos.html?sair");return;}
 var k=q.get("k");if(k){k=k.replace(/[^A-Za-z0-9]/g,"").toUpperCase();if(/^[A-Z0-9]{8}$/.test(k))ls(LS,k);history.replaceState(null,"",location.pathname);if(!/^[A-Z0-9]{8}$/.test(k)){iniciar(k);return;}}
 window.addEventListener("beforeunload",function(){if(S.sujo)guardaLocal(true);});
 k=ls(LS); if(!k){telaLogin();return;} iniciar(k);
