@@ -353,7 +353,7 @@ input.moeda{font-variant-numeric:tabular-nums}
 (function () {
   'use strict';
   var API = window.SUMMIT_API || '__API__';
-  var VERSAO_TELA = '1.1.6';   // 20/11/2026: páginas de preenchimento iguais ao book (tabelas, linhas automáticas) e gestor ajusta e salva no "ver como"   // 19/11/2026: Administração atualiza sozinha a cada 30 s   // 18/11/2026: no preenchimento, ‹ › do book ao lado leva o formulário junto
+  var VERSAO_TELA = '1.1.7';   // 20/11/2026: páginas de preenchimento iguais ao book (tabelas, linhas automáticas) e gestor ajusta e salva no "ver como"   // 19/11/2026: Administração atualiza sozinha a cada 30 s   // 18/11/2026: no preenchimento, ‹ › do book ao lado leva o formulário junto
   var M = window.Motor, $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var app = $('#app');
   var S = { token: null, eu: null, D: null, versao: 0, status: 'rascunho', diag: null, aba: 'inicio', sujo: false, salvando: false, fila: null };
@@ -538,7 +538,7 @@ input.moeda{font-variant-numeric:tabular-nums}
   function bookHtml() {
     return '<div class="bookbar"><span class="t">📖 Book · ' + rotPag(B.pg) + '</span>' +
       '<button class="btn sec" id="bkAnt">‹</button><button class="btn sec" id="bkProx">›</button>' +
-      (B.turma !== null && (!B.seguir || B.turma !== B.pg) ? '<button class="btn" id="bkTurma">Ir para a página da turma (' + rotPag(B.turma) + ')</button>' : (B.turma !== null ? '<span class="turma-aviso">● seguindo a turma</span>' : '')) +
+      ''/* v1.1.7: botão da turma retirado */ +
       '<button class="btn sec fechar" id="bkFechar">Fechar</button></div>' +
       '<div class="bookimg"><img alt="Página ' + rotPag(B.pg) + ' do book" src="' + arqPag(B.pg) + '"></div>';
   }
@@ -574,7 +574,7 @@ input.moeda{font-variant-numeric:tabular-nums}
         bookRender();
       }).catch(function () {});
     };
-    acompanha(); setInterval(function () { if (document.visibilityState !== 'hidden') acompanha(); }, 15000);
+    void acompanha;   // v1.1.7 (22/11): o book do corretor não segue mais a turma (evento encerrado)
   }
   // ================= MODO BOOK (tela principal do corretor) =================
   // Faixa de páginas de cada passo: nessas páginas aparece "Preencher" e abre o plano daquele passo.
@@ -628,7 +628,7 @@ input.moeda{font-variant-numeric:tabular-nums}
   function nomeAba(id) { return (ABAS.filter(function (a) { return a.id === id; })[0] || {}).t || id; }
   function leitorHtml() {
     var abas = abasDaPag(B.pg);
-    var turma = B.turma !== null && (!B.seguir || B.turma !== B.pg) ? '<button class="btn" id="lxTurma">Ir para a página da turma (' + rotPag(B.turma) + ')</button>' : (B.turma !== null ? '<span class="turma-aviso">● seguindo a turma</span>' : '');
+    var turma = '';   // v1.1.7 (22/11, pedido do Brenno): sem o botão "Ir para a página da turma"
     return '<div class="lxtop"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo">' + (S.status === 'aceito' ? '✓ Aceito' : '') + '</span><button class="btn sec" id="lxPlano">✍️ Meu plano</button></div>' +
       '<div class="lximg" id="lximg"><img alt="Página ' + rotPag(B.pg) + ' do book" src="' + arqPag(B.pg) + '"></div>' +
       '<div class="lxbar">' +
@@ -1099,7 +1099,7 @@ input.moeda{font-variant-numeric:tabular-nums}
       chamar('admin', [S.token]).then(function (a) {
         aplicaConfig(a.config); var t = a.telao;
         $('#adm').innerHTML = '<h1>Visão geral</h1><div class="cock">' + '<div class="k"><small>Aceitos · preenchendo</small><b>' + t.contagem.aceitos + ' · ' + t.contagem.preenchendo + ' de ' + t.contagem.total + '</b></div><div class="k"><small>VGC 2027 (soma das metas)</small><b>' + brl(t.totais.vgcMeta, 0) + '</b></div><div class="k"><small>Últimos 12 meses (iList)</small><b>' + brl(t.totais.vgc12m, 0) + '</b></div><div class="k"><small>Estilo de vida (soma)</small><b>' + brl(t.totais.estiloVida, 0) + '</b></div></div>' +
-          '<h2>A sala está no book em</h2><div class="card"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn sec" id="pgMenos">‹</button><b style="font-size:28px;color:var(--ac)" id="pgAtual">' + rotPag(t.pagina || 0) + '</b><button class="btn sec" id="pgMais">›</button><input id="pgNum" type="text" inputmode="numeric" placeholder="nº da página" style="width:140px"><button class="btn" id="pgIr">Levar a turma</button></div><p class="sub">Todo corretor com o app aberto vai para esta página (quem estiver folheando vê o botão “Ir para a página da turma”). Mudar a etapa abaixo também leva o book para o início da etapa.</p></div>' +
+          '<h2>A sala está no book em</h2><div class="card"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn sec" id="pgMenos">‹</button><b style="font-size:28px;color:var(--ac)" id="pgAtual">' + rotPag(t.pagina || 0) + '</b><button class="btn sec" id="pgMais">›</button><input id="pgNum" type="text" inputmode="numeric" placeholder="nº da página" style="width:140px"><button class="btn" id="pgIr">Levar a turma</button></div><p class="sub">Todo corretor com o app aberto vai para esta página (vale para o telão; o app do corretor não segue mais a turma desde 22/11). Mudar a etapa abaixo também leva o book para o início da etapa.</p></div>' +
           '<h2>O telão está mostrando</h2><div class="card"><div class="pill">' + ETAPAS.map(function (e) { return '<label><input type="radio" name="et" value="' + e[0] + '"' + (t.etapa === e[0] ? ' checked' : '') + '><span>' + e[1] + '</span></label>'; }).join('') + '</div><p class="sub">Troque conforme a sala avança no book. Em “Automático” o telão gira sozinho a cada 20 segundos.</p></div>' +
           '<h2>Planos dos corretores</h2><table><tr><th>Corretor</th><th>Situação</th><th>Metas</th><th></th></tr>' + a.corretores.filter(function (c) { return c.ativo; }).map(function (c) {
             var p = c.plano, r = p && p.dados && p.dados.__resumo || {};
