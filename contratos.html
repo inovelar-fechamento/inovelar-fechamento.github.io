@@ -66,7 +66,7 @@ input.cod{font-size:28px;letter-spacing:8px;text-align:center}
 <body>
 <div class="wrap" id="app">Carregando…</div>
 <script>
-/* Contratos Inovelar (v1 — 21/11/2026). Entrada do corretor para o contrato de compra e venda.
+/* Contratos Inovelar (v2 — 23/11/2026: tipo Cessão de direitos, modelo A5-01). v1 — 21/11/2026. Entrada do corretor para o contrato de compra e venda.
    Mesmo login da Avaliação (e-mail + código; o aparelho fica conectado). Rascunho salvo sozinho.
    Ao enviar, os dados vão para a mesma planilha do formulário antigo e a rotina gera o contrato pelo modelo vigente do Jurídico.
    O PDF vai primeiro para a gestão (Brenno e Andréia), que libera para o corretor ou pede ajuste. */
@@ -93,13 +93,19 @@ var VISTA=[["Formato do pagamento à vista","Mesmo sendo à vista, o pagamento p
  ["Financiamento ou dívida a quitar (se houver)","Banco credor, nº do contrato e saldo devedor aproximado. Deixe em branco se o imóvel não tem dívida.",0,"area"],
  ["Valor das arras","Parte do sinal que vale como garantia do negócio (ex.: R$ 35.000 = 10% do valor). No formato 100% na escritura, informe o % da multa se alguém desistir.",0],
  ["O comprador já mora no imóvel como inquilino?","",1,"sel",["Não","Sim"]]];
+var CESSAO=[["Em nome de quem está a matrícula do imóvel?","Veja na certidão de ônus. Ex.: Distrito Federal, TERRACAP, nome do antigo dono.",1],
+ ["Como os direitos chegaram ao vendedor","Liste em ordem os documentos que mostram como o imóvel chegou até o vendedor, com cartório e data de cada um. Ex.: termo de concessão (2005); inventário com adjudicação (6º Ofício, 17/03/2023); procuração pública (4º Ofício, 30/06/2026); substabelecimento ao vendedor (5º Ofício de Taguatinga, 09/09/2026).",1,"area"],
+ ["Como os direitos passam para o comprador","",1,"sel",["Substabelecimento da procuração pública","Escritura pública de cessão de direitos","Outro (descreva em \"Algo mais que o contrato precise dizer\")"]],
+ ["Data da transferência dos direitos","Normalmente o dia da quitação, junto com a entrega das chaves.",1,"date"],
+ ["Como e quando o pagamento será feito","Descreva como e quando cada valor será pago: sinal (valor e data), restante (valor e data), conta para depósito.",1,"area"],
+ ["Valor das arras","Só a parte do sinal que vai para o vendedor. A comissão nunca entra nas arras.",0]];
 var PARC=[["Como o saldo fica garantido?","A garantia do saldo é decisão da direção da loja — confirme com o Brenno antes de responder.",1,"sel",["Parcelamento declarado na escritura pública","Escritura retida até a última parcela","Alienação fiduciária na matrícula","Ainda não definido — o Brenno vai decidir"]],
  ["Quantidade de parcelas","",1],["Valor de cada parcela","Em reais. Se as parcelas forem diferentes, descreva.",1],["Periodicidade e data da primeira parcela","Ex.: mensais, a primeira em 10/11/2026.",1],["Índice de correção das parcelas","Ex.: IPCA, IGP-M, sem correção.",1],["Juros e multa por atraso","Ex.: multa de 2% e juros de 1% ao mês.",1]];
 var COM=[["Conta do vendedor para receber o líquido","Banco, agência, conta e PIX.",1],["Percentual da comissão","Ex.: 6%",1],["Divisão da comissão","Ex.: 45% corretor parceiro / 55% imobiliária.",1],
  ["Quem paga a comissão?","",1,"sel",["Os compradores","Os vendedores","Dividida entre as partes"]],["Corretor parceiro — nome e CRECI","Se não houver, escreva \"não há\".",1],["Entrega das chaves e posse","Data ou condição. Ex.: na assinatura da escritura.",1],
  ["Débitos do imóvel até a posse ficam por conta de quem?","",1,"sel",["Vendedores","Compradores"]],["Despesas de transferência (ITBI, escritura, registro) por conta de quem?","",1,"sel",["Compradores","Vendedores","Divididas"]],
  ["Algo mais que o contrato precise dizer","Combinações específicas deste negócio. Se não houver, deixe em branco.",0,"area"]];
-var TIPOS={fin:["Financiamento bancário","Sinal + financiamento (inclui FGTS e carta de consórcio)"],vista:["À vista","Pagamento à vista, com ou sem sinal"],parc:["Parcelado direto com o vendedor","Saldo em parcelas — a garantia é decisão da gestão"]};
+var TIPOS={fin:["Financiamento bancário","Sinal + financiamento (inclui FGTS e carta de consórcio)"],vista:["À vista","Pagamento à vista, com ou sem sinal"],parc:["Parcelado direto com o vendedor","Saldo em parcelas — a garantia é decisão da gestão"],cessao:["Cessão de direitos","Imóvel que não está no nome do vendedor (concessão, inventário, procuração) — pagamento à vista"]};
 var ORD=["Primeiro","Segundo","Terceiro"], EXT={2:["segundo","Não, só um"],3:["terceiro","Não, só dois"]};
 
 /* ---------- login (igual à Avaliação) ---------- */
@@ -203,12 +209,13 @@ function abrirForm(id,tipo,d,doLocal){
   desenhaForm(); if(doLocal)aviso("Recuperei o que estava preenchido neste aparelho. Confira e continue.");
 }
 function desenhaForm(){
-  var t=S.tipo, pag=t==="fin"?FIN:t==="vista"?VISTA:PARC, h="";
+  var t=S.tipo, pag=t==="fin"?FIN:t==="vista"?VISTA:t==="cessao"?CESSAO:PARC, h="";
   h+='<h1>'+esc(TIPOS[t][0])+'</h1><p class="sub">Campos com <b style="color:#ff8a8a">*</b> são obrigatórios. Campo sem resposta vira pendência no contrato. Tudo fica salvo sozinho.</p>';
   h+='<div class="op"><div class="card"><b>Opção 1 — envie os documentos</b><p class="sub" style="margin:6px 0 0">Em cada parte (imóvel, vendedores, compradores) tem um quadro 📎. Mande as fotos ou PDFs: eu leio e preencho os campos vazios, em amarelo, para você conferir.</p></div><div class="card"><b>Opção 2 — preencha os campos</b><p class="sub" style="margin:6px 0 0">Se preferir, digite direto nos campos abaixo. Pode misturar: ler os documentos e completar à mão.</p></div></div>';
+  if(t==="cessao")h+='<div class="aviso">Use quando o imóvel <b>não está registrado no nome do vendedor</b> e ele tem só os direitos (concessão, inventário, procuração). Envie no quadro do imóvel a certidão de ônus e todos os documentos da cadeia. Modelo novo do Jurídico: o contrato passa pela conferência da gestão antes de ser liberado.</div>';
   if(t==="parc")h+='<div class="aviso">O modelo do parcelado direto ainda depende de decisão da gestão sobre a garantia do saldo. Pode preencher e enviar: o Brenno decide e o contrato sai depois.</div>';
   h+='<div class="card sec"><h2>Você</h2>'+campo("Seu nome completo","",1)+campo("Seu CRECI","",1)+'</div>';
-  h+='<div class="card sec"><h2>O imóvel</h2><p class="sub">Os dados do cadastro e das contas. Sem eles o contrato sai com lacuna.</p>'+blocoDocs("Imóvel","matrícula, carnê do IPTU, conta da CAESB e da Neoenergia.")+IMOVEL.map(function(c){return campo(c[0],c[1],c[2],c[3]);}).join("")+'</div>';
+  h+='<div class="card sec"><h2>O imóvel</h2><p class="sub">Os dados do cadastro e das contas. Sem eles o contrato sai com lacuna.</p>'+blocoDocs("Imóvel","matrícula, carnê do IPTU, conta da CAESB e da Neoenergia"+(t==="cessao"?" — e os documentos da cadeia (concessão, inventário, procuração, substabelecimento).":"."))+IMOVEL.map(function(c){return campo(c[0],c[1],c[2],c[3]);}).join("")+'</div>';
   for(var i=1;i<=S.nv;i++)h+=pessoa("Vendedor",i);
   if(S.nv<3)h+='<div class="row"><button class="btn sec2" data-add="Vendedor">+ Adicionar '+(S.nv===1?"segundo":"terceiro")+' vendedor</button></div>';
   for(i=1;i<=S.nc;i++)h+=pessoa("Comprador",i);
@@ -262,7 +269,7 @@ function lerDocs(bx,files){
 }
 
 /* ---------- enviar ---------- */
-function obrig(){var t=S.tipo,L=[["Seu nome completo"],["Seu CRECI"]].concat(IMOVEL,PRECO,t==="fin"?FIN:t==="vista"?VISTA:PARC,COM),i,out=[];
+function obrig(){var t=S.tipo,L=[["Seu nome completo"],["Seu CRECI"]].concat(IMOVEL,PRECO,t==="fin"?FIN:t==="vista"?VISTA:t==="cessao"?CESSAO:PARC,COM),i,out=[];
   for(i=1;i<=S.nv;i++)PESSOA.forEach(function(c){L.push(["Vendedor "+i+" — "+c[0],"",c[2]]);});
   for(i=1;i<=S.nc;i++)PESSOA.forEach(function(c){L.push(["Comprador "+i+" — "+c[0],"",c[2]]);});
   L.forEach(function(c){if((c.length===1||c[2])&&!String(S.d[c[0]]||"").trim())out.push(c[0]);});return out;}
