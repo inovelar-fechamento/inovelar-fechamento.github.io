@@ -89,6 +89,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac)}textarea{min-heig
 .lxpg{min-width:52px;text-align:center;color:var(--mu);font-weight:700}
 body.emleitor .bookfab,body.emleitor .bookov{display:none!important}
 body.emleitor{overflow:hidden}
+.quemsou{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--tx);background:var(--pn2);border:1px solid var(--wa);border-radius:999px;padding:3px 4px 3px 10px;white-space:nowrap}.quemsou b{color:var(--wa)}.quemsou button{border:0;background:var(--wa);color:#1a1300;font-weight:700;border-radius:999px;padding:4px 9px;font-size:12px;cursor:pointer}
+.bvquem{background:#2a2410;border:2px solid var(--wa);border-radius:var(--r);padding:12px 14px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:17px}.bvquem b{color:var(--wa)}
+@media(max-width:560px){.quemsou .qn{max-width:90px;overflow:hidden;text-overflow:ellipsis}.lxtop .quemsou b.qn{display:inline-block!important}}
 .vbook{margin-left:8px;min-height:36px!important;padding:6px 10px!important;font-size:13px}
 @media(max-width:560px){.vbook{font-size:12px;padding:6px 8px!important}.lxtop b{display:none}}
 @media print{.leitor{display:none!important}}
@@ -353,7 +356,8 @@ input.moeda{font-variant-numeric:tabular-nums}
 (function () {
   'use strict';
   var API = window.SUMMIT_API || '__API__';
-  var VERSAO_TELA = '1.1.7';   // 20/11/2026: páginas de preenchimento iguais ao book (tabelas, linhas automáticas) e gestor ajusta e salva no "ver como"   // 19/11/2026: Administração atualiza sozinha a cada 30 s   // 18/11/2026: no preenchimento, ‹ › do book ao lado leva o formulário junto
+  var VERSAO_TELA = '1.1.8';   // 25/11/2026: nome de quem está conectado sempre visível + botão "Não sou eu" (caso do computador que guardou o login de outro corretor)
+  var _v117 = '1.1.7';   // 20/11/2026: páginas de preenchimento iguais ao book (tabelas, linhas automáticas) e gestor ajusta e salva no "ver como"   // 19/11/2026: Administração atualiza sozinha a cada 30 s   // 18/11/2026: no preenchimento, ‹ › do book ao lado leva o formulário junto
   var M = window.Motor, $ = function (s, r) { return (r || document).querySelector(s); }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var app = $('#app');
   var S = { token: null, eu: null, D: null, versao: 0, status: 'rascunho', diag: null, aba: 'inicio', sujo: false, salvando: false, fila: null };
@@ -629,7 +633,7 @@ input.moeda{font-variant-numeric:tabular-nums}
   function leitorHtml() {
     var abas = abasDaPag(B.pg);
     var turma = '';   // v1.1.7 (22/11, pedido do Brenno): sem o botão "Ir para a página da turma"
-    return '<div class="lxtop"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo">' + (S.status === 'aceito' ? '✓ Aceito' : '') + '</span><button class="btn sec" id="lxPlano">✍️ Meu plano</button></div>' +
+    return '<div class="lxtop"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b>' + quemSou() + '<span class="salvo">' + (S.status === 'aceito' ? '✓ Aceito' : '') + '</span><button class="btn sec" id="lxPlano">✍️ Meu plano</button></div>' +
       '<div class="lximg" id="lximg"><img alt="Página ' + rotPag(B.pg) + ' do book" src="' + arqPag(B.pg) + '"></div>' +
       '<div class="lxbar">' +
         (abas.length ? '<div class="lxpre">' + abas.map(function (a, i) { return '<button class="btn lxfill' + (i ? ' sec' : '') + '" data-fill="' + a + '">✍️ ' + (abas.length > 1 ? esc(nomeAba(a)) : 'Preencher esta página') + '</button>'; }).join('') + '</div>' : '') +
@@ -646,6 +650,7 @@ input.moeda{font-variant-numeric:tabular-nums}
     $('#lxAnt').onclick = function () { bookIr(B.pg - 1, true); }; $('#lxProx').onclick = function () { bookIr(B.pg + 1, true); };
     var t = $('#lxTurma'); if (t) t.onclick = function () { B.seguir = true; bookIr(B.turma, false); };
     var vt = $('#lxVolta'); if (vt) vt.onclick = function () { var x = S.volta; S.volta = null; if (x.modo === 'form') abrirPlano(x.aba); else bookIr(x.pg, true); };
+    ligaNaoSou(lx);
     $('#lxPlano').onclick = function () { abrirPlano(abasDaPag(B.pg)[0] || S.aba); };
     $$('[data-fill]', lx).forEach(function (b) { b.onclick = function () { preencherPagina(B.pg, b.getAttribute('data-fill')); }; });
   }
@@ -707,10 +712,10 @@ input.moeda{font-variant-numeric:tabular-nums}
     { id: 'trilha', t: 'Trilha Ativação' }, { id: 'cockpit', t: 'Cockpit' }, { id: 'aceite', t: 'Aceite' }, { id: 'claude', t: 'Levar p/ meu Claude' }
   ];
   function corretor() {
-    app.innerHTML = '<div class="top"><div class="in"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b><span class="salvo" id="salvo">' + (S.como ? '✍️ Ajustando o plano de ' + esc(S.como) + ' — salva no plano dele' : S.status === 'aceito' ? '✓ Aceito' : 'Tudo salvo') + '</span><button class="btn sec vbook" id="vbook">📖 Voltar ao book</button></div><div class="prog"><i id="pg" style="width:0"></i></div><div class="nav" id="nav"></div></div><div class="wrap" id="corpo"></div>' +
+    app.innerHTML = '<div class="top"><div class="in"><span class="logo">RE/<span>MAX</span></span><b>Meu Plano 2027</b>' + quemSou() + '<span class="salvo" id="salvo">' + (S.como ? '✍️ Ajustando o plano de ' + esc(S.como) + ' — salva no plano dele' : S.status === 'aceito' ? '✓ Aceito' : 'Tudo salvo') + '</span><button class="btn sec vbook" id="vbook">📖 Voltar ao book</button></div><div class="prog"><i id="pg" style="width:0"></i></div><div class="nav" id="nav"></div></div><div class="wrap" id="corpo"></div>' +
       '<div class="foot"><button class="btn sec" id="ant">‹ Voltar</button><button class="btn" id="prox">Avançar ›</button></div>';
     $('#ant').onclick = function () { if (S.pgFill !== null && S.pgFill !== undefined) voltarBook(); else mover(-1); }; $('#prox').onclick = function () { if (S.pgFill !== null && S.pgFill !== undefined) proximaPagina(); else mover(1); };
-    $('#vbook').onclick = voltarBook;
+    $('#vbook').onclick = voltarBook; ligaNaoSou($('.top'));
     if (!S.modo) {   // v1.1.2 (17/11, pedido do Brenno): toda entrada abre na CAPA do book; o ponto onde parou vira o botão "Continuar de onde parei"
       S.volta = (function () { var pg = parseInt(ls('mp27_pg'), 10), mo = ls('mp27_modo'), ab = ls('mp27_aba'); if (mo === 'form' && ab && ab !== 'inicio') return { modo: 'form', aba: ab }; if (pg > 0 && pg < BOOK_TOTAL) return { modo: 'book', pg: pg }; return null; })();
       S.modo = 'book'; B.seguir = false;
@@ -719,10 +724,15 @@ input.moeda{font-variant-numeric:tabular-nums}
     if (!S.bvOk) boasVindas();
   }
   // ================= BOAS-VINDAS (máscara antes do book, toda vez que o corretor entra) =================
+  // v1.1.8 (25/11, pedido do Brenno): nome de quem está conectado sempre à vista + "Não sou eu"
+  function quemSou() { if (S.como || !S.eu || !S.eu.nome) return ''; return '<span class="quemsou">👤 <b class="qn">' + esc(String(S.eu.nome).split(' ')[0]) + '</b><button data-naosou="1" title="Sair: este não é o meu login">Não sou eu</button></span>'; }
+  function naoSouEu() { if (!confirm('Você está conectado como ' + ((S.eu && S.eu.nome) || 'outro corretor') + '.\n\nSe não é você, toque em OK: este aparelho sai de todos os apps e você entra com o seu próprio e-mail.')) return; S.sujo = false; clearTimeout(S.fila); sair(); }
+  function ligaNaoSou(root) { $$('[data-naosou]', root || document).forEach(function (b) { b.onclick = function (e) { e.preventDefault(); e.stopPropagation(); naoSouEu(); }; }); }
   function boasVindas() {
     var bv = $('#boasv'); if (!bv) { bv = document.createElement('div'); bv.id = 'boasv'; bv.className = 'boasv'; document.body.appendChild(bv); }
     var nome = esc(String((S.eu && S.eu.nome) || '').split(' ')[0]);
     bv.innerHTML = '<div class="bvin"><span class="logo">RE/<span>MAX</span> Inovelar</span>' +
+      (S.como ? '' : '<div class="bvquem"><span>Você entrou como <b>' + esc((S.eu && S.eu.nome) || '') + '</b>. Não é você?</span><button class="btn red" data-naosou="1">Não sou eu — sair</button></div>') +
       '<h1>Olá, ' + nome + '! Boas-vindas ao seu Agent Summit 2027.</h1>' +
       '<p class="bvlead">Este é o lugar onde você vai ler o book e montar o seu plano de 2027.</p>' +
       '<div class="bvc"><h3>⚙️ Por que a Inovelar criou este sistema</h3><p>Você faz parte do nosso time, e queremos facilitar o seu trabalho. Por isso automatizamos o Summit: o book fica na tela; nas páginas de exercício aparece o botão <b>✍️ Preencher</b>; as contas são feitas sozinhas; os seus números do iList já vêm carregados; e tudo salva enquanto você digita, em qualquer aparelho.</p></div>' +
@@ -731,6 +741,7 @@ input.moeda{font-variant-numeric:tabular-nums}
       (S.como ? '<p class="sub">✍️ Você está ajustando o plano de ' + esc(S.como) + '. Tudo o que mudar aqui é salvo no plano dele, como se ele tivesse preenchido. O aceite continua só com ele.</p>' : '') +
       '<button class="btn bvgo" id="bvGo">Começar ›</button></div>';
     document.body.classList.add('combv');
+    ligaNaoSou(bv);
     $('#bvGo').onclick = function () { S.bvOk = true; bv.remove(); document.body.classList.remove('combv'); window.scrollTo(0, 0); };
   }
   function mover(d) { var i = ABAS.map(function (a) { return a.id; }).indexOf(S.aba); i = Math.max(0, Math.min(ABAS.length - 1, i + d)); irPara(ABAS[i].id); }
